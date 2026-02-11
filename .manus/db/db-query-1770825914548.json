@@ -1,0 +1,16 @@
+{
+  "query": "SELECT id, name, description, imageUrl FROM products WHERE name LIKE '%Doce%' ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2urwMim2eBFayPD.root --database gJtnQdBqiufDSTNa3ooRJb --execute SELECT id, name, description, imageUrl FROM products WHERE name LIKE '%Doce%' ORDER BY id;",
+  "rows": [
+    {
+      "id": "3",
+      "name": "Doce de leite 200ml",
+      "description": "Doce de leite artesanal cremoso",
+      "imageUrl": "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=500"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tdescription\timageUrl\n3\tDoce de leite 200ml\tDoce de leite artesanal cremoso\thttps://images.unsplash.com/photo-1563805042-7684c019e1cb?w=500\n",
+  "stderr": "",
+  "execution_time_ms": 414
+}
