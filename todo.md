@@ -246,3 +246,7 @@
 - [x] Implementar como "acesso secreto" (easter egg)
 - [x] Redirecionar para /admin ao clicar no ❤️
 - [x] Corrigir funcionamento em celular (adicionar onTouchEnd e WebkitTapHighlightColor)
+
+
+## Remover Botão Cardápio
+- [x] Excluir botão "Cardápio" do header

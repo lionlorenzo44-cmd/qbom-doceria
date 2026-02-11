@@ -28,14 +28,6 @@ function Header() {
           </div>
           
           <nav className="hidden md:flex items-center gap-6">
-            <Button 
-              variant={location === "/" ? "default" : "ghost"}
-              onClick={() => navigate("/")}
-              className={location === "/" ? "bg-red-600 hover:bg-red-700" : "text-gray-700 hover:text-red-600"}
-            >
-              Cardápio
-            </Button>
-
             <a 
               href="https://wa.me/5571992180210?text=Olá%20Qbom%20Doceria!"
               target="_blank"
