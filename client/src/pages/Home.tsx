@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { trpc } from "@/lib/trpc";
-import { MessageCircle, Plus, Trash2, MapPin, AlertCircle, CheckCircle2 } from "lucide-react";
+import { MessageCircle, Plus, Trash2, MapPin, AlertCircle, CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -33,6 +33,7 @@ export default function Home() {
   const [needsChange, setNeedsChange] = useState(false);
   const [changeAmount, setChangeAmount] = useState("");
   const [errors, setErrors] = useState<ValidationErrors>({});
+  const [photoIndex, setPhotoIndex] = useState<Record<number, number>>({});
 
   // Validação em tempo real
   const validateName = (name: string) => {
@@ -183,38 +184,90 @@ export default function Home() {
           <div className="lg:col-span-2">
             <h2 className="text-2xl font-bold text-gray-800 mb-6">Escolha seus doces</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {products.map((product) => (
-                <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                  {product.imageUrl && (
-                    <div className="w-full h-32 bg-gray-200 overflow-hidden">
-                      <img
-                        src={product.imageUrl}
-                        alt={product.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
-                  <div className="p-4">
-                    <h3 className="font-bold text-gray-800">{product.name}</h3>
-                    {product.description && (
-                      <p className="text-sm text-gray-600 mb-2">{product.description}</p>
+              {products.map((product) => {
+                const images = [product.imageUrl, product.imageUrl2, product.imageUrl3].filter(Boolean);
+                const currentIndex = photoIndex[product.id] || 0;
+                const currentImage = images[currentIndex];
+
+                const handlePrevPhoto = () => {
+                  setPhotoIndex(prev => ({
+                    ...prev,
+                    [product.id]: currentIndex === 0 ? images.length - 1 : currentIndex - 1
+                  }));
+                };
+
+                const handleNextPhoto = () => {
+                  setPhotoIndex(prev => ({
+                    ...prev,
+                    [product.id]: currentIndex === images.length - 1 ? 0 : currentIndex + 1
+                  }));
+                };
+
+                return (
+                  <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
+                    {currentImage && (
+                      <div className="relative w-full bg-gray-200 overflow-hidden group" style={{ height: '384px' }}>
+                        <img
+                          src={currentImage}
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                        />
+                        
+                        {/* Navegação de fotos */}
+                        {images.length > 1 && (
+                          <>
+                            {/* Setas */}
+                            <button
+                              onClick={handlePrevPhoto}
+                              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <ChevronLeft className="w-5 h-5" />
+                            </button>
+                            <button
+                              onClick={handleNextPhoto}
+                              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <ChevronRight className="w-5 h-5" />
+                            </button>
+
+                            {/* Dots */}
+                            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+                              {images.map((_, idx) => (
+                                <button
+                                  key={idx}
+                                  onClick={() => setPhotoIndex(prev => ({ ...prev, [product.id]: idx }))}
+                                  className={`w-2 h-2 rounded-full transition-all ${
+                                    idx === currentIndex ? 'bg-white w-6' : 'bg-white/50 hover:bg-white/75'
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                          </>
+                        )}
+                      </div>
                     )}
-                    <div className="flex justify-between items-center">
-                      <span className="text-lg font-bold text-red-600">
-                        R$ {(product.price / 100).toFixed(2)}
-                      </span>
-                      <Button
-                        onClick={() => handleAddToCart(product)}
-                        size="sm"
-                        className="bg-red-600 hover:bg-red-700"
-                        disabled={!product.isAvailable}
-                      >
-                        <Plus className="w-4 h-4" />
-                      </Button>
+                    <div className="p-4 flex-1 flex flex-col">
+                      <h3 className="font-bold text-gray-800">{product.name}</h3>
+                      {product.description && (
+                        <p className="text-sm text-gray-600 mb-2">{product.description}</p>
+                      )}
+                      <div className="flex justify-between items-center mt-auto">
+                        <span className="text-lg font-bold text-red-600">
+                          R$ {(product.price / 100).toFixed(2)}
+                        </span>
+                        <Button
+                          onClick={() => handleAddToCart(product)}
+                          size="sm"
+                          className="bg-red-600 hover:bg-red-700"
+                          disabled={!product.isAvailable}
+                        >
+                          <Plus className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </Card>
-              ))}
+                  </Card>
+                );
+              })}
             </div>
           </div>
 

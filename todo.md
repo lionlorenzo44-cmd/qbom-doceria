@@ -96,3 +96,11 @@
 - [x] Transformar Order na homepage (layout produtos + carrinho)
 - [x] Remover rota /order e páginas desnecessarias
 - [x] Testar todas as alterações com vitest
+
+## Melhorias de Apresentação de Produtos
+- [x] Aumentar tamanho das fotos dos produtos (48rem)
+- [x] Adicionar suporte a múltiplas fotos por produto (até 3 fotos)
+- [x] Implementar carrossel com setas de navegação
+- [x] Adicionar indicadores de foto (dots) clicáveis
+- [x] Adicionar campos imageUrl2 e imageUrl3 no banco de dados
+- [x] Testar carrossel com vitest
