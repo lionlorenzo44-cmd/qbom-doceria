@@ -271,3 +271,8 @@
 - [x] Verificar por que o componente não está exibindo corretamente
 - [x] Corrigir renderização do bloco Pix
 - [x] Testar novamente
+
+
+## Scroll Automático ao Acessar Admin
+- [x] Adicionar scroll para o topo ao clicar no coração
+- [x] Testar em PC e celular
