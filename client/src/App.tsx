@@ -6,6 +6,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Admin from "./pages/Admin";
+import AdminLogin from "./pages/AdminLogin";
 import { Heart, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -155,12 +156,22 @@ function Footer() {
   );
 }
 
+function ProtectedAdminRoute() {
+  const adminToken = localStorage.getItem("adminToken");
+  
+  if (!adminToken) {
+    return <AdminLogin />;
+  }
+  
+  return <Admin />;
+}
+
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path="/" component={Home} />
-      <Route path="/admin" component={Admin} />
+      <Route path="/admin" component={ProtectedAdminRoute} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

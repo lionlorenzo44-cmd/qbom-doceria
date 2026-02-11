@@ -134,6 +134,10 @@
 - [x] Editar produtos com opção de substituir ou adicionar imagens
 - [x] Deletar produtos
 - [x] Listar todos os produtos no admin
-- [ ] Implementar autenticação por senha para /admin
+- [x] Implementar autenticação por senha para /admin
+- [x] Criar página de login para o admin
+- [x] Proteger rota /admin com token no localStorage
+- [x] Adicionar botão de logout no painel admin
+- [x] Testar autenticação com 4 testes vitest (18 testes totais passando)
 - [ ] Exibir selo visual de esgotado no site público
 - [ ] Desativar botão de adicionar ao carrinho quando esgotado
