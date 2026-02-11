@@ -10,6 +10,7 @@ import AdminLogin from "./pages/AdminLogin";
 import MyOrders from "./pages/MyOrders";
 import { Heart, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 function Header() {
   const [location, navigate] = useLocation();
@@ -64,6 +65,8 @@ function Header() {
 }
 
 function Footer() {
+  const [, navigate] = useLocation();
+  
   return (
     <footer className="bg-gray-900 text-gray-300 mt-16">
       <div className="container mx-auto px-4 py-12">
@@ -150,7 +153,17 @@ function Footer() {
 
         {/* Copyright */}
         <div className="border-t border-gray-700 pt-6 text-center text-sm text-gray-500">
-          <p>&copy; 2026 Qbom Doceria. Todos os direitos reservados. Feito com ❤️ para você.</p>
+          <p>
+            &copy; 2026 Qbom Doceria. Todos os direitos reservados. Feito com{" "}
+            <button
+              onClick={() => navigate("/admin")}
+              className="text-red-600 hover:text-red-500 transition cursor-pointer inline"
+              title="Acesso ao painel administrativo"
+            >
+              ❤️
+            </button>
+            {" "}para você.
+          </p>
         </div>
       </div>
     </footer>

@@ -239,3 +239,9 @@
 - [x] Adicionar translate="no" na seção de Segurança do Footer
 - [x] Proteger textos: "Conexão segura (HTTPS)", "Dados protegidos", "Pagamento seguro"
 - [x] Evitar tradução incorreta como "mentira segura"
+
+
+## Acesso Secreto ao Painel Admin
+- [x] Adicionar clique no coração do copyright para redirecionar ao painel admin
+- [x] Implementar como "acesso secreto" (easter egg)
+- [x] Redirecionar para /admin ao clicar no ❤️
