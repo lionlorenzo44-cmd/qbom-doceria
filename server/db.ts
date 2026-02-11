@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, products, orders, orderItems, payments, cashRegister, InsertOrder, InsertOrderItem, InsertPayment, InsertCashRegister, InsertReview, reviews, InsertProduct, errorLogs, InsertErrorLog } from "../drizzle/schema";
+import { InsertUser, users, products, orders, orderItems, payments, cashRegister, InsertOrder, InsertOrderItem, InsertPayment, InsertCashRegister, InsertReview, reviews, InsertProduct, errorLogs, InsertErrorLog, healthChecks, InsertHealthCheck } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -307,4 +307,86 @@ export async function deleteErrorLog(errorId: number) {
   if (!db) throw new Error('Database not available');
   
   return db.delete(errorLogs).where(eq(errorLogs.id, errorId));
+}
+
+
+// Health Checks
+export async function getLatestHealthCheck() {
+  const db = await getDb();
+  if (!db) return null;
+  
+  try {
+    const result = await db.select().from(healthChecks).orderBy((t) => t.id).limit(1);
+    return result.length > 0 ? result[0] : null;
+  } catch (error) {
+    console.error("[Database] Failed to get health check:", error);
+    return null;
+  }
+}
+
+export async function updateHealthCheck(status: 'online' | 'offline', responseTime?: number) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot update health check: database not available");
+    return null;
+  }
+  
+  try {
+    const latest = await getLatestHealthCheck();
+    
+    if (!latest) {
+      // Criar primeiro registro
+      const result = await db.insert(healthChecks).values({
+        status,
+        responseTime,
+        isAlertActive: status === 'offline' ? 1 : 0,
+      }) as any;
+      return { insertId: result.insertId || 0 };
+    }
+    
+    // Atualizar registro existente
+    return db.update(healthChecks)
+      .set({ 
+        status, 
+        responseTime,
+        isAlertActive: status === 'offline' ? 1 : 0,
+        updatedAt: new Date(),
+      })
+      .where(eq(healthChecks.id, latest.id));
+  } catch (error) {
+    console.error("[Database] Failed to update health check:", error);
+    return null;
+  }
+}
+
+export async function recordAlertSent() {
+  const db = await getDb();
+  if (!db) return null;
+  
+  try {
+    const latest = await getLatestHealthCheck();
+    if (!latest) return null;
+    
+    return db.update(healthChecks)
+      .set({ 
+        lastAlertSent: new Date(),
+        alertCount: (latest.alertCount || 0) + 1,
+      })
+      .where(eq(healthChecks.id, latest.id));
+  } catch (error) {
+    console.error("[Database] Failed to record alert:", error);
+    return null;
+  }
+}
+
+export async function getHealthCheckHistory(limit: number = 10) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  try {
+    return await db.select().from(healthChecks).orderBy((t) => t.createdAt).limit(limit);
+  } catch (error) {
+    console.error("[Database] Failed to get health check history:", error);
+    return [];
+  }
 }

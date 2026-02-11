@@ -281,6 +281,25 @@ export const appRouter = router({
       return db.getErrorLogs(100);
     }),
   }),
+
+  health: router({
+    check: publicProcedure.query(async () => {
+      const health = await db.getLatestHealthCheck();
+      return {
+        status: health?.status || 'online',
+        responseTime: health?.responseTime,
+        isAlertActive: health?.isAlertActive || 0,
+        lastUpdated: health?.updatedAt,
+      };
+    }),
+
+    history: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user?.role !== 'admin') {
+        throw new Error('Unauthorized');
+      }
+      return db.getHealthCheckHistory(50);
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

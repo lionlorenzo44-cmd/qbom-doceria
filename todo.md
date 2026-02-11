@@ -170,3 +170,11 @@
 - [x] Integrar registro de erros no ErrorFallback
 - [x] Criar painel de visualização de erros no admin (ErrorLogsPanel.tsx)
 - [x] Testar analytics com vitest (5 testes adicionais, 28 testes totais passando)
+
+
+## Notificação Automática via WhatsApp
+- [x] Criar tabela de health checks no banco
+- [x] Criar endpoint tRPC para health check (health.check e health.history)
+- [x] Criar serviço de monitoramento com cron job (healthMonitor.ts)
+- [x] Integrar notificação WhatsApp quando site cai (whatsappNotifier.ts)
+- [x] Testar sistema com vitest (5 testes adicionais, 33 testes totais passando)

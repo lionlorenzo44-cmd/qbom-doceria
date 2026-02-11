@@ -132,3 +132,18 @@ export const errorLogs = mysqlTable("errorLogs", {
 
 export type ErrorLog = typeof errorLogs.$inferSelect;
 export type InsertErrorLog = typeof errorLogs.$inferInsert;
+
+
+export const healthChecks = mysqlTable("healthChecks", {
+  id: int("id").autoincrement().primaryKey(),
+  status: mysqlEnum("status", ["online", "offline"]).default("online").notNull(),
+  responseTime: int("responseTime"), // em milissegundos
+  lastAlertSent: timestamp("lastAlertSent"),
+  alertCount: int("alertCount").default(0).notNull(),
+  isAlertActive: int("isAlertActive").default(0).notNull(), // 1 = alerta ativo, 0 = resolvido
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type HealthCheck = typeof healthChecks.$inferSelect;
+export type InsertHealthCheck = typeof healthChecks.$inferInsert;

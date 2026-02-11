@@ -43,6 +43,13 @@
       "when": 1770832501501,
       "tag": "0005_hard_meggan",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1770833004992,
+      "tag": "0006_fancy_logan",
+      "breakpoints": true
     }
   ]
 }
