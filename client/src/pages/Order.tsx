@@ -368,8 +368,8 @@ export default function Order() {
                         <p className="text-sm font-mono font-semibold text-gray-800">vitoriabjj953@gmail.com</p>
                       </div>
                       <div className="bg-white p-2 rounded border border-red-200">
-                        <p className="text-xs text-gray-600">CPF:</p>
-                        <p className="text-sm font-mono font-semibold text-gray-800">759.829.969-39</p>
+                        <p className="text-xs text-gray-600">Telefone:</p>
+                        <p className="text-sm font-mono font-semibold text-gray-800">75 9 9829-8021</p>
                       </div>
                     </div>
                     <p className="text-xs text-gray-600 italic">Copie uma das chaves acima e faça a transferencia no seu banco.</p>
