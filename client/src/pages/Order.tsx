@@ -332,6 +332,26 @@ export default function Order() {
                   </div>
                 )}
 
+                {paymentMethod === "pix" && (
+                  <div className="space-y-3 border-t pt-3 bg-red-50 p-3 rounded">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-red-600 rounded-full"></div>
+                      <p className="text-sm font-semibold text-red-700">Chaves PIX para transferência:</p>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="bg-white p-2 rounded border border-red-200">
+                        <p className="text-xs text-gray-600">Email:</p>
+                        <p className="text-sm font-mono font-semibold text-gray-800">vitoriabjj953@gmail.com</p>
+                      </div>
+                      <div className="bg-white p-2 rounded border border-red-200">
+                        <p className="text-xs text-gray-600">CPF:</p>
+                        <p className="text-sm font-mono font-semibold text-gray-800">759.829.969-39</p>
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-600 italic">Copie uma das chaves acima e faça a transferencia no seu banco.</p>
+                  </div>
+                )}
+
                 <Button
                   onClick={handleSubmitOrder}
                   disabled={cart.length === 0 || createOrderMutation.isPending}
