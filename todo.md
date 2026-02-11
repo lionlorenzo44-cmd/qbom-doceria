@@ -245,3 +245,4 @@
 - [x] Adicionar clique no coração do copyright para redirecionar ao painel admin
 - [x] Implementar como "acesso secreto" (easter egg)
 - [x] Redirecionar para /admin ao clicar no ❤️
+- [x] Corrigir funcionamento em celular (adicionar onTouchEnd e WebkitTapHighlightColor)
