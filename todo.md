@@ -93,4 +93,6 @@
 - [x] Remover indicador de progresso para checkout rápido
 - [x] Remover opção de "retirada no balcão"
 - [x] Adicionar campos de Bairro e Referência no endereço
+- [x] Transformar Order na homepage (layout produtos + carrinho)
+- [x] Remover rota /order e páginas desnecessarias
 - [x] Testar todas as alterações com vitest

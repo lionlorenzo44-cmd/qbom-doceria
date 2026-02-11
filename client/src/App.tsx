@@ -5,7 +5,6 @@ import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
-import Order from "./pages/Order";
 import Admin from "./pages/Admin";
 import { Heart, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -33,13 +32,7 @@ function Header() {
             >
               Cardápio
             </Button>
-            <Button 
-              variant={location === "/order" ? "default" : "ghost"}
-              onClick={() => navigate("/order")}
-              className={location === "/order" ? "bg-red-600 hover:bg-red-700" : "text-gray-700 hover:text-red-600"}
-            >
-              Fazer Pedido
-            </Button>
+
             <a 
               href="https://wa.me/5571992180210?text=Olá%20Qbom%20Doceria!"
               target="_blank"
@@ -174,7 +167,6 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
-      <Route path="/order" component={Order} />
       <Route path="/admin" component={Admin} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
