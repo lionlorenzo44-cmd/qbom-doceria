@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { trpc } from "@/lib/trpc";
-import { ArrowLeft, Plus, Printer, TrendingUp } from "lucide-react";
+import { ArrowLeft, Plus, Printer, TrendingUp, Check, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { toast } from "sonner";
@@ -20,11 +20,14 @@ export default function Admin() {
   // Queries
   const { data: orders = [], refetch: refetchOrders } = trpc.orders.list.useQuery();
   const { data: cashEntries = [] } = trpc.cashRegister.list.useQuery();
+  const { data: allReviews = [], refetch: refetchReviews } = trpc.reviews.getAll.useQuery({});
 
   // Mutations
   const updateStatusMutation = trpc.orders.updateStatus.useMutation();
   const createPaymentMutation = trpc.payments.create.useMutation();
   const createCashEntryMutation = trpc.cashRegister.create.useMutation();
+  const approveReviewMutation = trpc.reviews.approve.useMutation();
+  const deleteReviewMutation = trpc.reviews.delete.useMutation();
 
   // Form states
   const [newPaymentOrderId, setNewPaymentOrderId] = useState<number | null>(null);
@@ -202,9 +205,10 @@ export default function Admin() {
 
         {/* Tabs */}
         <Tabs value={selectedTab} onValueChange={setSelectedTab}>
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="pedidos">Pedidos</TabsTrigger>
             <TabsTrigger value="caixa">Caixa</TabsTrigger>
+            <TabsTrigger value="avaliacoes">Avaliações</TabsTrigger>
             <TabsTrigger value="relatorios">Relatórios</TabsTrigger>
           </TabsList>
 
@@ -490,6 +494,83 @@ export default function Admin() {
                 </div>
               </div>
             </Card>
+          </TabsContent>
+
+          {/* Avaliações Tab */}
+          <TabsContent value="avaliacoes" className="space-y-4">
+            <h2 className="text-xl font-bold mb-4">Gerenciar Avaliações</h2>
+
+            <div className="space-y-4">
+              {allReviews.length === 0 ? (
+                <p className="text-center text-gray-500 py-8">Nenhuma avaliação</p>
+              ) : (
+                allReviews.map((review: any) => (
+                  <Card key={review.id} className="p-4">
+                    <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-3">
+                      <div>
+                        <p className="text-sm text-gray-600">Cliente</p>
+                        <p className="font-bold">{review.customerName}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">Nota</p>
+                        <p className="font-bold text-yellow-500">{'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">Status</p>
+                        <p className={`font-bold ${review.isApproved ? 'text-green-600' : 'text-orange-600'}`}>
+                          {review.isApproved ? 'Aprovada' : 'Pendente'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600">Data</p>
+                        <p className="font-bold">{new Date(review.createdAt).toLocaleDateString('pt-BR')}</p>
+                      </div>
+                    </div>
+                    {review.comment && (
+                      <div className="mb-3 p-3 bg-gray-50 rounded">
+                        <p className="text-sm text-gray-700">{review.comment}</p>
+                      </div>
+                    )}
+                    <div className="flex gap-2">
+                      {!review.isApproved && (
+                        <Button
+                          onClick={async () => {
+                            try {
+                              await approveReviewMutation.mutateAsync({ id: review.id });
+                              refetchReviews();
+                              toast.success('Avaliação aprovada!');
+                            } catch (error) {
+                              toast.error('Erro ao aprovar avaliação');
+                            }
+                          }}
+                          size="sm"
+                          className="bg-green-600 hover:bg-green-700"
+                        >
+                          <Check className="w-4 h-4 mr-2" />
+                          Aprovar
+                        </Button>
+                      )}
+                      <Button
+                        onClick={async () => {
+                          try {
+                            await deleteReviewMutation.mutateAsync({ id: review.id });
+                            refetchReviews();
+                            toast.success('Avaliação deletada!');
+                          } catch (error) {
+                            toast.error('Erro ao deletar avaliação');
+                          }
+                        }}
+                        size="sm"
+                        variant="destructive"
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Deletar
+                      </Button>
+                    </div>
+                  </Card>
+                ))
+              )}
+            </div>
           </TabsContent>
         </Tabs>
       </div>

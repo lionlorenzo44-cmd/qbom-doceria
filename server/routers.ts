@@ -118,6 +118,48 @@ export const appRouter = router({
 
     list: protectedProcedure.query(() => db.getCashRegisterEntries()),
   }),
+
+  reviews: router({
+    create: publicProcedure
+      .input(z.object({
+        productId: z.number(),
+        customerName: z.string(),
+        customerEmail: z.string().email().optional(),
+        rating: z.number().min(1).max(5),
+        comment: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const result = await db.createReview({
+          productId: input.productId,
+          customerName: input.customerName,
+          customerEmail: input.customerEmail,
+          rating: input.rating,
+          comment: input.comment,
+          isApproved: 0,
+        });
+        return result;
+      }),
+
+    getApproved: publicProcedure
+      .input(z.object({ productId: z.number() }))
+      .query(({ input }) => db.getApprovedReviews(input.productId)),
+
+    getAll: protectedProcedure
+      .input(z.object({ productId: z.number().optional() }))
+      .query(({ input }) => db.getAllReviews(input.productId)),
+
+    approve: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(({ input }) => db.approveReview(input.id)),
+
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(({ input }) => db.deleteReview(input.id)),
+
+    getAverageRating: publicProcedure
+      .input(z.object({ productId: z.number() }))
+      .query(({ input }) => db.getProductAverageRating(input.productId)),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

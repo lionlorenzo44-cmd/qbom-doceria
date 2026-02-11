@@ -1,6 +1,8 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { ReviewForm } from "@/components/ReviewForm";
+import { ReviewsList } from "@/components/ReviewsList";
 import { trpc } from "@/lib/trpc";
 import { Heart, ShoppingCart } from "lucide-react";
 import { useState } from "react";
@@ -10,6 +12,7 @@ export default function Home() {
   const { user } = useAuth();
   const [, navigate] = useLocation();
   const { data: products = [] } = trpc.products.list.useQuery();
+  const [expandedProduct, setExpandedProduct] = useState<number | null>(null);
 
   const handleOrderClick = () => {
     if (user?.role === "admin") {
@@ -71,35 +74,15 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {products.map((product) => (
-              <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                {product.imageUrl && (
-                  <div className="w-full h-48 bg-gray-200 overflow-hidden">
-                    <img
-                      src={product.imageUrl}
-                      alt={product.name}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform"
-                    />
-                  </div>
-                )}
-                <div className="p-4">
-                  <h4 className="font-bold text-lg text-gray-800 mb-2">{product.name}</h4>
-                  {product.description && (
-                    <p className="text-sm text-gray-600 mb-4">{product.description}</p>
-                  )}
-                  <div className="flex justify-between items-center">
-                    <span className="text-2xl font-bold text-pink-600">
-                      R$ {(product.price / 100).toFixed(2)}
-                    </span>
-                    <Button
-                      onClick={handleOrderClick}
-                      size="sm"
-                      className="bg-pink-600 hover:bg-pink-700"
-                    >
-                      Pedir
-                    </Button>
-                  </div>
-                </div>
-              </Card>
+              <ProductCard
+                key={product.id}
+                product={product}
+                isExpanded={expandedProduct === product.id}
+                onToggleExpand={() =>
+                  setExpandedProduct(expandedProduct === product.id ? null : product.id)
+                }
+                onOrderClick={handleOrderClick}
+              />
             ))}
           </div>
         </div>
@@ -151,5 +134,119 @@ export default function Home() {
         </div>
       </footer>
     </div>
+  );
+}
+
+interface ProductCardProps {
+  product: any;
+  isExpanded: boolean;
+  onToggleExpand: () => void;
+  onOrderClick: () => void;
+}
+
+function ProductCard({
+  product,
+  isExpanded,
+  onToggleExpand,
+  onOrderClick,
+}: ProductCardProps) {
+  const { data: reviews = [] } = trpc.reviews.getApproved.useQuery(
+    { productId: product.id },
+    { enabled: isExpanded }
+  );
+  const { data: averageRating = 0 } = trpc.reviews.getAverageRating.useQuery({
+    productId: product.id,
+  });
+
+  return (
+    <Card className="overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
+      {product.imageUrl && (
+        <div className="w-full h-48 bg-gray-200 overflow-hidden">
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            className="w-full h-full object-cover hover:scale-105 transition-transform"
+          />
+        </div>
+      )}
+      <div className="p-4 flex-1 flex flex-col">
+        <h4 className="font-bold text-lg text-gray-800 mb-2">{product.name}</h4>
+        {product.description && (
+          <p className="text-sm text-gray-600 mb-4">{product.description}</p>
+        )}
+
+        {/* Rating */}
+        <div className="mb-4">
+          <div className="flex items-center gap-2">
+            <div className="flex">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <span
+                  key={star}
+                  className={`text-sm ${
+                    star <= Math.round(averageRating)
+                      ? "text-yellow-400"
+                      : "text-gray-300"
+                  }`}
+                >
+                  ★
+                </span>
+              ))}
+            </div>
+            <span className="text-sm font-semibold">{averageRating.toFixed(1)}</span>
+          </div>
+        </div>
+
+        <div className="flex justify-between items-center mt-auto">
+          <span className="text-2xl font-bold text-pink-600">
+            R$ {(product.price / 100).toFixed(2)}
+          </span>
+          <Button
+            onClick={onOrderClick}
+            size="sm"
+            className="bg-pink-600 hover:bg-pink-700"
+          >
+            Pedir
+          </Button>
+        </div>
+
+        {/* Reviews Section */}
+        {isExpanded && (
+          <div className="mt-4 pt-4 border-t space-y-3">
+            <ReviewsList
+              reviews={reviews}
+              averageRating={averageRating}
+              totalReviews={reviews.length}
+            />
+            <ReviewForm
+              productId={product.id}
+              productName={product.name}
+              onReviewSubmitted={onToggleExpand}
+            />
+          </div>
+        )}
+
+        {!isExpanded && reviews.length > 0 && (
+          <Button
+            onClick={onToggleExpand}
+            variant="ghost"
+            size="sm"
+            className="w-full mt-2 text-pink-600"
+          >
+            Ver {reviews.length} avaliação{reviews.length !== 1 ? "ões" : ""}
+          </Button>
+        )}
+
+        {!isExpanded && reviews.length === 0 && (
+          <Button
+            onClick={onToggleExpand}
+            variant="ghost"
+            size="sm"
+            className="w-full mt-2 text-pink-600"
+          >
+            Deixar Avaliação
+          </Button>
+        )}
+      </div>
+    </Card>
   );
 }

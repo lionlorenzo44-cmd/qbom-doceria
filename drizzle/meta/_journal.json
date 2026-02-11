@@ -15,6 +15,13 @@
       "when": 1770774043014,
       "tag": "0001_fresh_living_lightning",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1770776542561,
+      "tag": "0002_legal_darwin",
+      "breakpoints": true
     }
   ]
 }

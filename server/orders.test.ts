@@ -169,3 +169,59 @@ describe("cashRegister", () => {
     expect(Array.isArray(entries)).toBe(true);
   });
 });
+
+
+describe("reviews", () => {
+  it("should create a review", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const result = await caller.reviews.create({
+      productId: 1,
+      customerName: "Test Customer",
+      customerEmail: "test@example.com",
+      rating: 5,
+      comment: "Muito bom!",
+    });
+
+    expect(result).toHaveProperty("insertId");
+  });
+
+  it("should get approved reviews", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const reviews = await caller.reviews.getApproved({ productId: 1 });
+
+    expect(Array.isArray(reviews)).toBe(true);
+  });
+
+  it("should get average rating", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const rating = await caller.reviews.getAverageRating({ productId: 1 });
+
+    expect(typeof rating).toBe("number");
+    expect(rating).toBeGreaterThanOrEqual(0);
+    expect(rating).toBeLessThanOrEqual(5);
+  });
+
+  it("should approve a review as admin", async () => {
+    const ctx = createAdminContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const result = await caller.reviews.approve({ id: 1 });
+
+    expect(result).toBeDefined();
+  });
+
+  it("should delete a review as admin", async () => {
+    const ctx = createAdminContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const result = await caller.reviews.delete({ id: 1 });
+
+    expect(result).toBeDefined();
+  });
+});

@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, products, orders, orderItems, payments, cashRegister, InsertOrder, InsertOrderItem, InsertPayment, InsertCashRegister } from "../drizzle/schema";
+import { InsertUser, users, products, orders, orderItems, payments, cashRegister, InsertOrder, InsertOrderItem, InsertPayment, InsertCashRegister, InsertReview, reviews } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -164,4 +164,49 @@ export async function getCashRegisterEntries() {
   const db = await getDb();
   if (!db) return [];
   return db.select().from(cashRegister).orderBy(cashRegister.createdAt);
+}
+
+// Reviews functions
+
+export async function createReview(review: InsertReview) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  const result = await db.insert(reviews).values(review) as any;
+  return { insertId: result.insertId || 0 };
+}
+
+export async function getApprovedReviews(productId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(reviews).where(eq(reviews.productId, productId) && eq(reviews.isApproved, 1));
+}
+
+export async function getAllReviews(productId?: number) {
+  const db = await getDb();
+  if (!db) return [];
+  if (productId) {
+    return db.select().from(reviews).where(eq(reviews.productId, productId));
+  }
+  return db.select().from(reviews);
+}
+
+export async function approveReview(reviewId: number) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  return db.update(reviews).set({ isApproved: 1 }).where(eq(reviews.id, reviewId));
+}
+
+export async function deleteReview(reviewId: number) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  return db.delete(reviews).where(eq(reviews.id, reviewId));
+}
+
+export async function getProductAverageRating(productId: number) {
+  const db = await getDb();
+  if (!db) return 0;
+  const result = await db.select().from(reviews).where(eq(reviews.productId, productId) && eq(reviews.isApproved, 1));
+  if (result.length === 0) return 0;
+  const sum = result.reduce((acc: number, r: any) => acc + r.rating, 0);
+  return Math.round((sum / result.length) * 10) / 10;
 }

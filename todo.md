@@ -48,3 +48,11 @@
 - [ ] Testar painel administrativo
 - [ ] Verificar responsividade
 - [ ] Entregar sistema ao usuário
+
+## Sistema de Avaliações
+- [x] Criar tabela de avaliações no banco de dados
+- [x] Implementar procedimentos tRPC para criar, listar e moderar avaliações
+- [x] Criar componente de avaliação com estrelas e campo de comentário
+- [x] Exibir avaliações no cardápio digital
+- [x] Adicionar painel de avaliações no admin para moderar comentários
+- [x] Testar fluxo completo de avaliações (14 testes passando)

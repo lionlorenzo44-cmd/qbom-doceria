@@ -95,3 +95,18 @@ export const cashRegister = mysqlTable("cashRegister", {
 
 export type CashRegister = typeof cashRegister.$inferSelect;
 export type InsertCashRegister = typeof cashRegister.$inferInsert;
+
+export const reviews = mysqlTable("reviews", {
+  id: int("id").autoincrement().primaryKey(),
+  productId: int("productId").notNull(),
+  customerName: varchar("customerName", { length: 255 }).notNull(),
+  customerEmail: varchar("customerEmail", { length: 320 }),
+  rating: int("rating").notNull(), // 1-5 estrelas
+  comment: text("comment"),
+  isApproved: int("isApproved").default(0).notNull(), // 0 = pendente, 1 = aprovado
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Review = typeof reviews.$inferSelect;
+export type InsertReview = typeof reviews.$inferInsert;
