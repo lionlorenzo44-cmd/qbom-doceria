@@ -276,3 +276,9 @@
 ## Scroll Automático ao Acessar Admin
 - [x] Adicionar scroll para o topo ao clicar no coração
 - [x] Testar em PC e celular
+
+
+## Atualizar Dados do Recebedor Pix
+- [x] Atualizar nome: Walesca Vitória Oliveira Dos Santos
+- [x] Atualizar chave Pix: vitoriabjj953@gmail.com
+- [x] Testar no site

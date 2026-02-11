@@ -491,8 +491,8 @@ export default function Home() {
 
                 {paymentMethod === "pix" && (
                   <PixPayment 
-                    pixKey="00020126580014br.gov.bcb.pix0136" 
-                    receiverName="Qbom Doceria"
+                    pixKey="vitoriabjj953@gmail.com" 
+                    receiverName="Walesca Vitória Oliveira Dos Santos"
                   />
                 )}
 
