@@ -25,4 +25,73 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
-// TODO: Add your tables here
+export const products = mysqlTable("products", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  price: int("price").notNull(), // Preço em centavos (ex: 1200 = R$ 12,00)
+  imageUrl: text("imageUrl"),
+  isActive: int("isActive").default(1).notNull(), // 1 = ativo, 0 = inativo
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Product = typeof products.$inferSelect;
+export type InsertProduct = typeof products.$inferInsert;
+
+export const orders = mysqlTable("orders", {
+  id: int("id").autoincrement().primaryKey(),
+  orderNumber: varchar("orderNumber", { length: 50 }).notNull().unique(),
+  customerName: varchar("customerName", { length: 255 }).notNull(),
+  customerPhone: varchar("customerPhone", { length: 20 }).notNull(),
+  customerAddress: text("customerAddress"),
+  totalPrice: int("totalPrice").notNull(), // em centavos
+  status: mysqlEnum("status", ["novo", "em_preparo", "entregue", "cancelado"]).default("novo").notNull(),
+  orderType: mysqlEnum("orderType", ["whatsapp", "balcao"]).default("whatsapp").notNull(),
+  paymentMethod: varchar("paymentMethod", { length: 50 }), // dinheiro, pix, cartao, etc
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Order = typeof orders.$inferSelect;
+export type InsertOrder = typeof orders.$inferInsert;
+
+export const orderItems = mysqlTable("orderItems", {
+  id: int("id").autoincrement().primaryKey(),
+  orderId: int("orderId").notNull(),
+  productId: int("productId").notNull(),
+  quantity: int("quantity").notNull(),
+  priceAtTime: int("priceAtTime").notNull(), // Preço do produto no momento da compra
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type OrderItem = typeof orderItems.$inferSelect;
+export type InsertOrderItem = typeof orderItems.$inferInsert;
+
+export const payments = mysqlTable("payments", {
+  id: int("id").autoincrement().primaryKey(),
+  orderId: int("orderId").notNull(),
+  amount: int("amount").notNull(), // em centavos
+  paymentMethod: varchar("paymentMethod", { length: 50 }).notNull(),
+  status: mysqlEnum("status", ["pendente", "recebido", "cancelado"]).default("pendente").notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Payment = typeof payments.$inferSelect;
+export type InsertPayment = typeof payments.$inferInsert;
+
+export const cashRegister = mysqlTable("cashRegister", {
+  id: int("id").autoincrement().primaryKey(),
+  amount: int("amount").notNull(), // em centavos
+  type: mysqlEnum("type", ["entrada", "saida"]).notNull(),
+  description: varchar("description", { length: 255 }).notNull(),
+  paymentMethod: varchar("paymentMethod", { length: 50 }),
+  orderId: int("orderId"), // Referência ao pedido, se aplicável
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type CashRegister = typeof cashRegister.$inferSelect;
+export type InsertCashRegister = typeof cashRegister.$inferInsert;

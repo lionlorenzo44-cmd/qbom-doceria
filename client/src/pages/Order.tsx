@@ -1,0 +1,294 @@
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { trpc } from "@/lib/trpc";
+import { ArrowLeft, MessageCircle, Plus, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { useLocation } from "wouter";
+import { toast } from "sonner";
+
+interface CartItem {
+  productId: number;
+  productName: string;
+  quantity: number;
+  price: number;
+}
+
+export default function Order() {
+  const [, navigate] = useLocation();
+  const { data: products = [] } = trpc.products.list.useQuery();
+  const createOrderMutation = trpc.orders.create.useMutation();
+
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [customerName, setCustomerName] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [customerAddress, setCustomerAddress] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("dinheiro");
+
+  const handleAddToCart = (product: any) => {
+    const existingItem = cart.find(item => item.productId === product.id);
+    if (existingItem) {
+      setCart(cart.map(item =>
+        item.productId === product.id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      ));
+    } else {
+      setCart([...cart, {
+        productId: product.id,
+        productName: product.name,
+        quantity: 1,
+        price: product.price,
+      }]);
+    }
+  };
+
+  const handleRemoveFromCart = (productId: number) => {
+    setCart(cart.filter(item => item.productId !== productId));
+  };
+
+  const handleQuantityChange = (productId: number, quantity: number) => {
+    if (quantity <= 0) {
+      handleRemoveFromCart(productId);
+    } else {
+      setCart(cart.map(item =>
+        item.productId === productId
+          ? { ...item, quantity }
+          : item
+      ));
+    }
+  };
+
+  const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+  const handleSubmitOrder = async () => {
+    if (!customerName.trim()) {
+      toast.error("Por favor, digite seu nome");
+      return;
+    }
+    if (!customerPhone.trim()) {
+      toast.error("Por favor, digite seu telefone");
+      return;
+    }
+    if (cart.length === 0) {
+      toast.error("Adicione pelo menos um produto ao carrinho");
+      return;
+    }
+
+    try {
+      const result = await createOrderMutation.mutateAsync({
+        customerName,
+        customerPhone,
+        customerAddress,
+        totalPrice,
+        orderType: "whatsapp",
+        paymentMethod,
+        items: cart.map(item => ({
+          productId: item.productId,
+          quantity: item.quantity,
+          priceAtTime: item.price,
+        })),
+      });
+
+      // Montar mensagem para WhatsApp
+      const itemsText = cart
+        .map(item => `${item.productName} (x${item.quantity}) - R$ ${(item.price * item.quantity / 100).toFixed(2)}`)
+        .join("\n");
+
+      const message = `Olá! Gostaria de fazer um pedido na Qbom Doceria:\n\n${itemsText}\n\nTotal: R$ ${(totalPrice / 100).toFixed(2)}\nNome: ${customerName}\nTelefone: ${customerPhone}\nEndereço: ${customerAddress || "Retirada no balcão"}\nForma de pagamento: ${paymentMethod}\n\nPedido: ${result.orderNumber}`;
+
+      const encodedMessage = encodeURIComponent(message);
+      const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+
+      toast.success("Pedido criado! Redirecionando para WhatsApp...");
+      window.open(whatsappUrl, "_blank");
+
+      // Limpar formulário
+      setCart([]);
+      setCustomerName("");
+      setCustomerPhone("");
+      setCustomerAddress("");
+      setPaymentMethod("dinheiro");
+    } catch (error) {
+      toast.error("Erro ao criar pedido");
+      console.error(error);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white">
+      {/* Header */}
+      <header className="bg-white shadow-sm">
+        <div className="container mx-auto px-4 py-4 flex items-center gap-4">
+          <Button
+            onClick={() => navigate("/")}
+            variant="ghost"
+            size="sm"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </Button>
+          <h1 className="text-2xl font-bold text-pink-700">Fazer Pedido</h1>
+        </div>
+      </header>
+
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Produtos */}
+          <div className="lg:col-span-2">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">Escolha seus doces</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {products.map((product) => (
+                <Card key={product.id} className="overflow-hidden">
+                  {product.imageUrl && (
+                    <div className="w-full h-32 bg-gray-200 overflow-hidden">
+                      <img
+                        src={product.imageUrl}
+                        alt={product.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                  <div className="p-4">
+                    <h3 className="font-bold text-gray-800">{product.name}</h3>
+                    {product.description && (
+                      <p className="text-sm text-gray-600 mb-2">{product.description}</p>
+                    )}
+                    <div className="flex justify-between items-center">
+                      <span className="text-lg font-bold text-pink-600">
+                        R$ {(product.price / 100).toFixed(2)}
+                      </span>
+                      <Button
+                        onClick={() => handleAddToCart(product)}
+                        size="sm"
+                        className="bg-pink-600 hover:bg-pink-700"
+                      >
+                        <Plus className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+
+          {/* Carrinho e Formulário */}
+          <div className="lg:col-span-1">
+            <Card className="p-6 sticky top-4">
+              <h2 className="text-xl font-bold text-gray-800 mb-4">Seu Pedido</h2>
+
+              {/* Carrinho */}
+              <div className="mb-6 max-h-64 overflow-y-auto">
+                {cart.length === 0 ? (
+                  <p className="text-gray-500 text-center py-4">Carrinho vazio</p>
+                ) : (
+                  <div className="space-y-3">
+                    {cart.map((item) => (
+                      <div key={item.productId} className="border-b pb-3">
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="font-medium text-gray-800">{item.productName}</span>
+                          <Button
+                            onClick={() => handleRemoveFromCart(item.productId)}
+                            variant="ghost"
+                            size="sm"
+                          >
+                            <Trash2 className="w-4 h-4 text-red-600" />
+                          </Button>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            min="1"
+                            value={item.quantity}
+                            onChange={(e) => handleQuantityChange(item.productId, parseInt(e.target.value))}
+                            className="w-12 px-2 py-1 border rounded"
+                          />
+                          <span className="text-sm text-gray-600">
+                            R$ {(item.price * item.quantity / 100).toFixed(2)}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Total */}
+              <div className="border-t pt-4 mb-6">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-gray-600">Subtotal:</span>
+                  <span className="font-bold">R$ {(totalPrice / 100).toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-gray-600">Entrega:</span>
+                  <span className="font-bold text-green-600">Grátis</span>
+                </div>
+                <div className="flex justify-between items-center text-lg font-bold border-t pt-2">
+                  <span>Total:</span>
+                  <span className="text-pink-600">R$ {(totalPrice / 100).toFixed(2)}</span>
+                </div>
+              </div>
+
+              {/* Formulário */}
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="name">Nome *</Label>
+                  <Input
+                    id="name"
+                    value={customerName}
+                    onChange={(e) => setCustomerName(e.target.value)}
+                    placeholder="Seu nome"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="phone">Telefone *</Label>
+                  <Input
+                    id="phone"
+                    value={customerPhone}
+                    onChange={(e) => setCustomerPhone(e.target.value)}
+                    placeholder="(11) 99999-9999"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="address">Endereço</Label>
+                  <Input
+                    id="address"
+                    value={customerAddress}
+                    onChange={(e) => setCustomerAddress(e.target.value)}
+                    placeholder="Deixe em branco para retirada no balcão"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="payment">Forma de Pagamento</Label>
+                  <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="dinheiro">Dinheiro</SelectItem>
+                      <SelectItem value="pix">PIX</SelectItem>
+                      <SelectItem value="cartao">Cartão</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <Button
+                  onClick={handleSubmitOrder}
+                  disabled={cart.length === 0 || createOrderMutation.isPending}
+                  className="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold"
+                >
+                  <MessageCircle className="w-5 h-5 mr-2" />
+                  Enviar para WhatsApp
+                </Button>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
