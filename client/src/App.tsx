@@ -142,14 +142,7 @@ function Footer() {
               </ul>
             </div>
 
-            {/* Formas de Pagamento */}
-            <div>
-              <h4 className="text-white font-bold mb-3">Formas de Pagamento</h4>
-              <div className="flex gap-3 text-2xl">
-                <span title="PIX">📲</span>
-                <span title="Dinheiro">💵</span>
-              </div>
-            </div>
+
           </div>
         </div>
 

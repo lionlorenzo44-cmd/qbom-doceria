@@ -104,3 +104,15 @@
 - [x] Adicionar indicadores de foto (dots) clicáveis
 - [x] Adicionar campos imageUrl2 e imageUrl3 no banco de dados
 - [x] Testar carrossel com vitest
+
+
+## Diretrizes de Desenvolvimento
+- Revisar estrutura completa antes de editar arquivos
+- Usar `edit` action para modificações pontuais, não `write` para recriar
+- Manter todas as funcionalidades já corrigidas
+- Testar após cada alteração
+- Modularizar componentes quando necessário
+- Documentar mudanças realizadas
+
+## Ajustes de Layout
+- [x] Remover seção "Formas de Pagamento" do footer
