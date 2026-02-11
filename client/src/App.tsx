@@ -105,20 +105,20 @@ function Footer() {
           </div>
 
           {/* Segurança */}
-          <div>
+          <div translate="no">
             <h3 className="text-white font-bold mb-4">Segurança</h3>
             <div className="space-y-2 text-sm">
               <p className="flex items-center gap-2">
                 <span className="text-green-400">🔒</span>
-                Conexão segura (HTTPS)
+                <span translate="no">Conexão segura (HTTPS)</span>
               </p>
               <p className="flex items-center gap-2">
                 <span className="text-green-400">✓</span>
-                Dados protegidos
+                <span translate="no">Dados protegidos</span>
               </p>
               <p className="flex items-center gap-2">
                 <span className="text-green-400">✓</span>
-                Pagamento seguro
+                <span translate="no">Pagamento seguro</span>
               </p>
             </div>
           </div>

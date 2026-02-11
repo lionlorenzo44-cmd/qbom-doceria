@@ -233,3 +233,9 @@
 - [x] Integrar ImageUpload no ProductManager para ambas as imagens
 - [x] Testar com vitest (37 testes passando)
 - [x] Compatível com Android e iPhone
+
+
+## Correção de Tradução Automática - Segurança
+- [x] Adicionar translate="no" na seção de Segurança do Footer
+- [x] Proteger textos: "Conexão segura (HTTPS)", "Dados protegidos", "Pagamento seguro"
+- [x] Evitar tradução incorreta como "mentira segura"
