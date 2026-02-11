@@ -154,3 +154,11 @@
 - NUNCA deletar ou alterar rotas públicas
 - SEMPRE usar edições cirúrgicas (edit action) ao invés de recriar arquivos
 - SEMPRE testar com vitest antes de commitar
+
+
+## Sistema de Fallback com WhatsApp
+- [x] Criar componente ErrorFallback.tsx (novo arquivo)
+- [x] Melhorar ErrorBoundary com fallback WhatsApp
+- [x] Testar comportamento de erro com vitest (5 testes adicionais)
+- [x] Exibir ícone WhatsApp quando site cai
+- [x] Direcionar para WhatsApp da loja em caso de erro (23 testes totais passando)
