@@ -256,3 +256,9 @@
 - [x] Investigar por que onTouchEnd não está funcionando
 - [x] Testar diferentes eventos de touch (onTouchStart, onPointerDown, etc)
 - [x] Garantir que funcione em Android e iPhone
+
+
+## Corrigir Coração com Div Clicável
+- [x] Substituir button por div com role="button"
+- [x] Usar div ao invés de button para evitar conflito com emoji
+- [x] Testar em celular
