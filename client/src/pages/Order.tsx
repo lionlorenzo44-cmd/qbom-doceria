@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SoldOutBadge } from "@/components/SoldOutBadge";
+import PixPayment from "@/components/PixPayment";
 import { trpc } from "@/lib/trpc";
 import { ArrowLeft, MessageCircle, Plus, Trash2, MapPin, AlertCircle, CheckCircle2 } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -398,6 +399,13 @@ export default function Order() {
                     </label>
                   </div>
                 </div>
+
+                {paymentMethod === "pix" && (
+                  <PixPayment 
+                    pixKey="00020126580014br.gov.bcb.pix0136" 
+                    receiverName="Qbom Doceria"
+                  />
+                )}
 
                 {paymentMethod === "dinheiro" && (
                   <div className="space-y-3 border-t pt-3">

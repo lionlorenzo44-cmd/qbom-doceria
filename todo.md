@@ -255,3 +255,13 @@
 ## Corrigir Tradução de Termos de Uso
 - [x] Adicionar translate="no" em "Termos de uso"
 - [x] Testar tradução automática
+
+
+## Melhorar Experiência de Pagamento via Pix
+- [x] Criar componente PixPayment com bloco organizado
+- [x] Implementar botão "Copiar chave Pix" com Clipboard API
+- [x] Adicionar feedback visual (texto e cor do botão)
+- [x] Implementar mensagem de instrução com timer
+- [x] Integrar componente na página de pedido
+- [x] Testar em PC e celular
+- [x] Escrever testes vitest
