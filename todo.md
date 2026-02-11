@@ -268,3 +268,9 @@
 - [x] Substituir emoji ❤️ por ícone SVG do coração
 - [x] Testar toque em celular com SVG
 - [x] Garantir que funcione em Android e iPhone
+
+
+## Corrigir Navegação ao Tocar no Coração
+- [x] Adicionar handler robusto para onTouchEnd
+- [x] Testar navegação em celular
+- [x] Garantir que redireciona para /admin

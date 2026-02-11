@@ -148,8 +148,26 @@ function Footer() {
           <p>
             &copy; 2026 Qbom Doceria. Todos os direitos reservados. Feito com{" "}
             <span
-              onClick={() => navigate("/admin")}
-              onTouchEnd={() => navigate("/admin")}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                navigate("/admin");
+              }}
+              onTouchStart={(e) => {
+                e.preventDefault();
+              }}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                navigate("/admin");
+              }}
+              onPointerUp={(e) => {
+                if (e.pointerType === 'touch') {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  navigate("/admin");
+                }
+              }}
               role="button"
               tabIndex={0}
               onKeyDown={(e) => {
