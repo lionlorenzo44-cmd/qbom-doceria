@@ -161,11 +161,11 @@ function ProductCard({
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
       {product.imageUrl && (
-        <div className="w-full h-48 bg-gray-200 overflow-hidden">
+        <div className="w-full h-56 bg-gray-200 overflow-hidden flex items-center justify-center p-2">
           <img
             src={product.imageUrl}
             alt={product.name}
-            className="w-full h-full object-cover hover:scale-105 transition-transform"
+            className="h-full object-contain hover:scale-105 transition-transform"
           />
         </div>
       )}
