@@ -132,7 +132,7 @@ function Footer() {
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition">
+                  <a href="#" className="text-gray-400 hover:text-white transition" translate="no">
                     Termos de Uso
                   </a>
                 </li>

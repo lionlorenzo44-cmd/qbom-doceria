@@ -250,3 +250,8 @@
 
 ## Remover Botão Cardápio
 - [x] Excluir botão "Cardápio" do header
+
+
+## Corrigir Tradução de Termos de Uso
+- [x] Adicionar translate="no" em "Termos de uso"
+- [x] Testar tradução automática
