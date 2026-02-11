@@ -7,6 +7,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
+import MyOrders from "./pages/MyOrders";
 import { Heart, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -171,6 +172,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/meus-pedidos" component={MyOrders} />
       <Route path="/admin" component={ProtectedAdminRoute} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}

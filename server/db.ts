@@ -1,5 +1,5 @@
-import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
+import { eq, desc } from "drizzle-orm";
 import { InsertUser, users, products, orders, orderItems, payments, cashRegister, InsertOrder, InsertOrderItem, InsertPayment, InsertCashRegister, InsertReview, reviews, InsertProduct, errorLogs, InsertErrorLog, healthChecks, InsertHealthCheck, recoveryWebhooks, InsertRecoveryWebhook, RecoveryWebhook } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -480,5 +480,35 @@ export async function recordWebhookExecution(id: number, status: number) {
   } catch (error) {
     console.error("[Database] Failed to record webhook execution:", error);
     return null;
+  }
+}
+
+
+export async function getCustomerOrders(customerPhone: string) {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const customerOrders = await db
+      .select()
+      .from(orders)
+      .where(eq(orders.customerPhone, customerPhone))
+      .orderBy(desc(orders.createdAt));
+
+    // Enriquecer com itens do pedido
+    const enrichedOrders = await Promise.all(
+      customerOrders.map(async (order) => {
+        const items = await db
+          .select()
+          .from(orderItems)
+          .where(eq(orderItems.orderId, order.id));
+        return { ...order, items };
+      })
+    );
+
+    return enrichedOrders;
+  } catch (error) {
+    console.error("[Database] Failed to get customer orders:", error);
+    return [];
   }
 }

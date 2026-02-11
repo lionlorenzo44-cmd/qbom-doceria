@@ -162,6 +162,20 @@ export const appRouter = router({
         }
         return db.updateOrderStatus(input.id, input.status);
       }),
+    getCustomerOrders: publicProcedure
+      .input(z.object({ customerPhone: z.string() }).optional())
+      .query(async ({ input }) => {
+        const phone = input?.customerPhone || '';
+        if (!phone) {
+          return [];
+        }
+        return db.getCustomerOrders(phone);
+      }),
+    repeatOrder: publicProcedure
+      .input(z.object({ orderId: z.number(), items: z.array(z.any()).optional() }))
+      .mutation(async ({ input }) => {
+        return { success: true, orderId: input.orderId };
+      }),
   }),
 
   payments: router({

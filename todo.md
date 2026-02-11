@@ -203,3 +203,13 @@
 - [x] Desabilitar botão "Adicionar ao Carrinho" quando indisponível
 - [x] Adicionar toggle de disponibilidade no painel admin (ProductManager.tsx)
 - [x] Testar com vitest (37 testes passando)
+
+
+## Meus Pedidos - Histórico de Compras
+- [x] Criar página MyOrders.tsx com histórico de pedidos
+- [x] Adicionar rota /meus-pedidos no App.tsx
+- [x] Criar endpoint tRPC para listar pedidos do cliente (getCustomerOrders)
+- [x] Adicionar filtros por status (pendente, confirmado, entregue)
+- [x] Implementar busca por nome e número do pedido
+- [x] Adicionar botão "Repetir Pedido" para adicionar itens ao carrinho
+- [x] Testar com vitest (37 testes passando)
