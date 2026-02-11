@@ -1,12 +1,12 @@
-import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ReviewForm } from "@/components/ReviewForm";
 import { ReviewsList } from "@/components/ReviewsList";
 import { trpc } from "@/lib/trpc";
-import { Heart, ShoppingCart } from "lucide-react";
+import { Heart, ShoppingCart, Share2 } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
+import { useAuth } from "@/_core/hooks/useAuth";
 
 export default function Home() {
   const { user } = useAuth();
@@ -20,6 +20,12 @@ export default function Home() {
     } else {
       navigate("/order");
     }
+  };
+
+  const handleShareProduct = (product: typeof products[0]) => {
+    const shareText = `Confira este doce delicioso da Qbom Doceria: ${product.name} - R$ ${(product.price / 100).toFixed(2)}`;
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+    window.open(whatsappUrl, '_blank');
   };
 
   return (
@@ -82,6 +88,7 @@ export default function Home() {
                   setExpandedProduct(expandedProduct === product.id ? null : product.id)
                 }
                 onOrderClick={handleOrderClick}
+                onShare={() => handleShareProduct(product)}
               />
             ))}
           </div>
@@ -142,6 +149,7 @@ interface ProductCardProps {
   isExpanded: boolean;
   onToggleExpand: () => void;
   onOrderClick: () => void;
+  onShare: () => void;
 }
 
 function ProductCard({
@@ -149,6 +157,7 @@ function ProductCard({
   isExpanded,
   onToggleExpand,
   onOrderClick,
+  onShare,
 }: ProductCardProps) {
   const { data: reviews = [] } = trpc.reviews.getApproved.useQuery(
     { productId: product.id },
@@ -196,17 +205,28 @@ function ProductCard({
           </div>
         </div>
 
-        <div className="flex justify-between items-center mt-auto">
+        <div className="flex justify-between items-center mt-auto gap-2">
           <span className="text-2xl font-bold text-red-600">
             R$ {(product.price / 100).toFixed(2)}
           </span>
-          <Button
-            onClick={onOrderClick}
-            size="sm"
-            className="bg-red-600 hover:bg-red-700"
-          >
-            Fazer Pedido
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              onClick={onShare}
+              size="sm"
+              variant="ghost"
+              className="text-red-600 hover:bg-red-50"
+              title="Compartilhar no WhatsApp"
+            >
+              <Share2 className="w-4 h-4" />
+            </Button>
+            <Button
+              onClick={onOrderClick}
+              size="sm"
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Fazer Pedido
+            </Button>
+          </div>
         </div>
 
         {/* Reviews Section */}
