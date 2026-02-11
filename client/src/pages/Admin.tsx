@@ -168,21 +168,8 @@ export default function Admin() {
             </Button>
             <h1 className="text-2xl font-bold text-red-700">Painel Administrativo</h1>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="text-sm text-gray-600">
-              Bem-vindo, {user?.name}
-            </div>
-            <Button
-              onClick={() => {
-                localStorage.removeItem("adminToken");
-                window.location.href = "/admin";
-              }}
-              variant="outline"
-              size="sm"
-              className="text-red-600 border-red-600 hover:bg-red-50"
-            >
-              Sair
-            </Button>
+          <div className="text-sm text-gray-600">
+            Bem-vindo, {user?.name}
           </div>
         </div>
       </header>
