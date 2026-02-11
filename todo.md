@@ -274,3 +274,9 @@
 - [x] Adicionar handler robusto para onTouchEnd
 - [x] Testar navegação em celular
 - [x] Garantir que redireciona para /admin
+
+
+## Usar Link ao Invés de Span
+- [x] Substituir span por elemento <a> (link)
+- [x] Usar href com onClick para navegação
+- [x] Testar em celular

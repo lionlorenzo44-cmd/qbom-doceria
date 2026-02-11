@@ -147,33 +147,12 @@ function Footer() {
         <div className="border-t border-gray-700 pt-6 text-center text-sm text-gray-500">
           <p>
             &copy; 2026 Qbom Doceria. Todos os direitos reservados. Feito com{" "}
-            <span
+            <a
+              href="#"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 navigate("/admin");
-              }}
-              onTouchStart={(e) => {
-                e.preventDefault();
-              }}
-              onTouchEnd={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                navigate("/admin");
-              }}
-              onPointerUp={(e) => {
-                if (e.pointerType === 'touch') {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  navigate("/admin");
-                }
-              }}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  navigate("/admin");
-                }
               }}
               className="text-red-600 hover:text-red-500 active:text-red-700 transition cursor-pointer inline select-none"
               title="Acesso ao painel administrativo"
@@ -181,13 +160,11 @@ function Footer() {
                 WebkitTapHighlightColor: 'transparent',
                 WebkitUserSelect: 'none',
                 userSelect: 'none',
-                touchAction: 'manipulation',
-                display: 'inline-block',
-                padding: '2px 4px'
+                touchAction: 'manipulation'
               }}
             >
               <Heart className="w-4 h-4 inline fill-current" />
-            </span>
+            </a>
             {" "}para você.
           </p>
         </div>
