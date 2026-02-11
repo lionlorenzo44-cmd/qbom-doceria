@@ -288,7 +288,7 @@ export default function Order() {
                 </div>
 
                 <div>
-                  <Label htmlFor="payment">Forma de Pagamento</Label>
+                  <Label htmlFor="payment">Forma de Pagamento *</Label>
                   <Select value={paymentMethod} onValueChange={setPaymentMethod}>
                     <SelectTrigger>
                       <SelectValue />
@@ -329,7 +329,7 @@ export default function Order() {
                           placeholder="Ex: 50.00"
                           className="text-red-600 font-semibold"
                         />
-                        {changeAmount && (
+                        {changeAmount && !isNaN(parseFloat(changeAmount)) && (
                           <p className="text-sm text-green-600 mt-2 font-semibold">
                             Troco: R$ {(parseFloat(changeAmount) - totalPrice / 100).toFixed(2)}
                           </p>
