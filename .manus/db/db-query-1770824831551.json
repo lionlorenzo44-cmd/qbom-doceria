@@ -1,0 +1,24 @@
+{
+  "query": "SELECT id, name, description, imageUrl, imageUrl2 FROM products WHERE name LIKE '%Bolo%' LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2urwMim2eBFayPD.root --database gJtnQdBqiufDSTNa3ooRJb --execute SELECT id, name, description, imageUrl, imageUrl2 FROM products WHERE name LIKE '%Bolo%' LIMIT 5;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Bolo de Pote",
+      "description": "Ninho com brigadeiro",
+      "imageUrl": "https://files.manuscdn.com/user_upload_by_module/session_file/310519663346318059/YXBPWsaZnRxSXnJk.jpg",
+      "imageUrl2": "/bolo_pote_2.webp"
+    },
+    {
+      "id": "2",
+      "name": "Bolo de Pote",
+      "description": "Chocolate com brigadeiro e doce de leite",
+      "imageUrl": "https://private-us-east-1.manuscdn.com/sessionFile/QIzBzYyaBuVQsOnmBY1fcd/sandbox/03v9o7ZaKKa9Z8mAwm7e6n-img-2_1770774083000_na1fn_Ym9sby1wb3RlLWNob2NvbGF0ZQ.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvUUl6QnpZeWFCdVZRc09ubUJZMWZjZC9zYW5kYm94LzAzdjlvN1phS0thOVo4bUF3bTdlNm4taW1nLTJfMTc3MDc3NDA4MzAwMF9uYTFmbl9Ym9sby1wb3RlLWNob2NvbGF0ZQ.png~eC1vc3MtcHJvY2Vzcz1pbWFnZS9yZXNpemUsd18xOTIwLGhfMTkyMC9mb3JtYXQsd2VicC9xdWFsaXR5LHFfODAiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTg3NjE2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=uGFRLl7IOKbUF7b18HllbXizy9tq7YPM0ADjPybKWvrtjhvcU47MewL1rKs2r8QhI2QD9iqBZ5-Dx3xyHiXfpHcHDK5pWe2E7MjtTe4eA-0u4Yu4jZr6k7efdTKq29mDc-XOe3JK4qm4oZcE10e7yN1TrlTbBG3G50nL3qdN7oryU-KMACiDF~JID1bYTRzIz0ffTMUNy2nQB89Y7UxC2nc5p9QJ-drPiGs21ZlwAk34tt9SDE9u6SgQOvt7n8De17Wgc~H3q-SL-4KscUw~NBiUJm1IxlRJNjeC-xy8zwDNN2cdiIMBDQHdaatjdmeld0bnzrsdO~yMSIPIekYbCg__",
+      "imageUrl2": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tdescription\timageUrl\timageUrl2\n1\tBolo de Pote\tNinho com brigadeiro\thttps://files.manuscdn.com/user_upload_by_module/session_file/310519663346318059/YXBPWsaZnRxSXnJk.jpg\t/bolo_pote_2.webp\n2\tBolo de Pote\tChocolate com brigadeiro e doce de leite\thttps://private-us-east-1.manuscdn.com/sessionFile/QIzBzYyaBuVQsOnmBY1fcd/sandbox/03v9o7ZaKKa9Z8mAwm7e6n-img-2_1770774083000_na1fn_Ym9sby1wb3RlLWNob2NvbGF0ZQ.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvUUl6QnpZeWFCdVZRc09ubUJZMWZjZC9zYW5kYm94LzAzdjlvN1phS0thOVo4bUF3bTdlNm4taW1nLTJfMTc3MDc3NDA4MzAwMF9uYTFmbl9Ym9sby1wb3RlLWNob2NvbGF0ZQ.png~eC1vc3MtcHJvY2Vzcz1pbWFnZS9yZXNpemUsd18xOTIwLGhfMTkyMC9mb3JtYXQsd2VicC9xdWFsaXR5LHFfODAiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTg3NjE2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=uGFRLl7IOKbUF7b18HllbXizy9tq7YPM0ADjPybKWvrtjhvcU47MewL1rKs2r8QhI2QD9iqBZ5-Dx3xyHiXfpHcHDK5pWe2E7MjtTe4eA-0u4Yu4jZr6k7efdTKq29mDc-XOe3JK4qm4oZcE10e7yN1TrlTbBG3G50nL3qdN7oryU-KMACiDF~JID1bYTRzIz0ffTMUNy2nQB89Y7UxC2nc5p9QJ-drPiGs21ZlwAk34tt9SDE9u6SgQOvt7n8De17Wgc~H3q-SL-4KscUw~NBiUJm1IxlRJNjeC-xy8zwDNN2cdiIMBDQHdaatjdmeld0bnzrsdO~yMSIPIekYbCg__\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 364
+}

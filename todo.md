@@ -116,3 +116,6 @@
 
 ## Ajustes de Layout
 - [x] Remover seção "Formas de Pagamento" do footer
+
+## Imagens de Produtos
+- [x] Adicionar segunda imagem ao Bolo de Pote (Ninho com brigadeiro)
