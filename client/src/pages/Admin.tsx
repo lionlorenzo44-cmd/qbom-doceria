@@ -1,4 +1,5 @@
 import { useAuth } from "@/_core/hooks/useAuth";
+import { ProductManager } from "@/components/ProductManager";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -334,37 +335,7 @@ export default function Admin() {
 
           {/* Produtos Tab */}
           <TabsContent value="produtos" className="space-y-4">
-            <h2 className="text-xl font-bold mb-4">Gerenciar Disponibilidade de Produtos</h2>
-            <div className="space-y-4">
-              {products.length === 0 ? (
-                <p className="text-center text-gray-500 py-8">Nenhum produto cadastrado</p>
-              ) : (
-                products.map((product: any) => (
-                  <Card key={product.id} className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <h3 className="font-bold text-lg">{product.name}</h3>
-                        <p className="text-gray-600 text-sm">R$ {(product.price / 100).toFixed(2)}</p>
-                      </div>
-                      <Button
-                        onClick={async () => {
-                          try {
-                            await toggleAvailability.mutateAsync({ id: product.id });
-                            refetchProducts();
-                            toast.success("Disponibilidade atualizada");
-                          } catch (error) {
-                            toast.error("Erro ao atualizar");
-                          }
-                        }}
-                        className={`${product.isAvailable ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}`}
-                      >
-                        {product.isAvailable ? 'Disponivel' : 'Esgotado'}
-                      </Button>
-                    </div>
-                  </Card>
-                ))
-              )}
-            </div>
+            <ProductManager />
           </TabsContent>
 
           {/* Caixa Tab */}

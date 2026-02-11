@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, products, orders, orderItems, payments, cashRegister, InsertOrder, InsertOrderItem, InsertPayment, InsertCashRegister, InsertReview, reviews } from "../drizzle/schema";
+import { InsertUser, users, products, orders, orderItems, payments, cashRegister, InsertOrder, InsertOrderItem, InsertPayment, InsertCashRegister, InsertReview, reviews, InsertProduct } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -220,4 +220,29 @@ export async function toggleProductAvailability(productId: number) {
   
   const newAvailability = product.isAvailable === 1 ? 0 : 1;
   return db.update(products).set({ isAvailable: newAvailability }).where(eq(products.id, productId));
+}
+
+export async function createProduct(product: InsertProduct) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  const result = await db.insert(products).values(product) as any;
+  return { insertId: result.insertId || 0 };
+}
+
+export async function updateProduct(id: number, updates: Partial<InsertProduct>) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  return db.update(products).set(updates).where(eq(products.id, id));
+}
+
+export async function deleteProduct(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  return db.delete(products).where(eq(products.id, id));
+}
+
+export async function getAllProducts() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(products);
 }

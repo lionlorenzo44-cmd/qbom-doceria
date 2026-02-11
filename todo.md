@@ -124,3 +124,16 @@
 - [x] Substituir primeira imagem do Produto 1 (Bolo de Pote Ninho)
 - [x] Substituir imagens do Produto 2 (Bolo de Pote Chocolate) - 2 imagens
 - [x] Adicionar segunda imagem ao Produto 4 (Surpresa de Uva)
+
+
+## Painel Administrativo - Gerenciamento de Produtos
+- [x] Criar endpoints tRPC para criar, editar e deletar produtos
+- [x] Criar componente ProductManager para gerenciar produtos
+- [x] Integrar ProductManager no Admin.tsx
+- [x] Upload de imagens (via URL)
+- [x] Editar produtos com opção de substituir ou adicionar imagens
+- [x] Deletar produtos
+- [x] Listar todos os produtos no admin
+- [ ] Implementar autenticação por senha para /admin
+- [ ] Exibir selo visual de esgotado no site público
+- [ ] Desativar botão de adicionar ao carrinho quando esgotado

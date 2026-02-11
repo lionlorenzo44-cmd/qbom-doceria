@@ -30,6 +30,58 @@ export const appRouter = router({
         }
         return db.toggleProductAvailability(input.id);
       }),
+    listAll: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user?.role !== 'admin') {
+        throw new Error('Unauthorized');
+      }
+      return db.getAllProducts();
+    }),
+    create: protectedProcedure
+      .input(z.object({
+        name: z.string(),
+        description: z.string().optional(),
+        price: z.number(),
+        imageUrl: z.string().optional(),
+        imageUrl2: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user?.role !== 'admin') {
+          throw new Error('Unauthorized');
+        }
+        return db.createProduct({
+          name: input.name,
+          description: input.description,
+          price: input.price,
+          imageUrl: input.imageUrl,
+          imageUrl2: input.imageUrl2,
+          isActive: 1,
+          isAvailable: 1,
+        });
+      }),
+    update: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        name: z.string().optional(),
+        description: z.string().optional(),
+        price: z.number().optional(),
+        imageUrl: z.string().optional(),
+        imageUrl2: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user?.role !== 'admin') {
+          throw new Error('Unauthorized');
+        }
+        const { id, ...updates } = input;
+        return db.updateProduct(id, updates);
+      }),
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user?.role !== 'admin') {
+          throw new Error('Unauthorized');
+        }
+        return db.deleteProduct(input.id);
+      }),
   }),
 
   orders: router({
