@@ -121,4 +121,4 @@
 - [x] Integrar novo logo da Qbom Doceria no header
 - [x] Remover texto "Qbom Doceria" do header (mantém apenas logo)
 - [x] Logo responsivo e clicável (volta para home)
-- [x] Aumentar tamanho do logo para máximo (96x96px)
+- [x] Aumentar tamanho do logo para máximo (160x160px)
