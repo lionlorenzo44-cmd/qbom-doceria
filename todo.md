@@ -119,6 +119,3 @@
 
 ## Imagens de Produtos
 - [x] Adicionar segunda imagem ao Bolo de Pote (Ninho com brigadeiro)
-- [x] Substituir imagem da Surpresa de Uva
-- [x] Substituir imagem do Doce de Leite 200ml (Doce de leite artesanal cremoso)
-- [x] Restaurar imagem original do Produto 3 (Surpresa de Uva)
