@@ -148,11 +148,32 @@ function Footer() {
           <p>
             &copy; 2026 Qbom Doceria. Todos os direitos reservados. Feito com{" "}
             <button
-              onClick={() => navigate("/admin")}
-              onTouchEnd={() => navigate("/admin")}
-              className="text-red-600 hover:text-red-500 active:text-red-700 transition cursor-pointer inline bg-transparent border-none p-0 m-0"
+              onClick={(e) => {
+                e.preventDefault();
+                navigate("/admin");
+              }}
+              onTouchStart={(e) => {
+                e.preventDefault();
+              }}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                navigate("/admin");
+              }}
+              onPointerDown={(e) => {
+                if (e.pointerType === 'touch') {
+                  e.preventDefault();
+                  navigate("/admin");
+                }
+              }}
+              className="text-red-600 hover:text-red-500 active:text-red-700 transition cursor-pointer inline bg-transparent border-none p-0 m-0 select-none"
               title="Acesso ao painel administrativo"
-              style={{ WebkitTapHighlightColor: 'transparent' }}
+              style={{ 
+                WebkitTapHighlightColor: 'transparent',
+                WebkitUserSelect: 'none',
+                userSelect: 'none',
+                touchAction: 'manipulation'
+              }}
+              type="button"
             >
               ❤️
             </button>

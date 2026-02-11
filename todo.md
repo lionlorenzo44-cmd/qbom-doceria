@@ -250,3 +250,9 @@
 
 ## Remover Botão Cardápio
 - [x] Excluir botão "Cardápio" do header
+
+
+## Corrigir Botão Coração no Celular
+- [x] Investigar por que onTouchEnd não está funcionando
+- [x] Testar diferentes eventos de touch (onTouchStart, onPointerDown, etc)
+- [x] Garantir que funcione em Android e iPhone
