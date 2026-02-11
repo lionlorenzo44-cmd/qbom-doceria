@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { trpc } from "@/lib/trpc";
-import { ArrowLeft, MessageCircle, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, MessageCircle, Plus, Trash2, MapPin } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { toast } from "sonner";
@@ -254,14 +254,30 @@ export default function Order() {
                   />
                 </div>
 
-                <div>
-                  <Label htmlFor="address">Endereço</Label>
-                  <Input
-                    id="address"
-                    value={customerAddress}
-                    onChange={(e) => setCustomerAddress(e.target.value)}
-                    placeholder="Deixe em branco para retirada no balcão"
-                  />
+                <div className="space-y-3">
+                  <Label>Endereço de Entrega</Label>
+                  <div className="space-y-2">
+                    <Input
+                      id="address"
+                      value={customerAddress}
+                      onChange={(e) => setCustomerAddress(e.target.value)}
+                      placeholder="Digite seu endereço ou deixe em branco para retirada"
+                    />
+                    <p className="text-xs text-gray-500">Ou</p>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full border-red-200 hover:bg-red-50 text-red-600"
+                      onClick={() => {
+                        const msg = `Oi! Para facilitar a entrega, estou enviando minha localizacao. Pedido de: ${customerName}`;
+                        const url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+                        window.open(url, '_blank');
+                      }}
+                    >
+                      <MapPin className="w-4 h-4 mr-2" />
+                      Enviar Localizacao via WhatsApp
+                    </Button>
+                  </div>
                 </div>
 
                 <div>
