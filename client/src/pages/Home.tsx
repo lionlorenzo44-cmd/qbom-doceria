@@ -24,7 +24,8 @@ export default function Home() {
 
   const handleShareProduct = (product: typeof products[0]) => {
     const shareText = `Confira este doce delicioso da Qbom Doceria: ${product.name} - R$ ${(product.price / 100).toFixed(2)}`;
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+    const whatsappNumber = "5571992180210";
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(shareText)}`;
     window.open(whatsappUrl, '_blank');
   };
 

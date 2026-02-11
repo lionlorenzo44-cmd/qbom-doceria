@@ -102,7 +102,8 @@ export default function Order() {
       const message = `Olá! Gostaria de fazer um pedido na Qbom Doceria:\n\n${itemsText}\n\nTotal: R$ ${(totalPrice / 100).toFixed(2)}\nNome: ${customerName}\nTelefone: ${customerPhone}\nEndereço: ${customerAddress || "Retirada no balcão"}\nForma de pagamento: ${paymentMethod}\n\nPedido: ${result.orderNumber}`;
 
       const encodedMessage = encodeURIComponent(message);
-      const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+      const whatsappNumber = "5571992180210";
+      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
 
       toast.success("Pedido criado! Redirecionando para WhatsApp...");
       window.open(whatsappUrl, "_blank");
@@ -270,7 +271,8 @@ export default function Order() {
                       className="w-full border-red-200 hover:bg-red-50 text-red-600"
                       onClick={() => {
                         const msg = `Oi! Para facilitar a entrega, estou enviando minha localizacao. Pedido de: ${customerName}`;
-                        const url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+                        const whatsappNumber = "5571992180210";
+                        const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`;
                         window.open(url, '_blank');
                       }}
                     >
