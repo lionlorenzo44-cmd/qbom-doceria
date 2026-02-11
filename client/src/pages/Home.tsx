@@ -165,7 +165,7 @@ function ProductCard({
           <img
             src={product.imageUrl}
             alt={product.name}
-            className="h-full object-contain hover:scale-105 transition-transform"
+            className="w-full h-full object-cover hover:scale-105 transition-transform"
           />
         </div>
       )}
