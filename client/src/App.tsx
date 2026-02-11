@@ -168,7 +168,7 @@ function Footer() {
                 padding: '2px 4px'
               }}
             >
-              ❤️
+              <Heart className="w-4 h-4 inline fill-current" />
             </span>
             {" "}para você.
           </p>

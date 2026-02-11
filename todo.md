@@ -262,3 +262,9 @@
 - [x] Substituir button por div com role="button"
 - [x] Usar div ao invés de button para evitar conflito com emoji
 - [x] Testar em celular
+
+
+## Substituir Emoji por Ícone SVG
+- [x] Substituir emoji ❤️ por ícone SVG do coração
+- [x] Testar toque em celular com SVG
+- [x] Garantir que funcione em Android e iPhone
