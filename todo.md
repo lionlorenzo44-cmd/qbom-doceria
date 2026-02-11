@@ -63,3 +63,8 @@
 - [x] Atualizar componentes React (Home, Order, Admin, etc)
 - [x] Testar responsividade com novas cores
 - [x] Entregar ao usuário
+
+## Ajuste de Tom de Cor
+- [x] Atualizar cores para tom específico da logo (rosa/vermelho vibrante)
+- [x] Testar em todos os componentes
+- [x] Entregar ao usuário
