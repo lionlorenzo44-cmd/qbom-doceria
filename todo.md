@@ -68,3 +68,9 @@
 - [x] Atualizar cores para tom específico da logo (rosa/vermelho vibrante)
 - [x] Testar em todos os componentes
 - [x] Entregar ao usuário
+
+## Novo Produto e Correções
+- [x] Upload da foto de Surpresa de Morango para S3
+- [x] Adicionar produto Surpresa de Morango ao banco de dados
+- [x] Corrigir erros de escrita em todo o site ("Pedir" -> "Fazer Pedido")
+- [x] Testar e entregar (14 testes passando)

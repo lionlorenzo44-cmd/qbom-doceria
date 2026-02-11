@@ -205,7 +205,7 @@ function ProductCard({
             size="sm"
             className="bg-red-600 hover:bg-red-700"
           >
-            Pedir
+            Fazer Pedido
           </Button>
         </div>
 

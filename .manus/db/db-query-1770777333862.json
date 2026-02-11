@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO products (name, description, price, imageUrl, isActive) VALUES ('Surpresa de Morango', 'Delicioso bolo de pote com morango fresco, calda de chocolate e cobertura cremosa', 1200, 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663346318059/uOmjFDaTIASqXuEy.jpg', 1);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2urwMim2eBFayPD.root --database gJtnQdBqiufDSTNa3ooRJb --execute INSERT INTO products (name, description, price, imageUrl, isActive) VALUES ('Surpresa de Morango', 'Delicioso bolo de pote com morango fresco, calda de chocolate e cobertura cremosa', 1200, 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663346318059/uOmjFDaTIASqXuEy.jpg', 1);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 372
+}
