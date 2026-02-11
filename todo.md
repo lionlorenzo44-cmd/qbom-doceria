@@ -74,3 +74,8 @@
 - [x] Adicionar produto Surpresa de Morango ao banco de dados
 - [x] Corrigir erros de escrita em todo o site ("Pedir" -> "Fazer Pedido")
 - [x] Testar e entregar (14 testes passando)
+
+## Reorganização de Nomes de Produtos
+- [x] Atualizar nome dos produtos para "Bolo de Pote" com sabor na descrição
+- [x] Testar produtos no cardápio (14 testes passando)
+- [x] Entregar ao usuário
