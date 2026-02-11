@@ -369,7 +369,7 @@ export default function Order() {
                       </div>
                       <div className="bg-white p-2 rounded border border-red-200">
                         <p className="text-xs text-gray-600">Telefone:</p>
-                        <p className="text-sm font-mono font-semibold text-gray-800">75 9 9829-8021</p>
+                        <p className="text-sm font-mono font-semibold text-gray-800">75 98299-6939</p>
                       </div>
                     </div>
                     <p className="text-xs text-gray-600 italic">Copie uma das chaves acima e faça a transferencia no seu banco.</p>
