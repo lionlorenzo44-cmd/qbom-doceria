@@ -178,3 +178,12 @@
 - [x] Criar serviço de monitoramento com cron job (healthMonitor.ts)
 - [x] Integrar notificação WhatsApp quando site cai (whatsappNotifier.ts)
 - [x] Testar sistema com vitest (5 testes adicionais, 33 testes totais passando)
+
+
+## Webhooks de Recuperação
+- [x] Criar tabela de webhooks no banco
+- [x] Criar funções de gerenciamento de webhooks (CRUD)
+- [x] Integrar execução de webhooks no healthMonitor
+- [x] Criar endpoints tRPC para gerenciar webhooks (list, create, update, delete)
+- [x] Criar painel de gerenciamento de webhooks (WebhooksPanel.tsx)
+- [x] Testar webhooks com vitest (4 testes, 37 testes totais passando)

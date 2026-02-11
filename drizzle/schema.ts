@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -147,3 +147,22 @@ export const healthChecks = mysqlTable("healthChecks", {
 
 export type HealthCheck = typeof healthChecks.$inferSelect;
 export type InsertHealthCheck = typeof healthChecks.$inferInsert;
+
+
+export const recoveryWebhooks = mysqlTable("recoveryWebhooks", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  url: varchar("url", { length: 2048 }).notNull(),
+  method: mysqlEnum("method", ["GET", "POST", "PUT"]).default("POST").notNull(),
+  headers: json("headers").$type<Record<string, string>>(),
+  payload: json("payload").$type<Record<string, any>>(),
+  isActive: int("isActive").default(1).notNull(),
+  lastExecuted: timestamp("lastExecuted"),
+  lastStatus: int("lastStatus"), // HTTP status code
+  failureCount: int("failureCount").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type RecoveryWebhook = typeof recoveryWebhooks.$inferSelect;
+export type InsertRecoveryWebhook = typeof recoveryWebhooks.$inferInsert;

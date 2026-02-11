@@ -1,6 +1,7 @@
 import * as db from "../db";
 import { notifyOwner } from "./notification";
 import { notifyDowntime, notifyRecovery } from "./whatsappNotifier";
+import { executeRecoveryWebhooks } from "./webhookExecutor";
 
 const HEALTH_CHECK_INTERVAL = 5 * 60 * 1000; // 5 minutos
 const ALERT_COOLDOWN = 15 * 60 * 1000; // 15 minutos entre alertas
@@ -55,6 +56,11 @@ export async function performHealthCheck() {
         title: "✅ Site Voltou Online",
         content: `Seu site está funcionando normalmente. Tempo de resposta: ${responseTime}ms`,
       });
+      
+      // Executar webhooks de recuperação
+      console.log("[Health Monitor] Executing recovery webhooks");
+      const webhookResults = await executeRecoveryWebhooks();
+      console.log(`[Health Monitor] Recovery webhooks: ${webhookResults.successful}/${webhookResults.total} successful`);
     }
 
     console.log(

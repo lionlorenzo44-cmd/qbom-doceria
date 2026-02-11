@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, products, orders, orderItems, payments, cashRegister, InsertOrder, InsertOrderItem, InsertPayment, InsertCashRegister, InsertReview, reviews, InsertProduct, errorLogs, InsertErrorLog, healthChecks, InsertHealthCheck } from "../drizzle/schema";
+import { InsertUser, users, products, orders, orderItems, payments, cashRegister, InsertOrder, InsertOrderItem, InsertPayment, InsertCashRegister, InsertReview, reviews, InsertProduct, errorLogs, InsertErrorLog, healthChecks, InsertHealthCheck, recoveryWebhooks, InsertRecoveryWebhook, RecoveryWebhook } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -388,5 +388,97 @@ export async function getHealthCheckHistory(limit: number = 10) {
   } catch (error) {
     console.error("[Database] Failed to get health check history:", error);
     return [];
+  }
+}
+
+
+// Recovery Webhooks
+export async function createWebhook(data: InsertRecoveryWebhook) {
+  const db = await getDb();
+  if (!db) return null;
+  
+  try {
+    const result = await db.insert(recoveryWebhooks).values(data) as any;
+    return { insertId: result.insertId || 0 };
+  } catch (error) {
+    console.error("[Database] Failed to create webhook:", error);
+    return null;
+  }
+}
+
+export async function getWebhooks(activeOnly: boolean = true) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  try {
+    if (activeOnly) {
+      return await db.select().from(recoveryWebhooks).where(eq(recoveryWebhooks.isActive, 1));
+    }
+    return await db.select().from(recoveryWebhooks);
+  } catch (error) {
+    console.error("[Database] Failed to get webhooks:", error);
+    return [];
+  }
+}
+
+export async function getWebhookById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  
+  try {
+    const result = await db.select().from(recoveryWebhooks).where(eq(recoveryWebhooks.id, id));
+    return result.length > 0 ? result[0] : null;
+  } catch (error) {
+    console.error("[Database] Failed to get webhook:", error);
+    return null;
+  }
+}
+
+export async function updateWebhook(id: number, data: Partial<InsertRecoveryWebhook>) {
+  const db = await getDb();
+  if (!db) return null;
+  
+  try {
+    return await db.update(recoveryWebhooks)
+      .set({ ...data, updatedAt: new Date() })
+      .where(eq(recoveryWebhooks.id, id));
+  } catch (error) {
+    console.error("[Database] Failed to update webhook:", error);
+    return null;
+  }
+}
+
+export async function deleteWebhook(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  
+  try {
+    return await db.delete(recoveryWebhooks).where(eq(recoveryWebhooks.id, id));
+  } catch (error) {
+    console.error("[Database] Failed to delete webhook:", error);
+    return null;
+  }
+}
+
+export async function recordWebhookExecution(id: number, status: number) {
+  const db = await getDb();
+  if (!db) return null;
+  
+  try {
+    const webhook = await getWebhookById(id);
+    if (!webhook) return null;
+    
+    const failureCount = status >= 400 ? (webhook.failureCount || 0) + 1 : 0;
+    
+    return await db.update(recoveryWebhooks)
+      .set({
+        lastExecuted: new Date(),
+        lastStatus: status,
+        failureCount,
+      })
+      .where(eq(recoveryWebhooks.id, id));
+  } catch (error) {
+    console.error("[Database] Failed to record webhook execution:", error);
+    return null;
   }
 }

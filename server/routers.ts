@@ -300,6 +300,53 @@ export const appRouter = router({
       return db.getHealthCheckHistory(50);
     }),
   }),
+
+  webhooks: router({
+      list: protectedProcedure.query(async ({ ctx }) => {
+        if (ctx.user?.role !== 'admin') {
+          throw new Error('Unauthorized');
+        }
+        return db.getWebhooks(false);
+      }),
+
+      create: protectedProcedure
+        .input(z.object({
+          name: z.string().min(1),
+          url: z.string().url(),
+          method: z.enum(['GET', 'POST', 'PUT']).default('POST'),
+        }))
+        .mutation(async ({ input, ctx }) => {
+          if (ctx.user?.role !== 'admin') {
+            throw new Error('Unauthorized');
+          }
+          return db.createWebhook(input);
+        }),
+
+      update: protectedProcedure
+        .input(z.object({
+          id: z.number(),
+          name: z.string().optional(),
+          url: z.string().url().optional(),
+          method: z.enum(['GET', 'POST', 'PUT']).optional(),
+          isActive: z.number().optional(),
+        }))
+        .mutation(async ({ input, ctx }) => {
+          if (ctx.user?.role !== 'admin') {
+            throw new Error('Unauthorized');
+          }
+          const { id, ...data } = input;
+          return db.updateWebhook(id, data);
+        }),
+
+      delete: protectedProcedure
+        .input(z.object({ id: z.number() }))
+        .mutation(async ({ input, ctx }) => {
+          if (ctx.user?.role !== 'admin') {
+            throw new Error('Unauthorized');
+          }
+          return db.deleteWebhook(input.id);
+        }),
+    }),
 });
 
 export type AppRouter = typeof appRouter;
