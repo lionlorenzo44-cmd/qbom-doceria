@@ -26,6 +26,8 @@ export default function Order() {
   const [customerPhone, setCustomerPhone] = useState("");
   const [customerAddress, setCustomerAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("dinheiro");
+  const [needsChange, setNeedsChange] = useState(false);
+  const [changeAmount, setChangeAmount] = useState("");
 
   const handleAddToCart = (product: any) => {
     const existingItem = cart.find(item => item.productId === product.id);
@@ -271,10 +273,48 @@ export default function Order() {
                     <SelectContent>
                       <SelectItem value="dinheiro">Dinheiro</SelectItem>
                       <SelectItem value="pix">PIX</SelectItem>
-                      <SelectItem value="cartao">Cartão</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
+
+                {paymentMethod === "dinheiro" && (
+                  <div className="space-y-3 border-t pt-3">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="needsChange"
+                        checked={needsChange}
+                        onChange={(e) => {
+                          setNeedsChange(e.target.checked);
+                          if (!e.target.checked) setChangeAmount("");
+                        }}
+                        className="w-4 h-4 text-red-600 cursor-pointer"
+                      />
+                      <label htmlFor="needsChange" className="cursor-pointer text-sm font-medium">
+                        Precisa de troco?
+                      </label>
+                    </div>
+                    {needsChange && (
+                      <div>
+                        <Label htmlFor="changeAmount">Valor pago em dinheiro</Label>
+                        <Input
+                          id="changeAmount"
+                          type="number"
+                          step="0.01"
+                          value={changeAmount}
+                          onChange={(e) => setChangeAmount(e.target.value)}
+                          placeholder="Ex: 50.00"
+                          className="text-red-600 font-semibold"
+                        />
+                        {changeAmount && (
+                          <p className="text-sm text-green-600 mt-2 font-semibold">
+                            Troco: R$ {(parseFloat(changeAmount) - totalPrice / 100).toFixed(2)}
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 <Button
                   onClick={handleSubmitOrder}
