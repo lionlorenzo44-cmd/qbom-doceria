@@ -82,3 +82,13 @@
 
 ## Bugs Reportados
 - [x] Carrinho não atualiza o valor total ao adicionar produtos (continua em R$ 0) - CORRIGIDO: Adicionada verificação de disponibilidade
+
+## Melhorias de UX e Confiabilidade do Checkout
+- [x] Implementar validação em tempo real dos campos (nome, telefone, endereço)
+- [x] Adicionar indicador de progresso do checkout (2 etapas: Carrinho → Pagamento)
+- [x] Melhorar responsividade mobile (botões maiores, textos legíveis)
+- [x] Adicionar menu superior com navegação clara (Home • Cardápio • Contato)
+- [x] Adicionar footer com informações de contato e política de privacidade
+- [x] Adicionar sinais de segurança (cadeado HTTPS, selo de confiança)
+- [x] Tornar opções de pagamento mais claras e clicáveis
+- [x] Testar todas as alterações com vitest

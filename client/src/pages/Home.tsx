@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { ReviewForm } from "@/components/ReviewForm";
 import { ReviewsList } from "@/components/ReviewsList";
 import { trpc } from "@/lib/trpc";
-import { Heart, ShoppingCart, Share2 } from "lucide-react";
+import { ShoppingCart, Share2 } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -31,39 +31,17 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <Heart className="w-8 h-8 text-red-600 fill-red-600" />
-            <h1 className="text-2xl font-bold text-red-700">Qbom Doceria</h1>
-          </div>
-          <nav className="flex gap-4 items-center">
-            {user?.role === "admin" && (
-              <Button onClick={() => navigate("/admin")} variant="outline">
-                Painel Admin
-              </Button>
-            )}
-            {user && (
-              <Button onClick={() => navigate("/profile")} variant="ghost">
-                {user.name || "Perfil"}
-              </Button>
-            )}
-          </nav>
-        </div>
-      </header>
-
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-red-600 to-red-500 text-white py-16 md:py-24">
+      <section className="bg-gradient-to-r from-red-600 to-red-500 text-white py-12 md:py-24">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Doces que dão vontade de repetir 😋</h2>
-          <p className="text-lg md:text-xl mb-8 opacity-90">
+          <h2 className="text-3xl md:text-5xl font-bold mb-4">Doces que dão vontade de repetir 😋</h2>
+          <p className="text-base md:text-xl mb-8 opacity-90">
             Doceria caseira com receitas especiais feitas com amor
           </p>
           <Button
             onClick={handleOrderClick}
             size="lg"
-            className="bg-white text-red-600 hover:bg-red-50 font-bold"
+            className="bg-white text-red-600 hover:bg-red-50 font-bold text-base md:text-lg px-6 md:px-8 py-2 md:py-3"
           >
             <ShoppingCart className="w-5 h-5 mr-2" />
             Fazer Pedido
@@ -72,14 +50,14 @@ export default function Home() {
       </section>
 
       {/* Cardápio Section */}
-      <section className="py-16 md:py-24">
+      <section className="py-12 md:py-24">
         <div className="container mx-auto px-4">
-          <h3 className="text-3xl md:text-4xl font-bold text-center mb-4 text-red-700">Nossos Doces</h3>
-          <p className="text-center text-gray-600 mb-12">
+          <h3 className="text-2xl md:text-4xl font-bold text-center mb-4 text-red-700">Nossos Doces</h3>
+          <p className="text-center text-gray-600 mb-8 md:mb-12">
             Escolha seus doces favoritos e faça seu pedido
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {products.map((product) => (
               <ProductCard
                 key={product.id}
@@ -97,50 +75,42 @@ export default function Home() {
       </section>
 
       {/* Info Section */}
-      <section className="bg-red-50 py-16">
+      <section className="bg-red-50 py-12 md:py-16">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div>
-              <div className="text-4xl font-bold text-red-600 mb-2">🏍️</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <div className="text-center">
+              <div className="text-4xl md:text-5xl font-bold text-red-600 mb-3">🏍️</div>
               <h4 className="font-bold text-lg mb-2">Entrega Grátis</h4>
-              <p className="text-gray-600">Em qualquer pedido, sem valor mínimo</p>
+              <p className="text-gray-600 text-sm md:text-base">Em qualquer pedido, sem valor mínimo</p>
             </div>
-            <div>
-              <div className="text-4xl font-bold text-red-600 mb-2">💝</div>
+            <div className="text-center">
+              <div className="text-4xl md:text-5xl font-bold text-red-600 mb-3">💝</div>
               <h4 className="font-bold text-lg mb-2">Feito com Amor</h4>
-              <p className="text-gray-600">Receitas caseiras e ingredientes de qualidade</p>
+              <p className="text-gray-600 text-sm md:text-base">Receitas caseiras e ingredientes de qualidade</p>
             </div>
-            <div>
-              <div className="text-4xl font-bold text-red-600 mb-2">📱</div>
+            <div className="text-center">
+              <div className="text-4xl md:text-5xl font-bold text-red-600 mb-3">📱</div>
               <h4 className="font-bold text-lg mb-2">Pedidos Fáceis</h4>
-              <p className="text-gray-600">Peça pelo WhatsApp de forma rápida e simples</p>
+              <p className="text-gray-600 text-sm md:text-base">Peça pelo WhatsApp de forma rápida e simples</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 text-center">
+      <section className="py-12 md:py-16 text-center">
         <div className="container mx-auto px-4">
-          <h3 className="text-3xl font-bold text-red-700 mb-6">Pronto para saborear?</h3>
+          <h3 className="text-2xl md:text-3xl font-bold text-red-700 mb-6">Pronto para saborear?</h3>
           <Button
             onClick={handleOrderClick}
             size="lg"
-            className="bg-red-600 hover:bg-red-700 text-white font-bold"
+            className="bg-red-600 hover:bg-red-700 text-white font-bold text-base md:text-lg px-6 md:px-8 py-2 md:py-3"
           >
             <ShoppingCart className="w-5 h-5 mr-2" />
             Fazer Pedido Agora
           </Button>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8">
-        <div className="container mx-auto px-4 text-center">
-          <p className="mb-2">© 2026 Qbom Doceria - Todos os direitos reservados</p>
-          <p className="text-gray-400">Feito com ❤️ para você</p>
-        </div>
-      </footer>
     </div>
   );
 }
@@ -171,7 +141,7 @@ function ProductCard({
   return (
     <Card className={`overflow-hidden hover:shadow-lg transition-shadow flex flex-col ${!product.isAvailable ? 'opacity-60' : ''}`}>
       {product.imageUrl && (
-        <div className="w-full h-56 bg-gray-200 overflow-hidden flex items-center justify-center p-2 relative">
+        <div className="w-full h-40 md:h-56 bg-gray-200 overflow-hidden flex items-center justify-center p-2 relative">
           <img
             src={product.imageUrl}
             alt={product.name}
@@ -179,25 +149,25 @@ function ProductCard({
           />
           {!product.isAvailable && (
             <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-              <span className="bg-red-600 text-white px-4 py-2 rounded-lg font-bold text-lg">ESGOTADO</span>
+              <span className="bg-red-600 text-white px-3 py-1 md:px-4 md:py-2 rounded-lg font-bold text-sm md:text-lg">ESGOTADO</span>
             </div>
           )}
         </div>
       )}
-      <div className="p-4 flex-1 flex flex-col">
-        <h4 className="font-bold text-lg text-gray-800 mb-2">{product.name}</h4>
+      <div className="p-3 md:p-4 flex-1 flex flex-col">
+        <h4 className="font-bold text-base md:text-lg text-gray-800 mb-2">{product.name}</h4>
         {product.description && (
-          <p className="text-sm text-gray-600 mb-4">{product.description}</p>
+          <p className="text-xs md:text-sm text-gray-600 mb-3 md:mb-4">{product.description}</p>
         )}
 
         {/* Rating */}
-        <div className="mb-4">
+        <div className="mb-3 md:mb-4">
           <div className="flex items-center gap-2">
             <div className="flex">
               {[1, 2, 3, 4, 5].map((star) => (
                 <span
                   key={star}
-                  className={`text-sm ${
+                  className={`text-xs md:text-sm ${
                     star <= Math.round(averageRating)
                       ? "text-yellow-400"
                       : "text-gray-300"
@@ -207,20 +177,20 @@ function ProductCard({
                 </span>
               ))}
             </div>
-            <span className="text-sm font-semibold">{averageRating.toFixed(1)}</span>
+            <span className="text-xs md:text-sm font-semibold">{averageRating.toFixed(1)}</span>
           </div>
         </div>
 
         <div className="flex justify-between items-center mt-auto gap-2">
-          <span className="text-2xl font-bold text-red-600">
+          <span className="text-xl md:text-2xl font-bold text-red-600">
             R$ {(product.price / 100).toFixed(2)}
           </span>
-          <div className="flex gap-2">
+          <div className="flex gap-1 md:gap-2">
             <Button
               onClick={onShare}
               size="sm"
               variant="ghost"
-              className="text-red-600 hover:bg-red-50"
+              className="text-red-600 hover:bg-red-50 p-1 md:p-2"
               title="Compartilhar no WhatsApp"
             >
               <Share2 className="w-4 h-4" />
@@ -228,17 +198,17 @@ function ProductCard({
             <Button
               onClick={onOrderClick}
               size="sm"
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-red-600 hover:bg-red-700 text-xs md:text-sm px-2 md:px-3 py-1 md:py-2"
               disabled={!product.isAvailable}
             >
-              {product.isAvailable ? 'Fazer Pedido' : 'Esgotado'}
+              {product.isAvailable ? 'Pedir' : 'Esgotado'}
             </Button>
           </div>
         </div>
 
         {/* Reviews Section */}
         {isExpanded && (
-          <div className="mt-4 pt-4 border-t space-y-3">
+          <div className="mt-3 md:mt-4 pt-3 md:pt-4 border-t space-y-3">
             <ReviewsList
               reviews={reviews}
               averageRating={averageRating}
@@ -257,7 +227,7 @@ function ProductCard({
             onClick={onToggleExpand}
             variant="ghost"
             size="sm"
-            className="w-full mt-2 text-red-600"
+            className="w-full mt-2 text-red-600 text-xs md:text-sm"
           >
             Ver {reviews.length} avaliação{reviews.length !== 1 ? "ões" : ""}
           </Button>
@@ -268,7 +238,7 @@ function ProductCard({
             onClick={onToggleExpand}
             variant="ghost"
             size="sm"
-            className="w-full mt-2 text-red-600"
+            className="w-full mt-2 text-red-600 text-xs md:text-sm"
           >
             Deixar Avaliação
           </Button>
