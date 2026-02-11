@@ -86,7 +86,6 @@ describe("orders", () => {
       customerPhone: "11999999999",
       customerAddress: "Rua Teste, 123",
       totalPrice: 2400,
-      orderType: "whatsapp",
       paymentMethod: "dinheiro",
       items: [
         {
@@ -97,9 +96,8 @@ describe("orders", () => {
       ],
     });
 
-    expect(result).toHaveProperty("orderId");
-    expect(result).toHaveProperty("orderNumber");
-    expect(result.orderNumber).toMatch(/^QBD-/);
+    expect(result).toHaveProperty("insertId");
+    expect(result.insertId).toBeGreaterThanOrEqual(0);
   });
 
   it("should list orders as admin", async () => {

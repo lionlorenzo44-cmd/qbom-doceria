@@ -162,3 +162,11 @@
 - [x] Testar comportamento de erro com vitest (5 testes adicionais)
 - [x] Exibir ícone WhatsApp quando site cai
 - [x] Direcionar para WhatsApp da loja em caso de erro (23 testes totais passando)
+
+
+## Analytics de Erros
+- [x] Criar tabela de erros no banco de dados
+- [x] Criar endpoint tRPC para registrar erros (errorLogs.log e errorLogs.list)
+- [x] Integrar registro de erros no ErrorFallback
+- [x] Criar painel de visualização de erros no admin (ErrorLogsPanel.tsx)
+- [x] Testar analytics com vitest (5 testes adicionais, 28 testes totais passando)

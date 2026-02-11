@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, products, orders, orderItems, payments, cashRegister, InsertOrder, InsertOrderItem, InsertPayment, InsertCashRegister, InsertReview, reviews, InsertProduct } from "../drizzle/schema";
+import { InsertUser, users, products, orders, orderItems, payments, cashRegister, InsertOrder, InsertOrderItem, InsertPayment, InsertCashRegister, InsertReview, reviews, InsertProduct, errorLogs, InsertErrorLog } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -245,4 +245,66 @@ export async function getAllProducts() {
   const db = await getDb();
   if (!db) return [];
   return db.select().from(products);
+}
+
+
+// Error Logs
+export async function logError(errorData: InsertErrorLog) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot log error: database not available");
+    return null;
+  }
+  
+  try {
+    const result = await db.insert(errorLogs).values(errorData) as any;
+    return { insertId: result.insertId || 0 };
+  } catch (error) {
+    console.error("[Database] Failed to log error:", error);
+    return null;
+  }
+}
+
+export async function getErrorLogs(limit: number = 100) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  try {
+    return await db.select().from(errorLogs).orderBy((t) => t.createdAt).limit(limit);
+  } catch (error) {
+    console.error("[Database] Failed to get error logs:", error);
+    return [];
+  }
+}
+
+export async function getUnresolvedErrors() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  try {
+    return await db.select().from(errorLogs).where(eq(errorLogs.isResolved, 0));
+  } catch (error) {
+    console.error("[Database] Failed to get unresolved errors:", error);
+    return [];
+  }
+}
+
+export async function markErrorAsResolved(errorId: number, notes?: string) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  
+  return db.update(errorLogs)
+    .set({ 
+      isResolved: 1, 
+      resolvedAt: new Date(),
+      notes: notes || null
+    })
+    .where(eq(errorLogs.id, errorId));
+}
+
+export async function deleteErrorLog(errorId: number) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  
+  return db.delete(errorLogs).where(eq(errorLogs.id, errorId));
 }

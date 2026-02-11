@@ -1,4 +1,4 @@
-import { COOKIE_NAME } from "@shared/const";
+import { COOKIE_NAME } from "../shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router, protectedProcedure } from "./_core/trpc";
@@ -56,6 +56,7 @@ export const appRouter = router({
         price: z.number(),
         imageUrl: z.string().optional(),
         imageUrl2: z.string().optional(),
+        imageUrl3: z.string().optional(),
       }))
       .mutation(async ({ input, ctx }) => {
         if (ctx.user?.role !== 'admin') {
@@ -64,9 +65,10 @@ export const appRouter = router({
         return db.createProduct({
           name: input.name,
           description: input.description,
-          price: input.price,
+          price: Math.round(input.price * 100),
           imageUrl: input.imageUrl,
           imageUrl2: input.imageUrl2,
+          imageUrl3: input.imageUrl3,
           isActive: 1,
           isAvailable: 1,
         });
@@ -79,13 +81,20 @@ export const appRouter = router({
         price: z.number().optional(),
         imageUrl: z.string().optional(),
         imageUrl2: z.string().optional(),
+        imageUrl3: z.string().optional(),
       }))
       .mutation(async ({ input, ctx }) => {
         if (ctx.user?.role !== 'admin') {
           throw new Error('Unauthorized');
         }
-        const { id, ...updates } = input;
-        return db.updateProduct(id, updates);
+        const updates: any = {};
+        if (input.name) updates.name = input.name;
+        if (input.description !== undefined) updates.description = input.description;
+        if (input.price) updates.price = Math.round(input.price * 100);
+        if (input.imageUrl !== undefined) updates.imageUrl = input.imageUrl;
+        if (input.imageUrl2 !== undefined) updates.imageUrl2 = input.imageUrl2;
+        if (input.imageUrl3 !== undefined) updates.imageUrl3 = input.imageUrl3;
+        return db.updateProduct(input.id, updates);
       }),
     delete: protectedProcedure
       .input(z.object({ id: z.number() }))
@@ -98,65 +107,61 @@ export const appRouter = router({
   }),
 
   orders: router({
+    list: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user?.role !== 'admin') {
+        throw new Error('Unauthorized');
+      }
+      return db.getAllOrders();
+    }),
     create: publicProcedure
       .input(z.object({
         customerName: z.string(),
         customerPhone: z.string(),
         customerAddress: z.string().optional(),
-        totalPrice: z.number(),
-        orderType: z.enum(["whatsapp", "balcao"]),
-        paymentMethod: z.string().optional(),
         items: z.array(z.object({
           productId: z.number(),
           quantity: z.number(),
           priceAtTime: z.number(),
         })),
+        paymentMethod: z.string(),
+        totalPrice: z.number(),
       }))
       .mutation(async ({ input }) => {
-        const orderNumber = `QBD-${Date.now()}`;
+        const orderNumber = `ORD-${Date.now()}`;
         const order = await db.createOrder({
           orderNumber,
           customerName: input.customerName,
           customerPhone: input.customerPhone,
           customerAddress: input.customerAddress,
-          totalPrice: input.totalPrice,
-          orderType: input.orderType,
+          status: 'novo',
+          totalPrice: Math.round(input.totalPrice * 100),
           paymentMethod: input.paymentMethod,
         });
 
-        if (order.insertId) {
-          await db.createOrderItems(
-            input.items.map(item => ({
-              orderId: Number(order.insertId),
-              productId: item.productId,
-              quantity: item.quantity,
-              priceAtTime: item.priceAtTime,
-            }))
-          );
+        await db.createOrderItems(
+          input.items.map(item => ({
+            orderId: order.insertId,
+            productId: item.productId,
+            quantity: item.quantity,
+            priceAtTime: item.priceAtTime,
+          }))
+        );
 
-          const totalFormatted = (input.totalPrice / 100).toFixed(2);
-          await notifyOwner({
-            title: `Novo pedido: ${orderNumber}`,
-            content: `Cliente: ${input.customerName}\nTelefone: ${input.customerPhone}\nTotal: R$ ${totalFormatted}\nTipo: ${input.orderType === 'whatsapp' ? 'WhatsApp' : 'Balcão'}`,
-          });
-        }
+        await notifyOwner({
+          title: 'Novo Pedido Recebido',
+          content: `Novo pedido de ${input.customerName} - R$ ${(input.totalPrice).toFixed(2)}`,
+        });
 
-        return { orderId: order.insertId, orderNumber };
+        return order;
       }),
-
-    list: protectedProcedure.query(() => db.getAllOrders()),
-    getById: protectedProcedure
-      .input(z.object({ id: z.number() }))
-      .query(async ({ input }) => {
-        const order = await db.getOrderById(input.id);
-        if (!order) return null;
-        const items = await db.getOrderItems(input.id);
-        return { ...order, items };
-      }),
-
     updateStatus: protectedProcedure
-      .input(z.object({ id: z.number(), status: z.enum(["novo", "em_preparo", "entregue", "cancelado"]) }))
-      .mutation(({ input }) => db.updateOrderStatus(input.id, input.status)),
+      .input(z.object({ id: z.number(), status: z.string() }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user?.role !== 'admin') {
+          throw new Error('Unauthorized');
+        }
+        return db.updateOrderStatus(input.id, input.status);
+      }),
   }),
 
   payments: router({
@@ -166,30 +171,44 @@ export const appRouter = router({
         amount: z.number(),
         paymentMethod: z.string(),
       }))
-      .mutation(({ input }) => db.createPayment({
-        orderId: input.orderId,
-        amount: input.amount,
-        paymentMethod: input.paymentMethod,
-        status: "recebido",
-      })),
-
-    getByOrder: protectedProcedure
-      .input(z.object({ orderId: z.number() }))
-      .query(({ input }) => db.getPaymentsByOrder(input.orderId)),
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user?.role !== 'admin') {
+          throw new Error('Unauthorized');
+        }
+        return db.createPayment({
+          orderId: input.orderId,
+          amount: input.amount,
+          paymentMethod: input.paymentMethod,
+          status: 'recebido',
+        });
+      }),
   }),
 
   cashRegister: router({
+    list: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user?.role !== 'admin') {
+        throw new Error('Unauthorized');
+      }
+      return db.getCashRegisterEntries();
+    }),
     create: protectedProcedure
       .input(z.object({
         amount: z.number(),
-        type: z.enum(["entrada", "saida"]),
+        type: z.enum(['entrada', 'saida']),
         description: z.string(),
-        paymentMethod: z.string().optional(),
-        orderId: z.number().optional(),
+        paymentMethod: z.string(),
       }))
-      .mutation(({ input }) => db.createCashEntry(input)),
-
-    list: protectedProcedure.query(() => db.getCashRegisterEntries()),
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user?.role !== 'admin') {
+          throw new Error('Unauthorized');
+        }
+        return db.createCashEntry({
+          amount: input.amount,
+          type: input.type,
+          description: input.description,
+          paymentMethod: input.paymentMethod,
+        });
+      }),
   }),
 
   reviews: router({
@@ -197,7 +216,7 @@ export const appRouter = router({
       .input(z.object({
         productId: z.number(),
         customerName: z.string(),
-        customerEmail: z.string().email().optional(),
+        customerEmail: z.string().optional(),
         rating: z.number().min(1).max(5),
         comment: z.string().optional(),
       }))
@@ -232,6 +251,35 @@ export const appRouter = router({
     getAverageRating: publicProcedure
       .input(z.object({ productId: z.number() }))
       .query(({ input }) => db.getProductAverageRating(input.productId)),
+  }),
+
+  errorLogs: router({
+    log: publicProcedure
+      .input(z.object({
+        errorMessage: z.string(),
+        errorStack: z.string().optional(),
+        errorType: z.string().optional(),
+        userAgent: z.string().optional(),
+        url: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        return await db.logError({
+          errorMessage: input.errorMessage,
+          errorStack: input.errorStack,
+          errorType: input.errorType || 'unknown',
+          userAgent: input.userAgent,
+          url: input.url,
+          severity: 'medium',
+          isResolved: 0,
+        });
+      }),
+
+    list: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user?.role !== 'admin') {
+        throw new Error('Unauthorized');
+      }
+      return db.getErrorLogs(100);
+    }),
   }),
 });
 

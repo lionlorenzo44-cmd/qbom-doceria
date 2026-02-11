@@ -36,6 +36,13 @@
       "when": 1770820689215,
       "tag": "0004_steady_gravity",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1770832501501,
+      "tag": "0005_hard_meggan",
+      "breakpoints": true
     }
   ]
 }

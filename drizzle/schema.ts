@@ -113,3 +113,22 @@ export const reviews = mysqlTable("reviews", {
 
 export type Review = typeof reviews.$inferSelect;
 export type InsertReview = typeof reviews.$inferInsert;
+
+export const errorLogs = mysqlTable("errorLogs", {
+  id: int("id").autoincrement().primaryKey(),
+  errorMessage: text("errorMessage").notNull(),
+  errorStack: text("errorStack"),
+  errorType: varchar("errorType", { length: 100 }).default("unknown").notNull(),
+  userAgent: text("userAgent"),
+  url: text("url"),
+  ipAddress: varchar("ipAddress", { length: 45 }),
+  severity: mysqlEnum("severity", ["low", "medium", "high", "critical"]).default("medium").notNull(),
+  isResolved: int("isResolved").default(0).notNull(), // 0 = não resolvido, 1 = resolvido
+  resolvedAt: timestamp("resolvedAt"),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ErrorLog = typeof errorLogs.$inferSelect;
+export type InsertErrorLog = typeof errorLogs.$inferInsert;
