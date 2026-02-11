@@ -116,3 +116,8 @@
 
 ## Ajustes de Layout
 - [x] Remover seção "Formas de Pagamento" do footer
+
+## Branding e Logo
+- [x] Integrar novo logo da Qbom Doceria no header
+- [x] Remover texto "Qbom Doceria" do header (mantém apenas logo)
+- [x] Logo responsivo e clicável (volta para home)

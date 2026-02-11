@@ -20,8 +20,7 @@ function Header() {
             className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition"
             onClick={() => navigate("/")}
           >
-            <Heart className="w-6 h-6 text-red-600 fill-red-600" />
-            <h1 className="text-2xl font-bold text-red-700">Qbom Doceria</h1>
+            <img src="/qbom_logo.webp" alt="Qbom Doceria" className="w-12 h-12" />
           </div>
           
           <nav className="hidden md:flex items-center gap-6">
