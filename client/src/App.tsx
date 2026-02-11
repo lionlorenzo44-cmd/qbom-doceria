@@ -14,13 +14,13 @@ function Header() {
   
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto px-4 py-2">
         <div className="flex items-center justify-between">
           <div 
             className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition"
             onClick={() => navigate("/")}
           >
-            <img src="/qbom_logo.webp" alt="Qbom Doceria" className="w-12 h-12" />
+            <img src="/qbom_logo.webp" alt="Qbom Doceria" className="w-24 h-24" />
           </div>
           
           <nav className="hidden md:flex items-center gap-6">
