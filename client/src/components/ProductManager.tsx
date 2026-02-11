@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { trpc } from "@/lib/trpc";
-import { Plus, Edit, Trash2 } from "lucide-react";
+import { Plus, Edit, Trash2, AlertCircle } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 export function ProductManager() {
@@ -48,7 +49,7 @@ export function ProductManager() {
 
   const handleSave = async () => {
     if (!name || !price) {
-      toast.error("Nome e preco sao obrigatorios");
+      toast.error("Nome e preço são obrigatórios");
       return;
     }
 
@@ -104,152 +105,188 @@ export function ProductManager() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold">Gerenciar Produtos</h2>
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger asChild>
-            <Button
-              className="bg-red-600 hover:bg-red-700"
-              onClick={() => handleOpenDialog()}
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Novo Produto
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>
-                {editingProduct ? "Editar Produto" : "Novo Produto"}
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div>
-                <Label>Nome *</Label>
-                <Input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Nome do produto"
-                />
-              </div>
-              <div>
-                <Label>Descricao</Label>
-                <Textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Descricao do produto"
-                  rows={3}
-                />
-              </div>
-              <div>
-                <Label>Preco (R$) *</Label>
-                <Input
-                  type="number"
-                  step="0.01"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                  placeholder="0.00"
-                />
-              </div>
-              <div>
-                <Label>URL da Primeira Imagem</Label>
-                <Input
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
-                  placeholder="https://..."
-                />
-                {imageUrl && (
-                  <img
-                    src={imageUrl}
-                    alt="Preview 1"
-                    className="mt-2 h-32 object-cover rounded"
+    <div className="space-y-4 pb-20">
+      {/* Header com botão de novo produto - Mobile Optimized */}
+      <div className="sticky top-0 bg-white z-10 p-4 -mx-4 border-b">
+        <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center">
+          <h2 className="text-lg font-bold text-gray-900">Gerenciar Produtos</h2>
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+              <Button
+                className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-semibold py-3 sm:py-2"
+                onClick={() => handleOpenDialog()}
+              >
+                <Plus className="w-5 h-5 mr-2" />
+                Novo Produto
+              </Button>
+            </DialogTrigger>
+            {/* Modal otimizado para mobile */}
+            <DialogContent className="w-[95vw] max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle className="text-lg">
+                  {editingProduct ? "Editar Produto" : "Novo Produto"}
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div>
+                  <Label className="text-base font-semibold">Nome do Produto *</Label>
+                  <Input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Ex: Bolo de Chocolate"
+                    className="mt-2 h-12 text-base"
                   />
-                )}
-              </div>
-              <div>
-                <Label>URL da Segunda Imagem (Opcional)</Label>
-                <Input
-                  value={imageUrl2}
-                  onChange={(e) => setImageUrl2(e.target.value)}
-                  placeholder="https://..."
-                />
-                {imageUrl2 && (
-                  <img
-                    src={imageUrl2}
-                    alt="Preview 2"
-                    className="mt-2 h-32 object-cover rounded"
-                  />
-                )}
-              </div>
-              <div className="flex gap-2 justify-end">
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setIsOpen(false);
-                    resetForm();
-                  }}
-                >
-                  Cancelar
-                </Button>
-                <Button
-                  className="bg-red-600 hover:bg-red-700"
-                  onClick={handleSave}
-                >
-                  {editingProduct ? "Atualizar" : "Criar"}
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
-
-      <div className="space-y-4">
-        {allProducts.length === 0 ? (
-          <p className="text-center text-gray-500 py-8">Nenhum produto cadastrado</p>
-        ) : (
-          allProducts.map((product: any) => (
-            <Card key={product.id} className="p-6">
-              <div className="flex items-start gap-4">
-                {product.imageUrl && (
-                  <img
-                    src={product.imageUrl}
-                    alt={product.name}
-                    className="w-24 h-24 object-cover rounded"
-                  />
-                )}
-                <div className="flex-1">
-                  <h3 className="font-bold text-lg">{product.name}</h3>
-                  {product.description && (
-                    <p className="text-gray-600 text-sm mb-2">{product.description}</p>
-                  )}
-                  <p className="text-red-600 font-bold">R$ {(product.price / 100).toFixed(2)}</p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Status: {product.isAvailable ? "Disponivel" : "Esgotado"}
-                  </p>
                 </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant={product.isAvailable ? "outline" : "default"}
-                    size="sm"
-                    onClick={() => handleToggleAvailability(product.id, !product.isAvailable)}
-                    className={!product.isAvailable ? "bg-green-600 hover:bg-green-700" : ""}
-                  >
-                    {product.isAvailable ? "Desabilitar" : "Habilitar"}
-                  </Button>
+
+                <div>
+                  <Label className="text-base font-semibold">Descrição</Label>
+                  <Textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Ex: Bolo caseiro com chocolate belga"
+                    className="mt-2 text-base min-h-20"
+                    rows={3}
+                  />
+                </div>
+
+                <div>
+                  <Label className="text-base font-semibold">Preço (R$) *</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    placeholder="0.00"
+                    className="mt-2 h-12 text-base"
+                  />
+                </div>
+
+                <div>
+                  <Label className="text-base font-semibold">URL da Primeira Imagem</Label>
+                  <Input
+                    value={imageUrl}
+                    onChange={(e) => setImageUrl(e.target.value)}
+                    placeholder="https://..."
+                    className="mt-2 h-12 text-base"
+                  />
+                  {imageUrl && (
+                    <img
+                      src={imageUrl}
+                      alt="Preview 1"
+                      className="mt-3 w-full h-40 object-cover rounded-lg"
+                    />
+                  )}
+                </div>
+
+                <div>
+                  <Label className="text-base font-semibold">URL da Segunda Imagem (Opcional)</Label>
+                  <Input
+                    value={imageUrl2}
+                    onChange={(e) => setImageUrl2(e.target.value)}
+                    placeholder="https://..."
+                    className="mt-2 h-12 text-base"
+                  />
+                  {imageUrl2 && (
+                    <img
+                      src={imageUrl2}
+                      alt="Preview 2"
+                      className="mt-3 w-full h-40 object-cover rounded-lg"
+                    />
+                  )}
+                </div>
+
+                <div className="flex gap-3 pt-4">
                   <Button
                     variant="outline"
-                    size="sm"
-                    onClick={() => handleOpenDialog(product)}
+                    onClick={() => {
+                      setIsOpen(false);
+                      resetForm();
+                    }}
+                    className="flex-1 h-12 text-base"
                   >
-                    <Edit className="w-4 h-4" />
+                    Cancelar
                   </Button>
                   <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => handleDelete(product.id)}
+                    className="flex-1 bg-red-600 hover:bg-red-700 h-12 text-base font-semibold"
+                    onClick={handleSave}
                   >
-                    <Trash2 className="w-4 h-4" />
+                    {editingProduct ? "Atualizar" : "Criar"}
                   </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </div>
+
+      {/* Lista de produtos - Mobile Optimized */}
+      <div className="space-y-3">
+        {allProducts.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-12 px-4">
+            <AlertCircle className="w-12 h-12 text-gray-300 mb-3" />
+            <p className="text-center text-gray-500 text-base">Nenhum produto cadastrado</p>
+            <p className="text-center text-gray-400 text-sm mt-1">Clique em "Novo Produto" para começar</p>
+          </div>
+        ) : (
+          allProducts.map((product: any) => (
+            <Card key={product.id} className="p-4 border-l-4 border-l-red-600">
+              <div className="space-y-3">
+                {/* Imagem e info principal */}
+                <div className="flex gap-3">
+                  {product.imageUrl && (
+                    <img
+                      src={product.imageUrl}
+                      alt={product.name}
+                      className="w-20 h-20 object-cover rounded-lg flex-shrink-0"
+                    />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-base text-gray-900 truncate">{product.name}</h3>
+                    {product.description && (
+                      <p className="text-gray-600 text-sm line-clamp-2 mt-1">{product.description}</p>
+                    )}
+                    <p className="text-red-600 font-bold text-lg mt-2">R$ {(product.price / 100).toFixed(2)}</p>
+                  </div>
+                </div>
+
+                {/* Status e botões */}
+                <div className="space-y-2 pt-2 border-t">
+                  <div className="flex items-center justify-between">
+                    <span className={`text-xs font-semibold px-3 py-1 rounded-full ${
+                      product.isAvailable 
+                        ? 'bg-green-100 text-green-800' 
+                        : 'bg-red-100 text-red-800'
+                    }`}>
+                      {product.isAvailable ? '✓ Disponível' : '✗ Esgotado'}
+                    </span>
+                  </div>
+                  
+                  <div className="grid grid-cols-3 gap-2">
+                    <Button
+                      variant={product.isAvailable ? "outline" : "default"}
+                      size="sm"
+                      onClick={() => handleToggleAvailability(product.id, !product.isAvailable)}
+                      className={`h-10 text-xs font-semibold ${!product.isAvailable ? "bg-green-600 hover:bg-green-700 text-white" : ""}`}
+                    >
+                      {product.isAvailable ? "Desabilitar" : "Habilitar"}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleOpenDialog(product)}
+                      className="h-10"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleDelete(product.id)}
+                      className="h-10"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </Card>

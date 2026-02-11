@@ -213,3 +213,12 @@
 - [x] Implementar busca por nome e número do pedido
 - [x] Adicionar botão "Repetir Pedido" para adicionar itens ao carrinho
 - [x] Testar com vitest (37 testes passando)
+
+
+## Otimização do Painel Admin para Mobile
+- [x] Apagar todos os pedidos do banco de dados
+- [x] Otimizar Admin.tsx para layout mobile (abas em grid 2x2 no mobile)
+- [x] Melhorar ProductManager para mobile (cards maiores, botões grandes)
+- [x] Adicionar botão "Novo Produto" com modal mobile-friendly
+- [x] Melhorar formulário de criar produto (inputs h-12, texto maior)
+- [x] Testar em celular (responsividade, usabilidade)

@@ -214,14 +214,14 @@ export default function Admin() {
           </Card>
         </div>
 
-        {/* Tabs */}
+        {/* Tabs - Mobile Optimized */}
         <Tabs value={selectedTab} onValueChange={setSelectedTab}>
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="pedidos">Pedidos</TabsTrigger>
-            <TabsTrigger value="produtos">Produtos</TabsTrigger>
-            <TabsTrigger value="caixa">Caixa</TabsTrigger>
-            <TabsTrigger value="avaliacoes">Avaliações</TabsTrigger>
-            <TabsTrigger value="relatorios">Relatórios</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 gap-1 mb-4">
+            <TabsTrigger value="pedidos" className="text-xs md:text-sm">Pedidos</TabsTrigger>
+            <TabsTrigger value="produtos" className="text-xs md:text-sm">Produtos</TabsTrigger>
+            <TabsTrigger value="caixa" className="text-xs md:text-sm">Caixa</TabsTrigger>
+            <TabsTrigger value="avaliacoes" className="text-xs md:text-sm">Avaliações</TabsTrigger>
+            <TabsTrigger value="relatorios" className="text-xs md:text-sm">Relatórios</TabsTrigger>
           </TabsList>
 
           {/* Pedidos Tab */}
