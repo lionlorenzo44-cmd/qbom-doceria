@@ -56,3 +56,10 @@
 - [x] Exibir avaliações no cardápio digital
 - [x] Adicionar painel de avaliações no admin para moderar comentários
 - [x] Testar fluxo completo de avaliações (14 testes passando)
+
+## Mudança de Paleta de Cores
+- [x] Mudar cores de rosa para vermelho em todos os componentes
+- [x] Atualizar tema global (index.css)
+- [x] Atualizar componentes React (Home, Order, Admin, etc)
+- [x] Testar responsividade com novas cores
+- [x] Entregar ao usuário

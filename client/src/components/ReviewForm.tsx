@@ -119,7 +119,7 @@ export function ReviewForm({ productId, productName, onReviewSubmitted }: Review
           <Button
             onClick={handleSubmit}
             disabled={createReviewMutation.isPending}
-            className="w-full bg-pink-600 hover:bg-pink-700"
+            className="w-full bg-red-600 hover:bg-red-700"
           >
             Enviar Avaliação
           </Button>

@@ -23,13 +23,13 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-red-50 to-white">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <Heart className="w-8 h-8 text-pink-600 fill-pink-600" />
-            <h1 className="text-2xl font-bold text-pink-700">Qbom Doceria</h1>
+            <Heart className="w-8 h-8 text-red-600 fill-red-600" />
+            <h1 className="text-2xl font-bold text-red-700">Qbom Doceria</h1>
           </div>
           <nav className="flex gap-4 items-center">
             {user?.role === "admin" && (
@@ -47,7 +47,7 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-pink-600 to-pink-500 text-white py-16 md:py-24">
+      <section className="bg-gradient-to-r from-red-600 to-red-500 text-white py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">Doces que dão vontade de repetir 😋</h2>
           <p className="text-lg md:text-xl mb-8 opacity-90">
@@ -56,7 +56,7 @@ export default function Home() {
           <Button
             onClick={handleOrderClick}
             size="lg"
-            className="bg-white text-pink-600 hover:bg-pink-50 font-bold"
+            className="bg-white text-red-600 hover:bg-red-50 font-bold"
           >
             <ShoppingCart className="w-5 h-5 mr-2" />
             Fazer Pedido
@@ -67,7 +67,7 @@ export default function Home() {
       {/* Cardápio Section */}
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4">
-          <h3 className="text-3xl md:text-4xl font-bold text-center mb-4 text-pink-700">Nossos Doces</h3>
+          <h3 className="text-3xl md:text-4xl font-bold text-center mb-4 text-red-700">Nossos Doces</h3>
           <p className="text-center text-gray-600 mb-12">
             Escolha seus doces favoritos e faça seu pedido
           </p>
@@ -89,21 +89,21 @@ export default function Home() {
       </section>
 
       {/* Info Section */}
-      <section className="bg-pink-50 py-16">
+      <section className="bg-red-50 py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div>
-              <div className="text-4xl font-bold text-pink-600 mb-2">🚚</div>
+              <div className="text-4xl font-bold text-red-600 mb-2">🚚</div>
               <h4 className="font-bold text-lg mb-2">Entrega Grátis</h4>
               <p className="text-gray-600">Em qualquer pedido, sem valor mínimo</p>
             </div>
             <div>
-              <div className="text-4xl font-bold text-pink-600 mb-2">💝</div>
+              <div className="text-4xl font-bold text-red-600 mb-2">💝</div>
               <h4 className="font-bold text-lg mb-2">Feito com Amor</h4>
               <p className="text-gray-600">Receitas caseiras e ingredientes de qualidade</p>
             </div>
             <div>
-              <div className="text-4xl font-bold text-pink-600 mb-2">📱</div>
+              <div className="text-4xl font-bold text-red-600 mb-2">📱</div>
               <h4 className="font-bold text-lg mb-2">Pedidos Fáceis</h4>
               <p className="text-gray-600">Peça pelo WhatsApp de forma rápida e simples</p>
             </div>
@@ -114,11 +114,11 @@ export default function Home() {
       {/* CTA Section */}
       <section className="py-16 text-center">
         <div className="container mx-auto px-4">
-          <h3 className="text-3xl font-bold text-pink-700 mb-6">Pronto para saborear?</h3>
+          <h3 className="text-3xl font-bold text-red-700 mb-6">Pronto para saborear?</h3>
           <Button
             onClick={handleOrderClick}
             size="lg"
-            className="bg-pink-600 hover:bg-pink-700 text-white font-bold"
+            className="bg-red-600 hover:bg-red-700 text-white font-bold"
           >
             <ShoppingCart className="w-5 h-5 mr-2" />
             Fazer Pedido Agora
@@ -197,13 +197,13 @@ function ProductCard({
         </div>
 
         <div className="flex justify-between items-center mt-auto">
-          <span className="text-2xl font-bold text-pink-600">
+          <span className="text-2xl font-bold text-red-600">
             R$ {(product.price / 100).toFixed(2)}
           </span>
           <Button
             onClick={onOrderClick}
             size="sm"
-            className="bg-pink-600 hover:bg-pink-700"
+            className="bg-red-600 hover:bg-red-700"
           >
             Pedir
           </Button>
@@ -230,7 +230,7 @@ function ProductCard({
             onClick={onToggleExpand}
             variant="ghost"
             size="sm"
-            className="w-full mt-2 text-pink-600"
+            className="w-full mt-2 text-red-600"
           >
             Ver {reviews.length} avaliação{reviews.length !== 1 ? "ões" : ""}
           </Button>
@@ -241,7 +241,7 @@ function ProductCard({
             onClick={onToggleExpand}
             variant="ghost"
             size="sm"
-            className="w-full mt-2 text-pink-600"
+            className="w-full mt-2 text-red-600"
           >
             Deixar Avaliação
           </Button>

@@ -118,7 +118,7 @@ export default function Order() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-red-50 to-white">
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4 flex items-center gap-4">
@@ -129,7 +129,7 @@ export default function Order() {
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <h1 className="text-2xl font-bold text-pink-700">Fazer Pedido</h1>
+          <h1 className="text-2xl font-bold text-red-700">Fazer Pedido</h1>
         </div>
       </header>
 
@@ -156,13 +156,13 @@ export default function Order() {
                       <p className="text-sm text-gray-600 mb-2">{product.description}</p>
                     )}
                     <div className="flex justify-between items-center">
-                      <span className="text-lg font-bold text-pink-600">
+                      <span className="text-lg font-bold text-red-600">
                         R$ {(product.price / 100).toFixed(2)}
                       </span>
                       <Button
                         onClick={() => handleAddToCart(product)}
                         size="sm"
-                        className="bg-pink-600 hover:bg-pink-700"
+                        className="bg-red-600 hover:bg-red-700"
                       >
                         <Plus className="w-4 h-4" />
                       </Button>
@@ -226,7 +226,7 @@ export default function Order() {
                 </div>
                 <div className="flex justify-between items-center text-lg font-bold border-t pt-2">
                   <span>Total:</span>
-                  <span className="text-pink-600">R$ {(totalPrice / 100).toFixed(2)}</span>
+                  <span className="text-red-600">R$ {(totalPrice / 100).toFixed(2)}</span>
                 </div>
               </div>
 
@@ -279,7 +279,7 @@ export default function Order() {
                 <Button
                   onClick={handleSubmitOrder}
                   disabled={cart.length === 0 || createOrderMutation.isPending}
-                  className="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold"
+                  className="w-full bg-red-600 hover:bg-red-700 text-white font-bold"
                 >
                   <MessageCircle className="w-5 h-5 mr-2" />
                   Enviar para WhatsApp

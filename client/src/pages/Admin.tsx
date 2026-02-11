@@ -163,7 +163,7 @@ export default function Admin() {
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
-            <h1 className="text-2xl font-bold text-pink-700">Painel Administrativo</h1>
+            <h1 className="text-2xl font-bold text-red-700">Painel Administrativo</h1>
           </div>
           <div className="text-sm text-gray-600">
             Bem-vindo, {user?.name}
@@ -178,9 +178,9 @@ export default function Admin() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-600 text-sm">Total de Pedidos</p>
-                <p className="text-3xl font-bold text-pink-600">{orders.length}</p>
+                <p className="text-3xl font-bold text-red-600">{orders.length}</p>
               </div>
-              <TrendingUp className="w-8 h-8 text-pink-600 opacity-50" />
+              <TrendingUp className="w-8 h-8 text-red-600 opacity-50" />
             </div>
           </Card>
           <Card className="p-6">
@@ -218,7 +218,7 @@ export default function Admin() {
               <h2 className="text-xl font-bold">Gerenciar Pedidos</h2>
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button className="bg-pink-600 hover:bg-pink-700">
+                  <Button className="bg-red-600 hover:bg-red-700">
                     <Plus className="w-4 h-4 mr-2" />
                     Novo Pedido (Balcão)
                   </Button>
@@ -249,7 +249,7 @@ export default function Admin() {
                       </div>
                       <div>
                         <p className="text-sm text-gray-600">Total</p>
-                        <p className="font-bold text-pink-600">R$ {(order.totalPrice / 100).toFixed(2)}</p>
+                        <p className="font-bold text-red-600">R$ {(order.totalPrice / 100).toFixed(2)}</p>
                       </div>
                       <div>
                         <p className="text-sm text-gray-600">Status</p>
@@ -315,7 +315,7 @@ export default function Admin() {
                             </div>
                             <Button
                               onClick={handleAddPayment}
-                              className="w-full bg-pink-600 hover:bg-pink-700"
+                              className="w-full bg-red-600 hover:bg-red-700"
                             >
                               Registrar
                             </Button>
@@ -335,7 +335,7 @@ export default function Admin() {
               <h2 className="text-xl font-bold">Controle de Caixa</h2>
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button className="bg-pink-600 hover:bg-pink-700">
+                  <Button className="bg-red-600 hover:bg-red-700">
                     <Plus className="w-4 h-4 mr-2" />
                     Novo Registro
                   </Button>
@@ -390,7 +390,7 @@ export default function Admin() {
                     </div>
                     <Button
                       onClick={handleAddCashEntry}
-                      className="w-full bg-pink-600 hover:bg-pink-700"
+                      className="w-full bg-red-600 hover:bg-red-700"
                     >
                       Registrar
                     </Button>
