@@ -119,3 +119,4 @@
 
 ## Imagens de Produtos
 - [x] Adicionar segunda imagem ao Bolo de Pote (Ninho com brigadeiro)
+- [x] Substituir imagem da Surpresa de Uva
