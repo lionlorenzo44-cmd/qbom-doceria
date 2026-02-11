@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SoldOutBadge } from "@/components/SoldOutBadge";
+import PixPayment from "@/components/PixPayment";
 import { trpc } from "@/lib/trpc";
 import { MessageCircle, Plus, Trash2, MapPin, AlertCircle, CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -489,23 +490,10 @@ export default function Home() {
                 )}
 
                 {paymentMethod === "pix" && (
-                  <div className="space-y-3 border-t pt-3 bg-red-50 p-3 rounded">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-red-600 rounded-full"></div>
-                      <p className="text-sm font-semibold text-red-700">Chaves PIX para transferência:</p>
-                    </div>
-                    <div className="space-y-2">
-                      <div className="bg-white p-2 rounded border border-red-200">
-                        <p className="text-xs text-gray-600">Email:</p>
-                        <p className="text-sm font-mono font-semibold text-gray-800">vitoriabjj953@gmail.com</p>
-                      </div>
-                      <div className="bg-white p-2 rounded border border-red-200">
-                        <p className="text-xs text-gray-600">Telefone:</p>
-                        <p className="text-sm font-mono font-semibold text-gray-800">75 98299-6939</p>
-                      </div>
-                    </div>
-                    <p className="text-xs text-gray-600 italic">Copie uma das chaves acima e faça a transferencia no seu banco.</p>
-                  </div>
+                  <PixPayment 
+                    pixKey="00020126580014br.gov.bcb.pix0136" 
+                    receiverName="Qbom Doceria"
+                  />
                 )}
 
                 <Button

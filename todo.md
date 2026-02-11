@@ -265,3 +265,9 @@
 - [x] Integrar componente na página de pedido
 - [x] Testar em PC e celular
 - [x] Escrever testes vitest
+
+
+## Corrigir Exibição do PixPayment
+- [x] Verificar por que o componente não está exibindo corretamente
+- [x] Corrigir renderização do bloco Pix
+- [x] Testar novamente
