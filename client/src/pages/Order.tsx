@@ -288,16 +288,33 @@ export default function Order() {
                 </div>
 
                 <div>
-                  <Label htmlFor="payment">Forma de Pagamento *</Label>
-                  <Select value={paymentMethod} onValueChange={setPaymentMethod}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="dinheiro">Dinheiro</SelectItem>
-                      <SelectItem value="pix">PIX</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Label>Forma de Pagamento *</Label>
+                  <div className="payment-options space-y-2 mt-2">
+                    <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-red-50 transition">
+                      <input
+                        type="radio"
+                        name="payment"
+                        value="dinheiro"
+                        checked={paymentMethod === "dinheiro"}
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                        className="w-4 h-4 text-red-600"
+                      />
+                      <span className="text-lg">💵</span>
+                      <span className="font-medium">Dinheiro</span>
+                    </label>
+                    <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-red-50 transition">
+                      <input
+                        type="radio"
+                        name="payment"
+                        value="pix"
+                        checked={paymentMethod === "pix"}
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                        className="w-4 h-4 text-red-600"
+                      />
+                      <span className="text-lg">📲</span>
+                      <span className="font-medium">PIX</span>
+                    </label>
+                  </div>
                 </div>
 
                 {paymentMethod === "dinheiro" && (
