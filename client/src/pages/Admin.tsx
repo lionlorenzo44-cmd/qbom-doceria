@@ -37,7 +37,7 @@ export default function Admin() {
   const [newPaymentAmount, setNewPaymentAmount] = useState("");
   const [newPaymentMethod, setNewPaymentMethod] = useState("dinheiro");
 
-  const [newCashAmount, setNewCashAmount] = useState("");
+  const [newCashAmount, setNewCashAmount] = useState("0");
   const [newCashType, setNewCashType] = useState<"entrada" | "saida">("entrada");
   const [newCashDescription, setNewCashDescription] = useState("");
   const [newCashMethod, setNewCashMethod] = useState("dinheiro");
