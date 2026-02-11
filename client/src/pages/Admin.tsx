@@ -42,6 +42,14 @@ export default function Admin() {
   const [newCashDescription, setNewCashDescription] = useState("");
   const [newCashMethod, setNewCashMethod] = useState("dinheiro");
 
+  // Proteger contra tradução automática
+  useEffect(() => {
+    const elements = document.querySelectorAll('[data-translate-no]');
+    elements.forEach(el => {
+      el.setAttribute('translate', 'no');
+    });
+  }, []);
+
   // Verificar se é admin
   useEffect(() => {
     if (user && user.role !== "admin") {
@@ -154,7 +162,7 @@ export default function Admin() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50" translate="no">
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">

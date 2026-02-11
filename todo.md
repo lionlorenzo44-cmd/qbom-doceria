@@ -187,3 +187,11 @@
 - [x] Criar endpoints tRPC para gerenciar webhooks (list, create, update, delete)
 - [x] Criar painel de gerenciamento de webhooks (WebhooksPanel.tsx)
 - [x] Testar webhooks com vitest (4 testes, 37 testes totais passando)
+
+
+## Proteção Contra Tradução Automática
+- [x] Adicionar translate="no" em componentes críticos
+- [x] Proteger textos em páginas públicas (Home.tsx, Order.tsx)
+- [x] Proteger textos no painel admin (Admin.tsx)
+- [x] Adicionar useEffect para proteger elementos dinâmicos
+- [x] Testar com tradução automática ativada

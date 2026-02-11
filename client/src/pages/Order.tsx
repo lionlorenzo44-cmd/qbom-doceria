@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { trpc } from "@/lib/trpc";
 import { ArrowLeft, MessageCircle, Plus, Trash2, MapPin, AlertCircle, CheckCircle2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { toast } from "sonner";
 
@@ -36,6 +36,14 @@ export default function Order() {
   const [needsChange, setNeedsChange] = useState(false);
   const [changeAmount, setChangeAmount] = useState("");
   const [errors, setErrors] = useState<ValidationErrors>({});
+
+  // Proteger contra tradução automática
+  useEffect(() => {
+    const elements = document.querySelectorAll('[data-translate-no]');
+    elements.forEach(el => {
+      el.setAttribute('translate', 'no');
+    });
+  }, []);
 
   // Validação em tempo real
   const validateName = (name: string) => {
@@ -179,7 +187,7 @@ export default function Order() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white" translate="no">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Produtos */}
