@@ -137,3 +137,20 @@
 - [ ] Implementar autenticação por senha para /admin
 - [ ] Exibir selo visual de esgotado no site público
 - [ ] Desativar botão de adicionar ao carrinho quando esgotado
+
+
+## Autenticação Segura do Painel Admin
+- [x] Criar endpoint tRPC auth.adminLogin (novo, sem alterar rotas existentes)
+- [x] Criar página AdminLogin.tsx (novo arquivo, sem modificar Admin.tsx)
+- [x] Implementar proteção de rota /admin com token localStorage
+- [ ] Adicionar botão logout no painel admin
+- [x] Testar autenticação com 4+ testes vitest (18 testes totais passando)
+- [x] Criar DATA_PROTECTION.md com regras de integridade
+
+## Regras de Proteção de Dados
+- NUNCA sobrescrever imagens de produtos existentes
+- NUNCA modificar dados de pedidos anteriores
+- NUNCA alterar Admin.tsx diretamente (usar componentes novos)
+- NUNCA deletar ou alterar rotas públicas
+- SEMPRE usar edições cirúrgicas (edit action) ao invés de recriar arquivos
+- SEMPRE testar com vitest antes de commitar

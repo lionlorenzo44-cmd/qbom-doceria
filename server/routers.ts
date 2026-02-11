@@ -17,6 +17,19 @@ export const appRouter = router({
         success: true,
       } as const;
     }),
+    adminLogin: publicProcedure
+      .input(z.object({ username: z.string(), password: z.string() }))
+      .mutation(({ input, ctx }) => {
+        const ADMIN_USERNAME = 'Aurora25';
+        const ADMIN_PASSWORD = 'Aqua1048';
+        
+        if (input.username === ADMIN_USERNAME && input.password === ADMIN_PASSWORD) {
+          const cookieOptions = getSessionCookieOptions(ctx.req);
+          ctx.res.cookie('admin_session', 'authenticated', { ...cookieOptions, maxAge: 7 * 24 * 60 * 60 * 1000 });
+          return { success: true };
+        }
+        throw new Error('Credenciais invalidas');
+      }),
   }),
 
   products: router({
