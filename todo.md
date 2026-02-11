@@ -137,4 +137,3 @@
 - [ ] Implementar autenticação por senha para /admin
 - [ ] Exibir selo visual de esgotado no site público
 - [ ] Desativar botão de adicionar ao carrinho quando esgotado
-- [x] Deixar setas de navegacao do carrossel visiveis no celular
