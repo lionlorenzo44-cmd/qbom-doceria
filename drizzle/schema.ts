@@ -32,6 +32,7 @@ export const products = mysqlTable("products", {
   price: int("price").notNull(), // Preço em centavos (ex: 1200 = R$ 12,00)
   imageUrl: text("imageUrl"),
   isActive: int("isActive").default(1).notNull(), // 1 = ativo, 0 = inativo
+  isAvailable: int("isAvailable").default(1).notNull(), // 1 = disponivel, 0 = esgotado
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

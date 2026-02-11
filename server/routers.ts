@@ -22,6 +22,14 @@ export const appRouter = router({
   products: router({
     list: publicProcedure.query(() => db.getActiveProducts()),
     getById: publicProcedure.input(z.object({ id: z.number() })).query(({ input }) => db.getProductById(input.id)),
+    toggleAvailability: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user?.role !== 'admin') {
+          throw new Error('Unauthorized');
+        }
+        return db.toggleProductAvailability(input.id);
+      }),
   }),
 
   orders: router({

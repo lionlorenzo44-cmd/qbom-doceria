@@ -19,6 +19,7 @@ export default function Admin() {
 
   // Queries
   const { data: orders = [], refetch: refetchOrders } = trpc.orders.list.useQuery();
+  const { data: products = [], refetch: refetchProducts } = trpc.products.list.useQuery();
   const { data: cashEntries = [] } = trpc.cashRegister.list.useQuery();
   const { data: allReviews = [], refetch: refetchReviews } = trpc.reviews.getAll.useQuery({});
 
@@ -28,6 +29,7 @@ export default function Admin() {
   const createCashEntryMutation = trpc.cashRegister.create.useMutation();
   const approveReviewMutation = trpc.reviews.approve.useMutation();
   const deleteReviewMutation = trpc.reviews.delete.useMutation();
+  const toggleAvailability = trpc.products.toggleAvailability.useMutation();
 
   // Form states
   const [newPaymentOrderId, setNewPaymentOrderId] = useState<number | null>(null);
@@ -205,8 +207,9 @@ export default function Admin() {
 
         {/* Tabs */}
         <Tabs value={selectedTab} onValueChange={setSelectedTab}>
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="pedidos">Pedidos</TabsTrigger>
+            <TabsTrigger value="produtos">Produtos</TabsTrigger>
             <TabsTrigger value="caixa">Caixa</TabsTrigger>
             <TabsTrigger value="avaliacoes">Avaliações</TabsTrigger>
             <TabsTrigger value="relatorios">Relatórios</TabsTrigger>
@@ -322,6 +325,41 @@ export default function Admin() {
                           </div>
                         </DialogContent>
                       </Dialog>
+                    </div>
+                  </Card>
+                ))
+              )}
+            </div>
+          </TabsContent>
+
+          {/* Produtos Tab */}
+          <TabsContent value="produtos" className="space-y-4">
+            <h2 className="text-xl font-bold mb-4">Gerenciar Disponibilidade de Produtos</h2>
+            <div className="space-y-4">
+              {products.length === 0 ? (
+                <p className="text-center text-gray-500 py-8">Nenhum produto cadastrado</p>
+              ) : (
+                products.map((product: any) => (
+                  <Card key={product.id} className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <h3 className="font-bold text-lg">{product.name}</h3>
+                        <p className="text-gray-600 text-sm">R$ {(product.price / 100).toFixed(2)}</p>
+                      </div>
+                      <Button
+                        onClick={async () => {
+                          try {
+                            await toggleAvailability.mutateAsync({ id: product.id });
+                            refetchProducts();
+                            toast.success("Disponibilidade atualizada");
+                          } catch (error) {
+                            toast.error("Erro ao atualizar");
+                          }
+                        }}
+                        className={`${product.isAvailable ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}`}
+                      >
+                        {product.isAvailable ? 'Disponivel' : 'Esgotado'}
+                      </Button>
                     </div>
                   </Card>
                 ))

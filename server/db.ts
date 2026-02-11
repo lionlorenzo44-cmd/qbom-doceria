@@ -210,3 +210,14 @@ export async function getProductAverageRating(productId: number) {
   const sum = result.reduce((acc: number, r: any) => acc + r.rating, 0);
   return Math.round((sum / result.length) * 10) / 10;
 }
+
+export async function toggleProductAvailability(productId: number) {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  
+  const product = await getProductById(productId);
+  if (!product) throw new Error('Product not found');
+  
+  const newAvailability = product.isAvailable === 1 ? 0 : 1;
+  return db.update(products).set({ isAvailable: newAvailability }).where(eq(products.id, productId));
+}

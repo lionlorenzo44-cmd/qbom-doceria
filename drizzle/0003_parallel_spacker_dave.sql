@@ -1,0 +1,1 @@
+ALTER TABLE `products` ADD `isAvailable` int DEFAULT 1 NOT NULL;
