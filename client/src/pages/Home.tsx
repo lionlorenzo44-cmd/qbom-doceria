@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { SoldOutBadge } from "@/components/SoldOutBadge";
 import { trpc } from "@/lib/trpc";
 import { MessageCircle, Plus, Trash2, MapPin, AlertCircle, CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -213,6 +214,7 @@ export default function Home() {
 
                 return (
                   <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
+                    {!product.isAvailable && <SoldOutBadge />}
                     {currentImage && (
                       <div className="relative w-full bg-gray-200 overflow-hidden group" style={{ height: '384px' }}>
                         <img

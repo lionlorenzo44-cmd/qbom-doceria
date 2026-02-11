@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -14,6 +13,7 @@ export function ProductManager() {
   const createProductMutation = trpc.products.create.useMutation();
   const updateProductMutation = trpc.products.update.useMutation();
   const deleteProductMutation = trpc.products.delete.useMutation();
+  const toggleAvailabilityMutation = trpc.products.toggleAvailability.useMutation();
 
   const [isOpen, setIsOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
@@ -78,6 +78,16 @@ export function ProductManager() {
       resetForm();
     } catch (error) {
       toast.error("Erro ao salvar produto");
+    }
+  };
+
+  const handleToggleAvailability = async (id: number, isAvailable: boolean) => {
+    try {
+      await toggleAvailabilityMutation.mutateAsync({ id, isAvailable });
+      toast.success(isAvailable ? "Produto habilitado" : "Produto desabilitado");
+      refetchAllProducts();
+    } catch (error) {
+      toast.error("Erro ao atualizar disponibilidade");
     }
   };
 
@@ -218,6 +228,14 @@ export function ProductManager() {
                   </p>
                 </div>
                 <div className="flex gap-2">
+                  <Button
+                    variant={product.isAvailable ? "outline" : "default"}
+                    size="sm"
+                    onClick={() => handleToggleAvailability(product.id, !product.isAvailable)}
+                    className={!product.isAvailable ? "bg-green-600 hover:bg-green-700" : ""}
+                  >
+                    {product.isAvailable ? "Desabilitar" : "Habilitar"}
+                  </Button>
                   <Button
                     variant="outline"
                     size="sm"

@@ -195,3 +195,11 @@
 - [x] Proteger textos no painel admin (Admin.tsx)
 - [x] Adicionar useEffect para proteger elementos dinâmicos
 - [x] Testar com tradução automática ativada
+
+
+## Produtos Esgotados
+- [x] Criar componente SoldOutBadge com selo visual
+- [x] Integrar selo nos cards de produtos (Home.tsx e Order.tsx)
+- [x] Desabilitar botão "Adicionar ao Carrinho" quando indisponível
+- [x] Adicionar toggle de disponibilidade no painel admin (ProductManager.tsx)
+- [x] Testar com vitest (37 testes passando)

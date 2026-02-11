@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { SoldOutBadge } from "@/components/SoldOutBadge";
 import { trpc } from "@/lib/trpc";
 import { ArrowLeft, MessageCircle, Plus, Trash2, MapPin, AlertCircle, CheckCircle2 } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -195,7 +196,8 @@ export default function Order() {
             <h2 className="text-2xl font-bold text-gray-800 mb-6">Escolha seus doces</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {products.map((product) => (
-                <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow relative">
+                  {!product.isAvailable && <SoldOutBadge />}
                   {product.imageUrl && (
                     <div className="w-full h-32 bg-gray-200 overflow-hidden">
                       <img
