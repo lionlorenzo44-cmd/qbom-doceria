@@ -122,3 +122,4 @@
 - [x] Substituir imagem do Produto 4 (Surpresa de Uva)
 - [x] Substituir imagem do Produto 3 (Doce de Leite 200ml)
 - [x] Substituir primeira imagem do Produto 1 (Bolo de Pote Ninho)
+- [x] Substituir imagens do Produto 2 (Bolo de Pote Chocolate) - 2 imagens
