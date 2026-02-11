@@ -30,6 +30,10 @@ export default function Order() {
   const [changeAmount, setChangeAmount] = useState("");
 
   const handleAddToCart = (product: any) => {
+    if (!product.isAvailable) {
+      toast.error("Este produto está esgotado");
+      return;
+    }
     const existingItem = cart.find(item => item.productId === product.id);
     if (existingItem) {
       setCart(cart.map(item =>
@@ -166,6 +170,7 @@ export default function Order() {
                         onClick={() => handleAddToCart(product)}
                         size="sm"
                         className="bg-red-600 hover:bg-red-700"
+                        disabled={!product.isAvailable}
                       >
                         <Plus className="w-4 h-4" />
                       </Button>

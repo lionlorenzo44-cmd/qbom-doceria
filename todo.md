@@ -79,3 +79,6 @@
 - [x] Atualizar nome dos produtos para "Bolo de Pote" com sabor na descrição
 - [x] Testar produtos no cardápio (14 testes passando)
 - [x] Entregar ao usuário
+
+## Bugs Reportados
+- [x] Carrinho não atualiza o valor total ao adicionar produtos (continua em R$ 0) - CORRIGIDO: Adicionada verificação de disponibilidade
