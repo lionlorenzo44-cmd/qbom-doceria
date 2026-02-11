@@ -92,4 +92,5 @@
 - [x] Tornar opções de pagamento mais claras e clicáveis
 - [x] Remover indicador de progresso para checkout rápido
 - [x] Remover opção de "retirada no balcão"
+- [x] Adicionar campos de Bairro e Referência no endereço
 - [x] Testar todas as alterações com vitest

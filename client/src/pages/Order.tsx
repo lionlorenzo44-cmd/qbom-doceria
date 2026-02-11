@@ -30,6 +30,8 @@ export default function Order() {
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [customerAddress, setCustomerAddress] = useState("");
+  const [customerNeighborhood, setCustomerNeighborhood] = useState("");
+  const [customerReference, setCustomerReference] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("dinheiro");
   const [needsChange, setNeedsChange] = useState(false);
   const [changeAmount, setChangeAmount] = useState("");
@@ -151,7 +153,8 @@ export default function Order() {
         .map(item => `${item.productName} (x${item.quantity}) - R$ ${(item.price * item.quantity / 100).toFixed(2)}`)
         .join("\n");
 
-      const message = `Olá! Gostaria de fazer um pedido na Qbom Doceria:\n\n${itemsText}\n\nTotal: R$ ${(totalPrice / 100).toFixed(2)}\nNome: ${customerName}\nTelefone: ${customerPhone}\nEndereço: ${customerAddress || "Endereço não informado"}\nForma de pagamento: ${paymentMethod}\n\nPedido: ${result.orderNumber}`;
+      const fullAddress = `${customerAddress}${customerNeighborhood ? `, ${customerNeighborhood}` : ""}${customerReference ? ` - Ref: ${customerReference}` : ""}`;
+      const message = `Olá! Gostaria de fazer um pedido na Qbom Doceria:\n\n${itemsText}\n\nTotal: R$ ${(totalPrice / 100).toFixed(2)}\nNome: ${customerName}\nTelefone: ${customerPhone}\nEndereço: ${fullAddress || "Endereço não informado"}\nForma de pagamento: ${paymentMethod}\n\nPedido: ${result.orderNumber}`;
 
       const encodedMessage = encodeURIComponent(message);
       const whatsappNumber = "5571992180210";
@@ -165,6 +168,8 @@ export default function Order() {
       setCustomerName("");
       setCustomerPhone("");
       setCustomerAddress("");
+      setCustomerNeighborhood("");
+      setCustomerReference("");
       setPaymentMethod("dinheiro");
       setErrors({});
     } catch (error) {
@@ -322,7 +327,19 @@ export default function Order() {
                       id="address"
                       value={customerAddress}
                       onChange={(e) => setCustomerAddress(e.target.value)}
-                      placeholder="Digite seu endereço"
+                      placeholder="Rua, número"
+                    />
+                    <Input
+                      id="neighborhood"
+                      value={customerNeighborhood}
+                      onChange={(e) => setCustomerNeighborhood(e.target.value)}
+                      placeholder="Bairro"
+                    />
+                    <Input
+                      id="reference"
+                      value={customerReference}
+                      onChange={(e) => setCustomerReference(e.target.value)}
+                      placeholder="Referência (ex: perto do mercado)"
                     />
                     <p className="text-xs text-gray-500">Ou</p>
                     <Button
