@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ImageUpload } from "@/components/ImageUpload";
 import { trpc } from "@/lib/trpc";
 import { Plus, Edit, Trash2, AlertCircle } from "lucide-react";
 import { useState } from "react";
@@ -161,38 +162,22 @@ export function ProductManager() {
                   />
                 </div>
 
+                {/* Primeira Imagem com Upload */}
                 <div>
-                  <Label className="text-base font-semibold">URL da Primeira Imagem</Label>
-                  <Input
-                    value={imageUrl}
-                    onChange={(e) => setImageUrl(e.target.value)}
-                    placeholder="https://..."
-                    className="mt-2 h-12 text-base"
+                  <ImageUpload
+                    label="Primeira Imagem do Produto"
+                    preview={imageUrl}
+                    onImageSelect={setImageUrl}
                   />
-                  {imageUrl && (
-                    <img
-                      src={imageUrl}
-                      alt="Preview 1"
-                      className="mt-3 w-full h-40 object-cover rounded-lg"
-                    />
-                  )}
                 </div>
 
+                {/* Segunda Imagem com Upload */}
                 <div>
-                  <Label className="text-base font-semibold">URL da Segunda Imagem (Opcional)</Label>
-                  <Input
-                    value={imageUrl2}
-                    onChange={(e) => setImageUrl2(e.target.value)}
-                    placeholder="https://..."
-                    className="mt-2 h-12 text-base"
+                  <ImageUpload
+                    label="Segunda Imagem (Opcional)"
+                    preview={imageUrl2}
+                    onImageSelect={setImageUrl2}
                   />
-                  {imageUrl2 && (
-                    <img
-                      src={imageUrl2}
-                      alt="Preview 2"
-                      className="mt-3 w-full h-40 object-cover rounded-lg"
-                    />
-                  )}
                 </div>
 
                 <div className="flex gap-3 pt-4">

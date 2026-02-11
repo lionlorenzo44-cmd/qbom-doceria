@@ -222,3 +222,14 @@
 - [x] Adicionar botão "Novo Produto" com modal mobile-friendly
 - [x] Melhorar formulário de criar produto (inputs h-12, texto maior)
 - [x] Testar em celular (responsividade, usabilidade)
+
+
+## Upload de Imagem da Galeria/Câmera
+- [x] Criar componente ImageUpload.tsx com suporte a câmera e galeria
+- [x] Implementar botões mobile-friendly (Câmera e Galeria)
+- [x] Adicionar validação de tipo e tamanho de arquivo (máx 5MB)
+- [x] Implementar preview de imagem com opção de remover
+- [x] Converter imagem para Base64 automaticamente
+- [x] Integrar ImageUpload no ProductManager para ambas as imagens
+- [x] Testar com vitest (37 testes passando)
+- [x] Compatível com Android e iPhone
