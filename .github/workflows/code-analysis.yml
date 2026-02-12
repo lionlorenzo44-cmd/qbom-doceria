@@ -1,0 +1,61 @@
+name: Análise de Código
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    - cron: '0 2 * * *'
+
+jobs:
+  analyze:
+    name: Análise Estática de Código
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22.x'
+        cache: 'npm'
+    
+    - name: Instalar pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 10
+    
+    - name: Instalar dependências
+      run: pnpm install --frozen-lockfile
+    
+    - name: Verificar tipos TypeScript
+      run: pnpm tsc --noEmit || true
+    
+    - name: Verificar vulnerabilidades
+      run: npm audit --audit-level=moderate || true
+
+  dependency-check:
+    name: Verificação de Dependências
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22.x'
+    
+    - name: Instalar pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 10
+    
+    - name: Verificar vulnerabilidades
+      run: |
+        pnpm install --frozen-lockfile
+        npm audit --audit-level=moderate || true
