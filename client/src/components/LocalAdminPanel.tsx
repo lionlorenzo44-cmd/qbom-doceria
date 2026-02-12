@@ -336,7 +336,16 @@ export default function LocalAdminPanel() {
                             </div>
                           </div>
                         ) : (
-                          <div className="text-center py-4 text-gray-500 text-sm">Nenhuma imagem adicionada</div>
+                          <div className="text-center py-4">
+                            <p className="text-gray-500 text-sm mb-3">Nenhuma imagem adicionada</p>
+                            <button
+                              type="button"
+                              onClick={() => setImageEditMode('add')}
+                              className="w-full px-3 py-2 rounded text-sm font-medium bg-blue-600 text-white hover:bg-blue-700"
+                            >
+                              Adicionar Imagem
+                            </button>
+                          </div>
                         )}
                       </div>
 

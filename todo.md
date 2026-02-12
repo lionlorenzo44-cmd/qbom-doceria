@@ -370,3 +370,9 @@
 ## Corrigir Formatação de Preços no Painel Admin
 - [x] Corrigir exibição de preços (centavos para reais)
 - [x] Testar valores de preço na listagem
+
+
+## Corrigir Opções de Imagem na Edição
+- [x] Mostrar botões de adicionar/substituir mesmo sem imagem atual
+- [x] Permitir adicionar primeira imagem ao produto
+- [x] Testar adição de imagem em produto sem imagem
