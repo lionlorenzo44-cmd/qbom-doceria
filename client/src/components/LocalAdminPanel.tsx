@@ -21,7 +21,7 @@ export default function LocalAdminPanel() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === 'admin123') {
+    if (password === 'Aqua1048') {
       localStorage.setItem('adminLocalToken', 'true');
       setIsLoggedIn(true);
       setPassword('');
@@ -97,9 +97,7 @@ export default function LocalAdminPanel() {
             </Button>
           </form>
 
-          <p className="text-center text-sm text-gray-600 mt-4">
-            Senha padrão: <strong>admin123</strong>
-          </p>
+
         </Card>
       </div>
     );

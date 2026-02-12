@@ -303,3 +303,9 @@
 - [x] Investigar redirecionamento para login Manus
 - [x] Implementar autenticação local independente
 - [x] Testar e verificar funcionamento
+
+
+## Alterar Senha do Admin
+- [x] Trocar senha para Aqua1048
+- [x] Remover dica de senha visível
+- [x] Testar login
