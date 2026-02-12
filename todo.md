@@ -365,3 +365,8 @@
 - [x] Usar API tRPC para editar produtos
 - [x] Usar API tRPC para deletar produtos
 - [x] Testar edição de produtos com imagens
+
+
+## Corrigir Formatação de Preços no Painel Admin
+- [x] Corrigir exibição de preços (centavos para reais)
+- [x] Testar valores de preço na listagem
