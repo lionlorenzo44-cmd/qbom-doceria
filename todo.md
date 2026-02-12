@@ -411,3 +411,9 @@
 - [x] Remover descrição da listagem quando editando
 - [x] Deixar só campos editáveis no modo de edição
 - [x] Testar visualização e edição
+
+
+## Remover Carousel de Imagens da Listagem
+- [x] Remover carousel da listagem de produtos
+- [x] Deixar carousel só na aba de edição
+- [x] Testar visualização

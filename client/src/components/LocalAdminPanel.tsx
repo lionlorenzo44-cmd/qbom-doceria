@@ -303,64 +303,13 @@ export default function LocalAdminPanel() {
               <Card key={product.id} id={`product-${product.id}`} className={`p-0 flex flex-col transition-all overflow-hidden ${
                 editingProductId === product.id ? 'ring-2 ring-red-600 shadow-lg' : ''
               }`}>
-                {product.imageUrl && (
-                  <div className="relative w-full bg-gray-200 overflow-hidden group" style={{ height: '384px' }}>
-                    {(() => {
-                      const images = [product.imageUrl, product.imageUrl2, product.imageUrl3].filter(Boolean);
-                      const currentIndex = photoIndex[product.id] || 0;
-                      const currentImage = images[currentIndex];
-
-                      const handlePrevPhoto = () => {
-                        setPhotoIndex(prev => ({
-                          ...prev,
-                          [product.id]: currentIndex === 0 ? images.length - 1 : currentIndex - 1
-                        }));
-                      };
-
-                      const handleNextPhoto = () => {
-                        setPhotoIndex(prev => ({
-                          ...prev,
-                          [product.id]: currentIndex === images.length - 1 ? 0 : currentIndex + 1
-                        }));
-                      };
-
-                      return (
-                        <>
-                          <img
-                            src={currentImage}
-                            alt={product.name}
-                            className="w-full h-full object-cover"
-                          />
-                          {images.length > 1 && (
-                            <>
-                              <button
-                                onClick={handlePrevPhoto}
-                                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
-                              >
-                                <ChevronLeft className="w-5 h-5" />
-                              </button>
-                              <button
-                                onClick={handleNextPhoto}
-                                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
-                              >
-                                <ChevronRight className="w-5 h-5" />
-                              </button>
-                              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
-                                {images.map((_, idx) => (
-                                  <button
-                                    key={idx}
-                                    onClick={() => setPhotoIndex(prev => ({ ...prev, [product.id]: idx }))}
-                                    className={`w-2 h-2 rounded-full transition-all ${
-                                      idx === currentIndex ? 'bg-white w-6' : 'bg-white/50 hover:bg-white/75'
-                                    }`}
-                                  />
-                                ))}
-                              </div>
-                            </>
-                          )}
-                        </>
-                      );
-                    })()}
+                {editingProductId !== product.id && product.imageUrl && (
+                  <div className="relative w-full bg-gray-200 overflow-hidden" style={{ height: '384px' }}>
+                    <img
+                      src={product.imageUrl}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                 )}
                 <div className="p-4 flex flex-col flex-1">
