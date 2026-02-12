@@ -348,3 +348,12 @@
 - [x] Adicionar opção de substituir imagem existente
 - [x] Adicionar opção de adicionar segunda imagem
 - [x] Testar em mobile e desktop
+
+
+## Sistema de Notificações para Novos Pedidos
+- [x] Criar componente de notificação visual (toast/banner)
+- [x] Implementar som de alerta para novos pedidos
+- [x] Adicionar toggle para ligar/desligar som
+- [x] Criar badge com contador de pedidos não lidos
+- [x] Integrar polling para verificar novos pedidos
+- [x] Testar notificações em mobile e desktop

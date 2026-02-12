@@ -8,18 +8,27 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { trpc } from "@/lib/trpc";
-import { ArrowLeft, Plus, Printer, TrendingUp, Check, Trash2 } from "lucide-react";
+import { ArrowLeft, Plus, Printer, TrendingUp, Check, Trash2, Volume2, VolumeX } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { toast } from "sonner";
+import { useNotification } from "@/hooks/useNotification";
+import { useNotificationSound } from "@/hooks/useNotificationSound";
+import { NotificationContainer } from "@/components/NotificationContainer";
 
 export default function Admin() {
   const { user } = useAuth();
   const [, navigate] = useLocation();
   const [selectedTab, setSelectedTab] = useState("pedidos");
+  const { notifications, addNotification, removeNotification } = useNotification();
+  const { soundEnabled, playSound, toggleSound } = useNotificationSound();
+  const [lastOrderCount, setLastOrderCount] = useState(0);
+  const [unreadOrdersCount, setUnreadOrdersCount] = useState(0);
 
   // Queries
-  const { data: orders = [], refetch: refetchOrders } = trpc.orders.list.useQuery();
+  const { data: orders = [], refetch: refetchOrders } = trpc.orders.list.useQuery(undefined, {
+    refetchInterval: 5000,
+  });
   const { data: products = [], refetch: refetchProducts } = trpc.products.list.useQuery();
   const { data: cashEntries = [] } = trpc.cashRegister.list.useQuery();
   const { data: allReviews = [], refetch: refetchReviews } = trpc.reviews.getAll.useQuery({});
@@ -41,6 +50,18 @@ export default function Admin() {
   const [newCashType, setNewCashType] = useState<"entrada" | "saida">("entrada");
   const [newCashDescription, setNewCashDescription] = useState("");
   const [newCashMethod, setNewCashMethod] = useState("dinheiro");
+
+  // Monitorar novos pedidos
+  useEffect(() => {
+    if (orders.length > lastOrderCount) {
+      const newOrdersCount = orders.length - lastOrderCount;
+      setUnreadOrdersCount(newOrdersCount);
+      playSound();
+      const msg = `${newOrdersCount} novo${newOrdersCount > 1 ? 's' : ''} pedido${newOrdersCount > 1 ? 's' : ''} chegou${newOrdersCount > 1 ? 'ram' : ''}!`;
+      addNotification('🔔 Novo Pedido!', msg, 'success', 8000);
+    }
+    setLastOrderCount(orders.length);
+  }, [orders.length, lastOrderCount, playSound, addNotification]);
 
   // Proteger contra tradução automática
   useEffect(() => {
@@ -163,6 +184,7 @@ export default function Admin() {
 
   return (
     <div className="min-h-screen bg-gray-50" translate="no">
+      <NotificationContainer notifications={notifications} onRemove={removeNotification} />
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -176,8 +198,27 @@ export default function Admin() {
             </Button>
             <h1 className="text-2xl font-bold text-red-700">Painel Administrativo</h1>
           </div>
-          <div className="text-sm text-gray-600">
-            Bem-vindo, {user?.name}
+          <div className="flex items-center gap-4">
+            {unreadOrdersCount > 0 && (
+              <div className="bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                {unreadOrdersCount} novo{unreadOrdersCount > 1 ? 's' : ''}
+              </div>
+            )}
+            <Button
+              onClick={toggleSound}
+              variant="ghost"
+              size="sm"
+              title={soundEnabled ? 'Som ativado' : 'Som desativado'}
+            >
+              {soundEnabled ? (
+                <Volume2 className="w-5 h-5 text-green-600" />
+              ) : (
+                <VolumeX className="w-5 h-5 text-gray-400" />
+              )}
+            </Button>
+            <div className="text-sm text-gray-600">
+              Bem-vindo, {user?.name}
+            </div>
           </div>
         </div>
       </header>
