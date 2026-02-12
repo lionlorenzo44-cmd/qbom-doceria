@@ -378,6 +378,17 @@ export default function LocalAdminPanel() {
                                 </>
                               )}
                               
+                              {/* Badge com número da imagem */}
+                              {[
+                                product.imageUrl,
+                                product.imageUrl2,
+                                product.imageUrl3
+                              ].filter(Boolean).length > 1 && (
+                                <div className="absolute top-2 right-2 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                                  {(photoIndex[product.id] ?? 0) + 1}
+                                </div>
+                              )}
+                              
                               {/* Indicadores (dots) */}
                               {[
                                 product.imageUrl,

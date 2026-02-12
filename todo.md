@@ -441,3 +441,8 @@
 - [x] Permitir navegar entre as três imagens (imageUrl, imageUrl2, imageUrl3)
 - [x] Mostrar qual imagem está sendo exibida (ex: "Imagem 1 de 2")
 - [x] Permitir escolher qual imagem substituir ao clicar em "Substituir"
+
+## Indicador de Número de Imagem no Carousel
+- [x] Adicionar badge com número da imagem atual (1, 2, 3) no carousel
+- [x] Atualizar número dinamicamente ao navegar com setas
+- [x] Posicionar badge de forma visível (ex: canto superior)
