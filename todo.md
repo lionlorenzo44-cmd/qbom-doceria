@@ -357,3 +357,11 @@
 - [x] Criar badge com contador de pedidos não lidos
 - [x] Integrar polling para verificar novos pedidos
 - [x] Testar notificações em mobile e desktop
+
+
+## Integrar Produtos do Banco de Dados no Painel Admin
+- [x] Remover localStorage do painel admin
+- [x] Usar API tRPC para carregar produtos reais
+- [x] Usar API tRPC para editar produtos
+- [x] Usar API tRPC para deletar produtos
+- [x] Testar edição de produtos com imagens

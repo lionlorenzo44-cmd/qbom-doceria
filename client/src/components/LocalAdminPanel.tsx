@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Upload, X } from 'lucide-react';
+import { trpc } from '@/lib/trpc';
+import { toast } from 'sonner';
 
 export default function LocalAdminPanel() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [password, setPassword] = useState('');
-  const [products, setProducts] = useState<any[]>([]);
   const [editingProductId, setEditingProductId] = useState<number | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({ name: '', description: '', price: '', image: '' });
@@ -14,11 +15,17 @@ export default function LocalAdminPanel() {
   const [imagePreview, setImagePreview] = useState('');
   const [imageEditMode, setImageEditMode] = useState<'view' | 'replace' | 'add'>('view');
 
+  const { data: products = [], refetch: refetchProducts } = trpc.products.list.useQuery(undefined, {
+    enabled: isLoggedIn,
+  });
+  const updateProductMutation = trpc.products.update.useMutation();
+  const deleteProductMutation = trpc.products.delete.useMutation();
+  const createProductMutation = trpc.products.create.useMutation();
+
   useEffect(() => {
     const token = localStorage.getItem('adminLocalToken');
     if (token === 'true') {
       setIsLoggedIn(true);
-      loadProducts();
     }
   }, []);
 
@@ -41,28 +48,7 @@ export default function LocalAdminPanel() {
     setPassword('');
   };
 
-  const loadProducts = () => {
-    const saved = localStorage.getItem('adminProducts');
-    if (saved) {
-      setProducts(JSON.parse(saved));
-    } else {
-      const defaultProducts = [
-        { id: 1, name: 'Bolo de Pote', description: 'Ninho com brigadeiro', price: 12.00, image: '' },
-        { id: 2, name: 'Bolo de Pote', description: 'Chocolate com brigadeiro e doce de leite', price: 12.00, image: '' },
-        { id: 3, name: 'Doce de leite 200ml', description: 'Doce de leite artesanal cremoso', price: 10.00, image: '' },
-        { id: 4, name: 'Surpresa de uva', description: 'Doce com uva e cobertura de chocolate', price: 12.00, image: '' },
-        { id: 5, name: 'Surpresa de Morango', description: 'Doce com morango fresco e chocolate', price: 12.00, image: '' },
-        { id: 6, name: 'Brownie', description: 'Brownie de chocolate caseiro', price: 8.00, image: '' }
-      ];
-      setProducts(defaultProducts);
-      localStorage.setItem('adminProducts', JSON.stringify(defaultProducts));
-    }
-  };
 
-  const saveProducts = (updatedProducts: any[]) => {
-    setProducts(updatedProducts);
-    localStorage.setItem('adminProducts', JSON.stringify(updatedProducts));
-  };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -82,15 +68,32 @@ export default function LocalAdminPanel() {
     setImagePreview(url);
   };
 
-  const handleAddProduct = (e: React.FormEvent) => {
+  const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (editingProductId) {
-      saveProducts(products.map(p => p.id === editingProductId ? { ...p, ...formData, price: parseFloat(formData.price) } : p));
-    } else {
-      const newId = Math.max(...products.map(p => p.id), 0) + 1;
-      saveProducts([...products, { id: newId, ...formData, price: parseFloat(formData.price) }]);
+    try {
+      if (editingProductId) {
+        await updateProductMutation.mutateAsync({
+          id: editingProductId,
+          name: formData.name,
+          description: formData.description,
+          price: Math.round(parseFloat(formData.price) * 100),
+          image: formData.image,
+        });
+        toast.success('Produto atualizado com sucesso');
+      } else {
+        await createProductMutation.mutateAsync({
+          name: formData.name,
+          description: formData.description,
+          price: Math.round(parseFloat(formData.price) * 100),
+          image: formData.image,
+        });
+        toast.success('Produto criado com sucesso');
+      }
+      await refetchProducts();
+      resetForm();
+    } catch (error) {
+      toast.error('Erro ao salvar produto');
     }
-    resetForm();
   };
 
   const resetForm = () => {
@@ -103,8 +106,8 @@ export default function LocalAdminPanel() {
 
   const handleEditProduct = (product: any) => {
     setEditingProductId(product.id);
-    setFormData({ name: product.name, description: product.description, price: product.price.toString(), image: product.image });
-    setImagePreview(product.image);
+    setFormData({ name: product.name, description: product.description, price: (product.price / 100).toString(), image: product.image || '' });
+    setImagePreview(product.image || '');
     setImageEditMode('view');
     setTimeout(() => {
       const element = document.getElementById(`product-${product.id}`);
@@ -114,15 +117,21 @@ export default function LocalAdminPanel() {
     }, 100);
   };
 
-  const handleDeleteProduct = (id: number) => {
+  const handleDeleteProduct = async (id: number) => {
     if (confirm('Deletar este produto?')) {
-      saveProducts(products.filter(p => p.id !== id));
+      try {
+        await deleteProductMutation.mutateAsync({ id });
+        await refetchProducts();
+        toast.success('Produto deletado com sucesso');
+      } catch (error) {
+        toast.error('Erro ao deletar produto');
+      }
     }
   };
 
   if (!isLoggedIn) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-red-600 to-red-800 p-4">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-red-600 to-red-800 p-4" translate="no">
         <Card className="w-full max-w-md p-8">
           <div className="text-center mb-6">
             <div className="text-4xl mb-2">❤️</div>
