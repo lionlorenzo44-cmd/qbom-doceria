@@ -335,3 +335,9 @@
 - [x] Colocar Upload como primeira opção
 - [x] URL como segunda opção
 - [x] Testar em mobile e desktop
+
+
+## Reorganizar Ordem de Edição - Imagem Primeiro
+- [x] Mover imagem para primeira opção na edição
+- [x] Depois nome, descrição e preço
+- [x] Testar em mobile e desktop
