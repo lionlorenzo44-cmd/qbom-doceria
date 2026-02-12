@@ -36,7 +36,7 @@ export const appRouter = router({
     list: publicProcedure.query(() => db.getActiveProducts()),
     getById: publicProcedure.input(z.object({ id: z.number() })).query(({ input }) => db.getProductById(input.id)),
     toggleAvailability: protectedProcedure
-      .input(z.object({ id: z.number() }))
+      .input(z.object({ id: z.number(), isAvailable: z.boolean() }))
       .mutation(async ({ input, ctx }) => {
         if (ctx.user?.role !== 'admin') {
           throw new Error('Unauthorized');
@@ -294,6 +294,15 @@ export const appRouter = router({
       }
       return db.getErrorLogs(100);
     }),
+
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user?.role !== 'admin') {
+          throw new Error('Unauthorized');
+        }
+        return db.deleteErrorLog(input.id);
+      }),
   }),
 
   health: router({

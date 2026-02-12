@@ -12,7 +12,13 @@ interface ErrorLog {
   severity: "low" | "medium" | "high" | "critical";
   isResolved: number;
   createdAt: Date;
-  url?: string;
+  url?: string | null;
+  ipAddress?: string | null;
+  userAgent?: string | null;
+  errorStack?: string | null;
+  notes?: string | null;
+  resolvedAt?: Date | null;
+  updatedAt: Date;
 }
 
 export default function ErrorLogsPanel() {
