@@ -435,3 +435,9 @@
 - [x] Aumentar tamanho da imagem na seção "Imagem Atual" do painel de edição
 - [x] Exibir imagem no tamanho normal que aparece na homepage (h-96 ou similar)
 - [x] Permitir visualizar exatamente como ficará o produto final antes de salvar
+
+## Carousel de Imagens na Edição de Produtos
+- [x] Adicionar carousel com setas na seção "Imagem Atual" do painel de edição
+- [x] Permitir navegar entre as três imagens (imageUrl, imageUrl2, imageUrl3)
+- [x] Mostrar qual imagem está sendo exibida (ex: "Imagem 1 de 2")
+- [x] Permitir escolher qual imagem substituir ao clicar em "Substituir"

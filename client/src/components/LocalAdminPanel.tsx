@@ -15,6 +15,7 @@ export default function LocalAdminPanel() {
   const [imagePreview, setImagePreview] = useState('');
   const [imageEditMode, setImageEditMode] = useState<'view' | 'replace' | 'add'>('view');
   const [photoIndex, setPhotoIndex] = useState<Record<number, number>>({});
+  const [editingImageIndex, setEditingImageIndex] = useState<0 | 1 | 2>(0); // Qual imagem está sendo editada (0=imageUrl, 1=imageUrl2, 2=imageUrl3)
 
   const { data: products = [], refetch: refetchProducts } = trpc.products.list.useQuery(undefined, {
     enabled: isLoggedIn,
@@ -327,11 +328,106 @@ export default function LocalAdminPanel() {
                         <label className="block text-sm font-medium mb-2">Imagem Atual</label>
                         {product.imageUrl ? (
                           <div className="mb-3">
-                            <img src={product.imageUrl} alt={product.name} className="w-full h-96 object-cover rounded-lg" />
-                              <div className="flex gap-2 mt-2">
+                            {/* Carousel de imagens */}
+                            <div className="relative w-full bg-gray-200 rounded-lg overflow-hidden" style={{ height: '384px' }}>
+                              {photoIndex[product.id] === undefined && (setPhotoIndex({ ...photoIndex, [product.id]: 0 }), null)}
+                              {[
+                                product.imageUrl,
+                                product.imageUrl2,
+                                product.imageUrl3
+                              ].filter((url): url is string => url !== null && url !== undefined).map((url, idx) => (
+                                <img
+                                  key={idx}
+                                  src={url}
+                                  alt={`${product.name} - ${idx + 1}`}
+                                  className={`w-full h-full object-cover transition-opacity duration-300 absolute top-0 left-0 ${
+                                    idx === (photoIndex[product.id] ?? 0) ? 'opacity-100 relative' : 'opacity-0'
+                                  }`}
+                                />
+                              ))}
+                              
+                              {/* Setas de navegação */}
+                              {[
+                                product.imageUrl,
+                                product.imageUrl2,
+                                product.imageUrl3
+                              ].filter(Boolean).length > 1 && (
+                                <>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const images = [product.imageUrl, product.imageUrl2, product.imageUrl3].filter(Boolean);
+                                      const currentIndex = photoIndex[product.id] ?? 0;
+                                      setPhotoIndex({ ...photoIndex, [product.id]: (currentIndex - 1 + images.length) % images.length });
+                                    }}
+                                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition"
+                                  >
+                                    <ChevronLeft className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const images = [product.imageUrl, product.imageUrl2, product.imageUrl3].filter(Boolean);
+                                      const currentIndex = photoIndex[product.id] ?? 0;
+                                      setPhotoIndex({ ...photoIndex, [product.id]: (currentIndex + 1) % images.length });
+                                    }}
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition"
+                                  >
+                                    <ChevronRight className="w-4 h-4" />
+                                  </button>
+                                </>
+                              )}
+                              
+                              {/* Indicadores (dots) */}
+                              {[
+                                product.imageUrl,
+                                product.imageUrl2,
+                                product.imageUrl3
+                              ].filter(Boolean).length > 1 && (
+                                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+                                  {[
+                                    product.imageUrl,
+                                    product.imageUrl2,
+                                    product.imageUrl3
+                                  ].filter(Boolean).map((_, idx) => (
+                                    <button
+                                      key={idx}
+                                      type="button"
+                                      onClick={() => setPhotoIndex({ ...photoIndex, [product.id]: idx })}
+                                      className={`w-2 h-2 rounded-full transition ${
+                                        idx === (photoIndex[product.id] ?? 0)
+                                          ? 'bg-white'
+                                          : 'bg-white/50 hover:bg-white/75'
+                                      }`}
+                                    />
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                            
+                            {/* Contador de imagens */}
+                            {[
+                              product.imageUrl,
+                              product.imageUrl2,
+                              product.imageUrl3
+                            ].filter(Boolean).length > 1 && (
+                              <p className="text-xs text-gray-600 mt-2 text-center">
+                                Imagem {(photoIndex[product.id] ?? 0) + 1} de {[
+                                  product.imageUrl,
+                                  product.imageUrl2,
+                                  product.imageUrl3
+                                ].filter(Boolean).length}
+                              </p>
+                            )}
+                            
+                            {/* Botões de ação */}
+                            <div className="flex gap-2 mt-2">
                               <button
                                 type="button"
-                                onClick={() => setImageEditMode('replace')}
+                                onClick={() => {
+                                  setImageEditMode('replace');
+                                  setEditingImageIndex((photoIndex[product.id] ?? 0) as 0 | 1 | 2);
+                                }}
                                 className="flex-1 px-2 py-1 rounded text-xs font-medium bg-red-600 text-white hover:bg-red-700"
                                 translate="no"
                               >
@@ -344,7 +440,10 @@ export default function LocalAdminPanel() {
                             <p className="text-gray-500 text-sm mb-3">Nenhuma imagem adicionada</p>
                             <button
                               type="button"
-                              onClick={() => setImageEditMode('add')}
+                              onClick={() => {
+                                setImageEditMode('add');
+                                setEditingImageIndex(0);
+                              }}
                               className="w-full px-3 py-2 rounded text-sm font-medium bg-blue-600 text-white hover:bg-blue-700"
                               translate="no"
                             >
