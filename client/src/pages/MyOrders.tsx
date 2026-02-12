@@ -27,7 +27,7 @@ export default function MyOrders() {
   const filteredOrders = orders.filter(order => {
     const matchesStatus = statusFilter === "all" || order.status === statusFilter;
     const matchesSearch = 
-      order.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (order.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false) ||
       order.id.toString().includes(searchTerm);
     return matchesStatus && matchesSearch;
   });

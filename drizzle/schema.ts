@@ -13,9 +13,9 @@ export const users = mysqlTable("users", {
   id: int("id").autoincrement().primaryKey(),
   /** Manus OAuth identifier (openId) returned from the OAuth callback. Unique per user. */
   openId: varchar("openId", { length: 64 }).notNull().unique(),
-  name: text("name"),
-  email: varchar("email", { length: 320 }),
-  loginMethod: varchar("loginMethod", { length: 64 }),
+  name: text("name").$type<string | null>(),
+  email: varchar("email", { length: 320 }).$type<string | null>(),
+  loginMethod: varchar("loginMethod", { length: 64 }).$type<string | null>(),
   role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
@@ -28,11 +28,11 @@ export type InsertUser = typeof users.$inferInsert;
 export const products = mysqlTable("products", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
-  description: text("description"),
+  description: text("description").$type<string | null>(),
   price: int("price").notNull(), // Preço em centavos (ex: 1200 = R$ 12,00)
-  imageUrl: text("imageUrl"),
-  imageUrl2: text("imageUrl2"), // Segunda foto do produto
-  imageUrl3: text("imageUrl3"), // Terceira foto do produto
+  imageUrl: text("imageUrl").$type<string | null>(),
+  imageUrl2: text("imageUrl2").$type<string | null>(), // Segunda foto do produto
+  imageUrl3: text("imageUrl3").$type<string | null>(), // Terceira foto do produto
   isActive: int("isActive").default(1).notNull(), // 1 = ativo, 0 = inativo
   isAvailable: int("isAvailable").default(1).notNull(), // 1 = disponivel, 0 = esgotado
   createdAt: timestamp("createdAt").defaultNow().notNull(),
@@ -44,15 +44,15 @@ export type InsertProduct = typeof products.$inferInsert;
 
 export const orders = mysqlTable("orders", {
   id: int("id").autoincrement().primaryKey(),
-  orderNumber: varchar("orderNumber", { length: 50 }).notNull().unique(),
-  customerName: varchar("customerName", { length: 255 }).notNull(),
-  customerPhone: varchar("customerPhone", { length: 20 }).notNull(),
-  customerAddress: text("customerAddress"),
+  orderNumber: varchar("orderNumber", { length: 50 }).$type<string | null>().notNull().unique(),
+  customerName: varchar("customerName", { length: 255 }).$type<string | null>().notNull(),
+  customerPhone: varchar("customerPhone", { length: 20 }).$type<string | null>().notNull(),
+  customerAddress: text("customerAddress").$type<string | null>(),
   totalPrice: int("totalPrice").notNull(), // em centavos
   status: mysqlEnum("status", ["novo", "em_preparo", "entregue", "cancelado"]).default("novo").notNull(),
   orderType: mysqlEnum("orderType", ["whatsapp", "balcao"]).default("whatsapp").notNull(),
-  paymentMethod: varchar("paymentMethod", { length: 50 }), // dinheiro, pix, cartao, etc
-  notes: text("notes"),
+  paymentMethod: varchar("paymentMethod", { length: 50 }).$type<string | null>(), // dinheiro, pix, cartao, etc
+  notes: text("notes").$type<string | null>(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -76,9 +76,9 @@ export const payments = mysqlTable("payments", {
   id: int("id").autoincrement().primaryKey(),
   orderId: int("orderId").notNull(),
   amount: int("amount").notNull(), // em centavos
-  paymentMethod: varchar("paymentMethod", { length: 50 }).notNull(),
+  paymentMethod: varchar("paymentMethod", { length: 50 }).$type<string | null>().notNull(),
   status: mysqlEnum("status", ["pendente", "recebido", "cancelado"]).default("pendente").notNull(),
-  notes: text("notes"),
+  notes: text("notes").$type<string | null>(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -90,8 +90,8 @@ export const cashRegister = mysqlTable("cashRegister", {
   id: int("id").autoincrement().primaryKey(),
   amount: int("amount").notNull(), // em centavos
   type: mysqlEnum("type", ["entrada", "saida"]).notNull(),
-  description: varchar("description", { length: 255 }).notNull(),
-  paymentMethod: varchar("paymentMethod", { length: 50 }),
+  description: varchar("description", { length: 255 }).$type<string | null>().notNull(),
+  paymentMethod: varchar("paymentMethod", { length: 50 }).$type<string | null>(),
   orderId: int("orderId"), // Referência ao pedido, se aplicável
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
@@ -102,10 +102,10 @@ export type InsertCashRegister = typeof cashRegister.$inferInsert;
 export const reviews = mysqlTable("reviews", {
   id: int("id").autoincrement().primaryKey(),
   productId: int("productId").notNull(),
-  customerName: varchar("customerName", { length: 255 }).notNull(),
-  customerEmail: varchar("customerEmail", { length: 320 }),
+  customerName: varchar("customerName", { length: 255 }).$type<string | null>().notNull(),
+  customerEmail: varchar("customerEmail", { length: 320 }).$type<string | null>(),
   rating: int("rating").notNull(), // 1-5 estrelas
-  comment: text("comment"),
+  comment: text("comment").$type<string | null>(),
   isApproved: int("isApproved").default(0).notNull(), // 0 = pendente, 1 = aprovado
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
@@ -117,15 +117,15 @@ export type InsertReview = typeof reviews.$inferInsert;
 export const errorLogs = mysqlTable("errorLogs", {
   id: int("id").autoincrement().primaryKey(),
   errorMessage: text("errorMessage").notNull(),
-  errorStack: text("errorStack"),
+  errorStack: text("errorStack").$type<string | null>(),
   errorType: varchar("errorType", { length: 100 }).default("unknown").notNull(),
-  userAgent: text("userAgent"),
-  url: text("url"),
-  ipAddress: varchar("ipAddress", { length: 45 }),
+  userAgent: text("userAgent").$type<string | null>(),
+  url: text("url").$type<string | null>(),
+  ipAddress: varchar("ipAddress", { length: 45 }).$type<string | null>(),
   severity: mysqlEnum("severity", ["low", "medium", "high", "critical"]).default("medium").notNull(),
   isResolved: int("isResolved").default(0).notNull(), // 0 = não resolvido, 1 = resolvido
   resolvedAt: timestamp("resolvedAt"),
-  notes: text("notes"),
+  notes: text("notes").$type<string | null>(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -151,8 +151,8 @@ export type InsertHealthCheck = typeof healthChecks.$inferInsert;
 
 export const recoveryWebhooks = mysqlTable("recoveryWebhooks", {
   id: int("id").autoincrement().primaryKey(),
-  name: varchar("name", { length: 255 }).notNull(),
-  url: varchar("url", { length: 2048 }).notNull(),
+  name: varchar("name", { length: 255 }).$type<string | null>().notNull(),
+  url: varchar("url", { length: 2048 }).$type<string | null>().notNull(),
   method: mysqlEnum("method", ["GET", "POST", "PUT"]).default("POST").notNull(),
   headers: json("headers").$type<Record<string, string>>(),
   payload: json("payload").$type<Record<string, any>>(),
