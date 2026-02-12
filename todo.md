@@ -390,3 +390,11 @@
 - [x] Descrição abaixo do título
 - [x] Valor por último
 - [x] Testar layout em mobile e desktop
+
+
+## Implementar Carousel de Imagens Idêntico ao Homepage
+- [x] Analisar componente de imagem da homepage
+- [x] Copiar estrutura e estilos do carousel
+- [x] Implementar no painel admin
+- [x] Adicionar navegação entre imagens (setas)
+- [x] Testar em mobile e desktop

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Upload, X } from 'lucide-react';
+import { Upload, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { toast } from 'sonner';
 
@@ -14,6 +14,7 @@ export default function LocalAdminPanel() {
   const [imageMode, setImageMode] = useState<'url' | 'upload'>('upload');
   const [imagePreview, setImagePreview] = useState('');
   const [imageEditMode, setImageEditMode] = useState<'view' | 'replace' | 'add'>('view');
+  const [photoIndex, setPhotoIndex] = useState<Record<number, number>>({});
 
   const { data: products = [], refetch: refetchProducts } = trpc.products.list.useQuery(undefined, {
     enabled: isLoggedIn,
@@ -304,7 +305,64 @@ export default function LocalAdminPanel() {
                 editingProductId === product.id ? 'ring-2 ring-red-600 shadow-lg' : ''
               }`}>
                 {product.imageUrl && (
-                  <img src={product.imageUrl} alt={product.name} className="w-full h-40 object-cover" />
+                  <div className="relative w-full bg-gray-200 overflow-hidden group" style={{ height: '384px' }}>
+                    {(() => {
+                      const images = [product.imageUrl, product.imageUrl2, product.imageUrl3].filter(Boolean);
+                      const currentIndex = photoIndex[product.id] || 0;
+                      const currentImage = images[currentIndex];
+
+                      const handlePrevPhoto = () => {
+                        setPhotoIndex(prev => ({
+                          ...prev,
+                          [product.id]: currentIndex === 0 ? images.length - 1 : currentIndex - 1
+                        }));
+                      };
+
+                      const handleNextPhoto = () => {
+                        setPhotoIndex(prev => ({
+                          ...prev,
+                          [product.id]: currentIndex === images.length - 1 ? 0 : currentIndex + 1
+                        }));
+                      };
+
+                      return (
+                        <>
+                          <img
+                            src={currentImage}
+                            alt={product.name}
+                            className="w-full h-full object-cover"
+                          />
+                          {images.length > 1 && (
+                            <>
+                              <button
+                                onClick={handlePrevPhoto}
+                                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
+                              >
+                                <ChevronLeft className="w-5 h-5" />
+                              </button>
+                              <button
+                                onClick={handleNextPhoto}
+                                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
+                              >
+                                <ChevronRight className="w-5 h-5" />
+                              </button>
+                              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+                                {images.map((_, idx) => (
+                                  <button
+                                    key={idx}
+                                    onClick={() => setPhotoIndex(prev => ({ ...prev, [product.id]: idx }))}
+                                    className={`w-2 h-2 rounded-full transition-all ${
+                                      idx === currentIndex ? 'bg-white w-6' : 'bg-white/50 hover:bg-white/75'
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+                            </>
+                          )}
+                        </>
+                      );
+                    })()}
+                  </div>
                 )}
                 <div className="p-4 flex flex-col flex-1">
                   <h3 className="font-bold text-lg mb-2">{product.name}</h3>
