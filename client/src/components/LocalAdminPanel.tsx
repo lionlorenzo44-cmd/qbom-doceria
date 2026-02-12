@@ -10,7 +10,7 @@ export default function LocalAdminPanel() {
   const [password, setPassword] = useState('');
   const [editingProductId, setEditingProductId] = useState<number | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [formData, setFormData] = useState({ name: '', description: '', price: '', image: '' });
+  const [formData, setFormData] = useState({ name: '', description: '', price: '', imageUrl: '' });
   const [imageMode, setImageMode] = useState<'url' | 'upload'>('upload');
   const [imagePreview, setImagePreview] = useState('');
   const [imageEditMode, setImageEditMode] = useState<'view' | 'replace' | 'add'>('view');
@@ -64,7 +64,7 @@ export default function LocalAdminPanel() {
   };
 
   const handleImageUrl = (url: string) => {
-    setFormData({ ...formData, image: url });
+    setFormData({ ...formData, imageUrl: url });
     setImagePreview(url);
   };
 
@@ -77,7 +77,7 @@ export default function LocalAdminPanel() {
           name: formData.name,
           description: formData.description,
           price: Math.round(parseFloat(formData.price) * 100),
-          image: formData.image,
+          imageUrl: formData.imageUrl,
         });
         toast.success('Produto atualizado com sucesso');
       } else {
@@ -85,7 +85,7 @@ export default function LocalAdminPanel() {
           name: formData.name,
           description: formData.description,
           price: Math.round(parseFloat(formData.price) * 100),
-          image: formData.image,
+          imageUrl: formData.imageUrl,
         });
         toast.success('Produto criado com sucesso');
       }
@@ -97,7 +97,7 @@ export default function LocalAdminPanel() {
   };
 
   const resetForm = () => {
-    setFormData({ name: '', description: '', price: '', image: '' });
+    setFormData({ name: '', description: '', price: '', imageUrl: '' });
     setImagePreview('');
     setEditingProductId(null);
     setShowAddForm(false);
@@ -106,8 +106,8 @@ export default function LocalAdminPanel() {
 
   const handleEditProduct = (product: any) => {
     setEditingProductId(product.id);
-    setFormData({ name: product.name, description: product.description, price: (product.price / 100).toString(), image: product.image || '' });
-    setImagePreview(product.image || '');
+    setFormData({ name: product.name, description: product.description, price: (product.price / 100).toString(), imageUrl: product.imageUrl || '' });
+    setImagePreview(product.imageUrl || '');
     setImageEditMode('view');
     setTimeout(() => {
       const element = document.getElementById(`product-${product.id}`);
@@ -310,28 +310,24 @@ export default function LocalAdminPanel() {
                   <h3 className="font-bold text-lg mb-1">{product.name}</h3>
                   <p className="text-gray-600 text-sm mb-3 flex-1">{product.description}</p>
                   <p className="text-red-600 font-bold text-lg mb-4">R$ {(product.price / 100).toFixed(2)}</p>
+                  {product.imageUrl && (
+                    <img src={product.imageUrl} alt={product.name} className="w-full h-40 object-cover rounded-lg mb-4" />
+                  )}
 
                   {editingProductId === product.id && (
                     <div className="mb-4 pt-4 border-t-2 border-red-200 space-y-3">
                       <div className="bg-red-50 p-3 rounded-lg">
                         <label className="block text-sm font-medium mb-2">Imagem Atual</label>
-                        {product.image ? (
+                        {product.imageUrl ? (
                           <div className="mb-3">
-                            <img src={product.image} alt={product.name} className="w-full h-32 object-cover rounded-lg" />
-                            <div className="flex gap-2 mt-2">
+                            <img src={product.imageUrl} alt={product.name} className="w-full h-32 object-cover rounded-lg" />
+                              <div className="flex gap-2 mt-2">
                               <button
                                 type="button"
                                 onClick={() => setImageEditMode('replace')}
                                 className="flex-1 px-2 py-1 rounded text-xs font-medium bg-red-600 text-white hover:bg-red-700"
                               >
                                 Substituir
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => setImageEditMode('add')}
-                                className="flex-1 px-2 py-1 rounded text-xs font-medium bg-blue-600 text-white hover:bg-blue-700"
-                              >
-                                Adicionar Mais
                               </button>
                             </div>
                           </div>
@@ -379,7 +375,7 @@ export default function LocalAdminPanel() {
                           {imageMode === 'url' ? (
                             <input
                               type="url"
-                              value={formData.image}
+                              value={formData.imageUrl}
                               onChange={(e) => handleImageUrl(e.target.value)}
                               placeholder="https://exemplo.com/imagem.jpg"
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 text-sm"

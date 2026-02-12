@@ -376,3 +376,9 @@
 - [x] Mostrar botões de adicionar/substituir mesmo sem imagem atual
 - [x] Permitir adicionar primeira imagem ao produto
 - [x] Testar adição de imagem em produto sem imagem
+
+
+## Carregar Imagens dos Produtos no Painel Admin
+- [x] Verificar se API está retornando imagens dos produtos
+- [x] Corrigir campo de imagem na resposta da API
+- [x] Testar se imagens aparecem no painel admin
