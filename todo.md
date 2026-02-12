@@ -382,3 +382,11 @@
 - [x] Verificar se API está retornando imagens dos produtos
 - [x] Corrigir campo de imagem na resposta da API
 - [x] Testar se imagens aparecem no painel admin
+
+
+## Reorganizar Layout do Painel Admin
+- [x] Colocar imagem primeiro na listagem
+- [x] Título abaixo da imagem
+- [x] Descrição abaixo do título
+- [x] Valor por último
+- [x] Testar layout em mobile e desktop

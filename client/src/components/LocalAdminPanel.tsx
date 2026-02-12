@@ -303,16 +303,13 @@ export default function LocalAdminPanel() {
               <Card key={product.id} id={`product-${product.id}`} className={`p-0 flex flex-col transition-all overflow-hidden ${
                 editingProductId === product.id ? 'ring-2 ring-red-600 shadow-lg' : ''
               }`}>
-                {product.image && (
-                  <img src={product.image} alt={product.name} className="w-full h-40 object-cover" />
+                {product.imageUrl && (
+                  <img src={product.imageUrl} alt={product.name} className="w-full h-40 object-cover" />
                 )}
                 <div className="p-4 flex flex-col flex-1">
-                  <h3 className="font-bold text-lg mb-1">{product.name}</h3>
+                  <h3 className="font-bold text-lg mb-2">{product.name}</h3>
                   <p className="text-gray-600 text-sm mb-3 flex-1">{product.description}</p>
-                  <p className="text-red-600 font-bold text-lg mb-4">R$ {(product.price / 100).toFixed(2)}</p>
-                  {product.imageUrl && (
-                    <img src={product.imageUrl} alt={product.name} className="w-full h-40 object-cover rounded-lg mb-4" />
-                  )}
+                  <p className="text-red-600 font-bold text-lg">R$ {(product.price / 100).toFixed(2)}</p>
 
                   {editingProductId === product.id && (
                     <div className="mb-4 pt-4 border-t-2 border-red-200 space-y-3">
