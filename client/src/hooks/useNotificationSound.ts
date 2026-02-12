@@ -41,7 +41,7 @@ export function useNotificationSound() {
   }, [soundEnabled, createNotificationAudio]);
 
   const toggleSound = useCallback(() => {
-    setSoundEnabled((prev) => {
+    setSoundEnabled((prev: boolean) => {
       const newValue = !prev;
       localStorage.setItem('notificationSoundEnabled', JSON.stringify(newValue));
       return newValue;

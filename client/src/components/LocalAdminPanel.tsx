@@ -36,7 +36,6 @@ export default function LocalAdminPanel() {
       localStorage.setItem('adminLocalToken', 'true');
       setIsLoggedIn(true);
       setPassword('');
-      loadProducts();
     } else {
       alert('Senha incorreta!');
       setPassword('');
@@ -57,7 +56,7 @@ export default function LocalAdminPanel() {
       const reader = new FileReader();
       reader.onload = (event) => {
         const base64 = event.target?.result as string;
-        setFormData({ ...formData, image: base64 });
+        setFormData({ ...formData, imageUrl: base64 });
         setImagePreview(base64);
       };
       reader.readAsDataURL(file);
@@ -108,7 +107,7 @@ export default function LocalAdminPanel() {
   const handleEditProduct = (product: any) => {
     setEditingProductId(product.id);
     setFormData({ name: product.name, description: product.description, price: (product.price / 100).toString(), imageUrl: product.imageUrl || '' });
-    setImagePreview(product.imageUrl || '');
+    setImagePreview(product.imageUrl ? product.imageUrl : '');
     setImageEditMode('view');
     setTimeout(() => {
       const element = document.getElementById(`product-${product.id}`);
@@ -176,7 +175,7 @@ export default function LocalAdminPanel() {
         <div className="mb-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold">Produtos ({products.length})</h2>
-            <Button onClick={() => { setShowAddForm(true); setEditingProductId(null); setFormData({ name: '', description: '', price: '', image: '' }); setImagePreview(''); }} className="bg-red-600 hover:bg-red-700">
+            <Button onClick={() => { setShowAddForm(true); setEditingProductId(null); setFormData({ name: '', description: '', price: '', imageUrl: '' }); setImagePreview(''); }} className="bg-red-600 hover:bg-red-700">
               + Novo Produto
             </Button>
           </div>
@@ -250,7 +249,7 @@ export default function LocalAdminPanel() {
                   {imageMode === 'url' ? (
                     <input
                       type="url"
-                      value={formData.image}
+                      value={formData.imageUrl}
                       onChange={(e) => handleImageUrl(e.target.value)}
                       placeholder="https://exemplo.com/imagem.jpg"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
@@ -277,7 +276,7 @@ export default function LocalAdminPanel() {
                         type="button"
                         onClick={() => {
                           setImagePreview('');
-                          setFormData({ ...formData, image: '' });
+                          setFormData({ ...formData, imageUrl: '' });
                         }}
                         className="absolute top-2 right-2 bg-red-600 text-white p-1 rounded-full hover:bg-red-700"
                       >
@@ -457,7 +456,7 @@ export default function LocalAdminPanel() {
                                 type="button"
                                 onClick={() => {
                                   setImagePreview('');
-                                  setFormData({ ...formData, image: '' });
+                                  setFormData({ ...formData, imageUrl: '' });
                                 }}
                                 className="absolute top-1 right-1 bg-red-600 text-white p-1 rounded-full hover:bg-red-700"
                               >

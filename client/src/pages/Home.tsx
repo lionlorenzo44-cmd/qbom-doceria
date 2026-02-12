@@ -147,7 +147,6 @@ export default function Home() {
         customerPhone,
         customerAddress,
         totalPrice,
-        orderType: "whatsapp",
         paymentMethod,
         items: cart.map(item => ({
           productId: item.productId,
