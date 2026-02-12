@@ -398,3 +398,9 @@
 - [x] Implementar no painel admin
 - [x] Adicionar navegação entre imagens (setas)
 - [x] Testar em mobile e desktop
+
+
+## Remover Duplicação de Valor no Painel Admin
+- [x] Remover valor da listagem de produtos
+- [x] Deixar valor editável só no modo de edição
+- [x] Testar visualização e edição

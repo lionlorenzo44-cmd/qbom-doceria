@@ -367,7 +367,9 @@ export default function LocalAdminPanel() {
                 <div className="p-4 flex flex-col flex-1">
                   <h3 className="font-bold text-lg mb-2">{product.name}</h3>
                   <p className="text-gray-600 text-sm mb-3 flex-1">{product.description}</p>
-                  <p className="text-red-600 font-bold text-lg">R$ {(product.price / 100).toFixed(2)}</p>
+                  {editingProductId !== product.id && (
+                    <p className="text-red-600 font-bold text-lg">R$ {(product.price / 100).toFixed(2)}</p>
+                  )}
 
                   {editingProductId === product.id && (
                     <div className="mb-4 pt-4 border-t-2 border-red-200 space-y-3">
