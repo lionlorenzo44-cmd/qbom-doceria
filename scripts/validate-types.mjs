@@ -14,33 +14,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.join(__dirname, '..');
 const schemaPath = path.join(projectRoot, 'drizzle', 'schema.ts');
 
-// Padrões de tipos problemáticos
-const TYPE_PATTERNS = [
-  {
-    pattern: /text\("([^"]+)"\)(?!.*\$type)/g,
-    issue: 'Campo TEXT sem tipo explícito (pode ser null | undefined)',
-    suggestion: 'Adicione .$type<string | null>()'
-  },
-  {
-    pattern: /varchar\("([^"]+)".*?\)(?!.*\$type)/g,
-    issue: 'Campo VARCHAR sem tipo explícito (pode ser null | undefined)',
-    suggestion: 'Adicione .$type<string | null>()'
-  },
-  {
-    pattern: /\$type<string \| undefined>\(\)/g,
-    issue: 'Campo com tipo undefined (banco retorna null)',
-    suggestion: 'Use .$type<string | null>() ao invés'
-  }
-];
-
-// Tipos que devem ser iguais entre schema e inferência
-const REQUIRED_TYPE_CONSISTENCY = [
-  { field: 'url', expectedType: 'string | null' },
-  { field: 'ipAddress', expectedType: 'string | null' },
-  { field: 'userAgent', expectedType: 'string | null' },
-  { field: 'errorStack', expectedType: 'string | null' }
-];
-
 function validateSchema() {
   console.log('🔍 Validando tipos no schema...\n');
   
@@ -50,33 +23,56 @@ function validateSchema() {
   }
 
   const schemaContent = fs.readFileSync(schemaPath, 'utf-8');
+  const lines = schemaContent.split('\n');
   let hasErrors = false;
+  const problematicFields = [];
 
-  // Verificar cada padrão
-  TYPE_PATTERNS.forEach(({ pattern, issue, suggestion }) => {
-    const matches = [...schemaContent.matchAll(pattern)];
-    if (matches.length > 0) {
-      hasErrors = true;
-      console.log(`⚠️  ${issue}`);
-      matches.forEach(match => {
-        console.log(`   Campo: ${match[1] || match[0]}`);
-        console.log(`   Sugestão: ${suggestion}\n`);
-      });
+  // Procurar por campos TEXT ou VARCHAR sem $type na mesma linha
+  lines.forEach((line, idx) => {
+    // Ignorar imports e comentários
+    if (line.includes('import') || line.trim().startsWith('//') || line.trim().startsWith('*')) {
+      return;
+    }
+
+    // Procura por varchar ou text que NÃO tem $type na mesma linha
+    if ((line.includes('varchar(') || line.includes('text(')) && !line.includes('$type')) {
+      const fieldMatch = line.match(/(?:varchar|text)\("([^"]+)"/);
+      if (fieldMatch) {
+        problematicFields.push({
+          line: idx + 1,
+          field: fieldMatch[1],
+          type: line.includes('varchar') ? 'VARCHAR' : 'TEXT'
+        });
+      }
+    }
+
+    // Procurar por string | undefined (banco retorna null, não undefined)
+    if (line.includes('$type<string | undefined>')) {
+      const fieldMatch = line.match(/(\w+):\s*(?:varchar|text)/);
+      if (fieldMatch) {
+        problematicFields.push({
+          line: idx + 1,
+          field: fieldMatch[1],
+          issue: 'string | undefined (banco retorna null)',
+          type: 'TYPE_MISMATCH'
+        });
+      }
     }
   });
 
-  // Verificar consistência de tipos
-  REQUIRED_TYPE_CONSISTENCY.forEach(({ field, expectedType }) => {
-    const fieldRegex = new RegExp(`${field}:.*?\\$type<([^>]+)>`, 's');
-    const match = schemaContent.match(fieldRegex);
-    
-    if (match && match[1] !== expectedType) {
-      hasErrors = true;
-      console.log(`⚠️  Campo '${field}' tem tipo inconsistente`);
-      console.log(`   Esperado: ${expectedType}`);
-      console.log(`   Encontrado: ${match[1]}\n`);
-    }
-  });
+  if (problematicFields.length > 0) {
+    hasErrors = true;
+    problematicFields.forEach(({ line, field, type, issue }) => {
+      if (issue) {
+        console.log(`⚠️  Campo com tipo ${issue}`);
+      } else {
+        console.log(`⚠️  Campo ${type} sem tipo explícito (pode ser null | undefined)`);
+      }
+      console.log(`   Campo: ${field}`);
+      console.log(`   Linha: ${line}`);
+      console.log(`   Sugestão: Adicione .$type<string | null>()\n`);
+    });
+  }
 
   if (!hasErrors) {
     console.log('✅ Nenhum erro de tipo detectado!\n');
@@ -91,6 +87,7 @@ function fixTypes() {
   console.log('🔧 Corrigindo tipos automaticamente...\n');
   
   let schemaContent = fs.readFileSync(schemaPath, 'utf-8');
+  const lines = schemaContent.split('\n');
   let fixed = false;
 
   // Corrigir tipos undefined para null
@@ -102,18 +99,40 @@ function fixTypes() {
   }
 
   // Adicionar tipos explícitos onde faltam
-  REQUIRED_TYPE_CONSISTENCY.forEach(({ field, expectedType }) => {
-    const fieldRegex = new RegExp(`(${field}: text\\("${field}"\\))(?!.*\\$type)`, 'g');
-    const beforeFix = schemaContent;
-    schemaContent = schemaContent.replace(fieldRegex, `$1.$type<${expectedType}>()`);
-    
-    if (beforeFix !== schemaContent) {
-      console.log(`✅ Adicionado tipo explícito para '${field}': ${expectedType}`);
-      fixed = true;
+  const fixedLines = schemaContent.split('\n').map((line, idx) => {
+    // Ignorar imports e comentários
+    if (line.includes('import') || line.trim().startsWith('//') || line.trim().startsWith('*')) {
+      return line;
     }
+
+    // Se tem varchar ou text sem $type, adicionar tipo
+    if ((line.includes('varchar(') || line.includes('text(')) && !line.includes('$type')) {
+      // Encontrar a posição do ) que fecha varchar ou text
+      const varcharMatch = line.match(/varchar\("([^"]+)"[^)]*\)/);
+      const textMatch = line.match(/text\("([^"]+)"\)/);
+      
+      if (varcharMatch) {
+        const closeParenIndex = line.indexOf(varcharMatch[0]) + varcharMatch[0].length;
+        const before = line.substring(0, closeParenIndex);
+        const after = line.substring(closeParenIndex);
+        const newLine = before + '.$type<string | null>()' + after;
+        fixed = true;
+        return newLine;
+      } else if (textMatch) {
+        const closeParenIndex = line.indexOf(textMatch[0]) + textMatch[0].length;
+        const before = line.substring(0, closeParenIndex);
+        const after = line.substring(closeParenIndex);
+        const newLine = before + '.$type<string | null>()' + after;
+        fixed = true;
+        return newLine;
+      }
+    }
+
+    return line;
   });
 
   if (fixed) {
+    schemaContent = fixedLines.join('\n');
     fs.writeFileSync(schemaPath, schemaContent);
     console.log('\n✅ Schema atualizado com sucesso!');
     console.log('⚠️  Execute: pnpm drizzle-kit generate\n');

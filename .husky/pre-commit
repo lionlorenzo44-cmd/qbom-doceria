@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Pre-commit hook para validar tipos antes de commitar
+# Previne erros de tipo que causam carregamento infinito
+
+echo "🔍 Validando tipos no schema..."
+node scripts/validate-types.mjs
+
+if [ $? -ne 0 ]; then
+  echo "❌ Validação de tipos falhou!"
+  echo "Execute: npm run fix-types"
+  exit 1
+fi
+
+echo "✅ Tipos validados com sucesso!"
+exit 0
