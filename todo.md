@@ -282,3 +282,24 @@
 - [x] Atualizar nome: Walesca Vitória Oliveira Dos Santos
 - [x] Atualizar chave Pix: vitoriabjj953@gmail.com
 - [x] Testar no site
+
+
+## Exportação do Projeto em ZIP
+- [x] Converter código React para HTML/CSS/JS estático
+- [x] Organizar estrutura de pastas (css, js, assets, admin)
+- [x] Criar painel admin separado
+- [x] Gerar arquivo .zip
+
+
+## Corrigir Painel Admin Exportável
+- [x] Remover redirecionamentos Manus
+- [x] Implementar autenticação local independente
+- [x] Otimizar interface para celular
+- [x] Testar login e dashboard
+- [x] Gerar novo ZIP
+
+
+## Corrigir Admin no Site Manus
+- [x] Investigar redirecionamento para login Manus
+- [x] Implementar autenticação local independente
+- [x] Testar e verificar funcionamento

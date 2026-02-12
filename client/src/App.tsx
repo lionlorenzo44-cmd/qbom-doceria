@@ -7,6 +7,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
+import LocalAdminPanel from "./components/LocalAdminPanel";
 import MyOrders from "./pages/MyOrders";
 import { Heart, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -171,13 +172,8 @@ function Footer() {
 }
 
 function ProtectedAdminRoute() {
-  const adminToken = localStorage.getItem("adminToken");
-  
-  if (!adminToken) {
-    return <AdminLogin />;
-  }
-  
-  return <Admin />;
+  // Usar painel admin local independente
+  return <LocalAdminPanel />;
 }
 
 function Router() {
