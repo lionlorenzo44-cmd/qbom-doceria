@@ -404,3 +404,10 @@
 - [x] Remover valor da listagem de produtos
 - [x] Deixar valor editável só no modo de edição
 - [x] Testar visualização e edição
+
+
+## Remover Duplicação de Título e Descrição
+- [x] Remover título da listagem quando editando
+- [x] Remover descrição da listagem quando editando
+- [x] Deixar só campos editáveis no modo de edição
+- [x] Testar visualização e edição
