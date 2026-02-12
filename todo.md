@@ -317,3 +317,9 @@
 - [x] Implementar URL de imagem
 - [x] Permitir editar e deletar produtos com imagens
 - [x] Testar em mobile
+
+
+## Abrir Edição como Modal no Produto
+- [x] Implementar modal de edição no próprio card do produto
+- [x] Sem precisar rolar para cima
+- [x] Testar em mobile e desktop
