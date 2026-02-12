@@ -323,3 +323,9 @@
 - [x] Implementar modal de edição no próprio card do produto
 - [x] Sem precisar rolar para cima
 - [x] Testar em mobile e desktop
+
+
+## Reorganizar Layout do Card do Produto
+- [x] Mover imagem para o início do card
+- [x] Depois nome, descrição e preço
+- [x] Testar layout em mobile e desktop

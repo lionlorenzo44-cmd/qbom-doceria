@@ -288,15 +288,16 @@ export default function LocalAdminPanel() {
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {products.map((product) => (
-              <Card key={product.id} id={`product-${product.id}`} className={`p-4 flex flex-col transition-all ${
+              <Card key={product.id} id={`product-${product.id}`} className={`p-0 flex flex-col transition-all overflow-hidden ${
                 editingProductId === product.id ? 'ring-2 ring-red-600 shadow-lg' : ''
               }`}>
                 {product.image && (
-                  <img src={product.image} alt={product.name} className="w-full h-32 object-cover rounded-lg mb-3" />
+                  <img src={product.image} alt={product.name} className="w-full h-40 object-cover" />
                 )}
-                <h3 className="font-bold text-lg mb-1">{product.name}</h3>
-                <p className="text-gray-600 text-sm mb-2 flex-1">{product.description}</p>
-                <p className="text-red-600 font-bold text-lg mb-4">R$ {product.price.toFixed(2)}</p>
+                <div className="p-4 flex flex-col flex-1">
+                  <h3 className="font-bold text-lg mb-1">{product.name}</h3>
+                  <p className="text-gray-600 text-sm mb-3 flex-1">{product.description}</p>
+                  <p className="text-red-600 font-bold text-lg mb-4">R$ {product.price.toFixed(2)}</p>
 
                 {editingProductId === product.id && (
                   <div className="mb-4 pt-4 border-t-2 border-red-200 space-y-3">
@@ -400,13 +401,14 @@ export default function LocalAdminPanel() {
                   </div>
                 )}
 
-                <div className="flex gap-2">
-                  <Button onClick={() => handleEditProduct(product)} variant="outline" className="flex-1 text-sm">
-                    Editar
-                  </Button>
-                  <Button onClick={() => handleDeleteProduct(product.id)} variant="destructive" className="flex-1 text-sm">
-                    Deletar
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button onClick={() => handleEditProduct(product)} variant="outline" className="flex-1 text-sm">
+                      Editar
+                    </Button>
+                    <Button onClick={() => handleDeleteProduct(product.id)} variant="destructive" className="flex-1 text-sm">
+                      Deletar
+                    </Button>
+                  </div>
                 </div>
               </Card>
             ))}
