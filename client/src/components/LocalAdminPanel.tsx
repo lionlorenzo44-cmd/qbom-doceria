@@ -327,7 +327,7 @@ export default function LocalAdminPanel() {
                         <label className="block text-sm font-medium mb-2">Imagem Atual</label>
                         {product.imageUrl ? (
                           <div className="mb-3">
-                            <img src={product.imageUrl} alt={product.name} className="w-full h-32 object-cover rounded-lg" />
+                            <img src={product.imageUrl} alt={product.name} className="w-full h-96 object-cover rounded-lg" />
                               <div className="flex gap-2 mt-2">
                               <button
                                 type="button"

@@ -430,3 +430,8 @@
 - [x] Criar pre-commit hook para validar tipos
 - [x] Adicionar script de correção automática
 - [x] Testar sistema de prevenção
+
+## Preview de Imagem na Edição de Produtos
+- [x] Aumentar tamanho da imagem na seção "Imagem Atual" do painel de edição
+- [x] Exibir imagem no tamanho normal que aparece na homepage (h-96 ou similar)
+- [x] Permitir visualizar exatamente como ficará o produto final antes de salvar
