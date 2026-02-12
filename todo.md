@@ -329,3 +329,9 @@
 - [x] Mover imagem para o início do card
 - [x] Depois nome, descrição e preço
 - [x] Testar layout em mobile e desktop
+
+
+## Inverter Ordem de Upload e URL
+- [x] Colocar Upload como primeira opção
+- [x] URL como segunda opção
+- [x] Testar em mobile e desktop

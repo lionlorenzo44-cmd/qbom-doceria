@@ -10,7 +10,7 @@ export default function LocalAdminPanel() {
   const [editingProductId, setEditingProductId] = useState<number | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({ name: '', description: '', price: '', image: '' });
-  const [imageMode, setImageMode] = useState<'url' | 'upload'>('url');
+  const [imageMode, setImageMode] = useState<'url' | 'upload'>('upload');
   const [imagePreview, setImagePreview] = useState('');
 
   useEffect(() => {
@@ -212,17 +212,6 @@ export default function LocalAdminPanel() {
                   <div className="flex gap-2 mb-3">
                     <button
                       type="button"
-                      onClick={() => setImageMode('url')}
-                      className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition ${
-                        imageMode === 'url'
-                          ? 'bg-red-600 text-white'
-                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                      }`}
-                    >
-                      URL
-                    </button>
-                    <button
-                      type="button"
                       onClick={() => setImageMode('upload')}
                       className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition ${
                         imageMode === 'upload'
@@ -231,6 +220,17 @@ export default function LocalAdminPanel() {
                       }`}
                     >
                       Upload
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setImageMode('url')}
+                      className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition ${
+                        imageMode === 'url'
+                          ? 'bg-red-600 text-white'
+                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      }`}
+                    >
+                      URL
                     </button>
                   </div>
 
@@ -334,17 +334,6 @@ export default function LocalAdminPanel() {
                       <div className="flex gap-2 mb-2">
                         <button
                           type="button"
-                          onClick={() => setImageMode('url')}
-                          className={`flex-1 px-2 py-1 rounded text-xs font-medium transition ${
-                            imageMode === 'url'
-                              ? 'bg-red-600 text-white'
-                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                          }`}
-                        >
-                          URL
-                        </button>
-                        <button
-                          type="button"
                           onClick={() => setImageMode('upload')}
                           className={`flex-1 px-2 py-1 rounded text-xs font-medium transition ${
                             imageMode === 'upload'
@@ -353,6 +342,17 @@ export default function LocalAdminPanel() {
                           }`}
                         >
                           Upload
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setImageMode('url')}
+                          className={`flex-1 px-2 py-1 rounded text-xs font-medium transition ${
+                            imageMode === 'url'
+                              ? 'bg-red-600 text-white'
+                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                          }`}
+                        >
+                          URL
                         </button>
                       </div>
                       {imageMode === 'url' ? (
