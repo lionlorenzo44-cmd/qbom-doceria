@@ -450,3 +450,15 @@
 ## Integração com GitHub
 - [x] Habilitar integração com GitHub no painel de configurações
 - [x] Permitir exportação do código para repositório GitHub
+
+## Pós-Exportação GitHub
+- [ ] Clonar e testar localmente
+- [ ] Configurar CI/CD com GitHub Actions
+- [ ] Adicionar colaboradores ao repositório
+- [ ] Verificar backup no GitHub
+- [ ] Sincronizar mudanças entre GitHub e Manus
+
+## Sincronização GitHub ↔ Manus
+- [x] Configurar remotes (origin para Manus, user_github para GitHub)
+- [x] Testar sincronização bidirecional
+- [x] Documentar fluxo de sincronização
