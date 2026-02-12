@@ -1,0 +1,54 @@
+name: Build e Deploy
+
+on:
+  push:
+    branches: [ main ]
+  workflow_run:
+    workflows: ["CI - Testes e Validação"]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  build:
+    name: Build da Aplicação
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'push' }}
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22.x'
+        cache: 'npm'
+    
+    - name: Instalar pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 10
+    
+    - name: Instalar dependências
+      run: pnpm install --frozen-lockfile
+    
+    - name: Validar tipos
+      run: pnpm validate-types
+    
+    - name: Executar testes
+      run: pnpm test
+    
+    - name: Fazer build
+      run: pnpm build
+    
+    - name: Upload artefatos de build
+      uses: actions/upload-artifact@v4
+      with:
+        name: production-build
+        path: dist/
+        retention-days: 30
+    
+    - name: Sucesso no Build
+      run: |
+        echo "✅ Build e testes completados com sucesso!"
+        echo "📦 Artefatos prontos para deploy"
