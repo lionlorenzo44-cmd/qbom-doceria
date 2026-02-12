@@ -417,3 +417,9 @@
 - [x] Remover carousel da listagem de produtos
 - [x] Deixar carousel só na aba de edição
 - [x] Testar visualização
+
+
+## Corrigir Nome do Botão "Substituir"
+- [x] Corrigir nome do botão na edição de imagem
+- [x] Adicionar translate="no" para evitar tradução automática
+- [x] Testar visualização

@@ -333,6 +333,7 @@ export default function LocalAdminPanel() {
                                 type="button"
                                 onClick={() => setImageEditMode('replace')}
                                 className="flex-1 px-2 py-1 rounded text-xs font-medium bg-red-600 text-white hover:bg-red-700"
+                                translate="no"
                               >
                                 Substituir
                               </button>
@@ -345,6 +346,7 @@ export default function LocalAdminPanel() {
                               type="button"
                               onClick={() => setImageEditMode('add')}
                               className="w-full px-3 py-2 rounded text-sm font-medium bg-blue-600 text-white hover:bg-blue-700"
+                              translate="no"
                             >
                               Adicionar Imagem
                             </button>
@@ -354,7 +356,7 @@ export default function LocalAdminPanel() {
 
                       {(imageEditMode === 'replace' || imageEditMode === 'add') && (
                         <div className="bg-red-50 p-3 rounded-lg">
-                          <label className="block text-sm font-medium mb-2">{imageEditMode === 'replace' ? 'Substituir Imagem' : 'Adicionar Nova Imagem'}</label>
+                          <label className="block text-sm font-medium mb-2" translate="no">{imageEditMode === 'replace' ? 'Substituir Imagem' : 'Adicionar Nova Imagem'}</label>
                           <div className="flex gap-2 mb-2">
                             <button
                               type="button"
