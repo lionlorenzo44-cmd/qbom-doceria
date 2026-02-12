@@ -309,3 +309,11 @@
 - [x] Trocar senha para Aqua1048
 - [x] Remover dica de senha visível
 - [x] Testar login
+
+
+## Adicionar Todos os Produtos ao Admin
+- [x] Adicionar todos os 6 produtos com dados completos
+- [x] Implementar upload de imagem do celular
+- [x] Implementar URL de imagem
+- [x] Permitir editar e deletar produtos com imagens
+- [x] Testar em mobile

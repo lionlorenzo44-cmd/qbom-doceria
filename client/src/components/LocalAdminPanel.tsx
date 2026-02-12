@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Upload, X } from 'lucide-react';
 
 export default function LocalAdminPanel() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -8,7 +9,9 @@ export default function LocalAdminPanel() {
   const [products, setProducts] = useState<any[]>([]);
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({ name: '', description: '', price: '' });
+  const [formData, setFormData] = useState({ name: '', description: '', price: '', image: '' });
+  const [imageMode, setImageMode] = useState<'url' | 'upload'>('url');
+  const [imagePreview, setImagePreview] = useState('');
 
   useEffect(() => {
     // Verificar se já está logado
@@ -39,34 +42,71 @@ export default function LocalAdminPanel() {
   };
 
   const loadProducts = () => {
-    // Aqui você pode carregar produtos da API ou localStorage
-    setProducts([
-      { id: 1, name: 'Bolo de Pote', description: 'Ninho com brigadeiro', price: 12.00 },
-      { id: 2, name: 'Bolo de Pote', description: 'Chocolate com brigadeiro', price: 12.00 },
-    ]);
+    const saved = localStorage.getItem('adminProducts');
+    if (saved) {
+      setProducts(JSON.parse(saved));
+    } else {
+      // Produtos padrão
+      const defaultProducts = [
+        { id: 1, name: 'Bolo de Pote', description: 'Ninho com brigadeiro', price: 12.00, image: '' },
+        { id: 2, name: 'Bolo de Pote', description: 'Chocolate com brigadeiro e doce de leite', price: 12.00, image: '' },
+        { id: 3, name: 'Doce de leite 200ml', description: 'Doce de leite artesanal cremoso', price: 10.00, image: '' },
+        { id: 4, name: 'Surpresa de uva', description: 'Doce com uva e cobertura de chocolate', price: 12.00, image: '' },
+        { id: 5, name: 'Surpresa de Morango', description: 'Doce com morango fresco e chocolate', price: 12.00, image: '' },
+        { id: 6, name: 'Brownie', description: 'Brownie de chocolate caseiro', price: 8.00, image: '' }
+      ];
+      setProducts(defaultProducts);
+      localStorage.setItem('adminProducts', JSON.stringify(defaultProducts));
+    }
+  };
+
+  const saveProducts = (updatedProducts: any[]) => {
+    setProducts(updatedProducts);
+    localStorage.setItem('adminProducts', JSON.stringify(updatedProducts));
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64 = event.target?.result as string;
+        setFormData({ ...formData, image: base64 });
+        setImagePreview(base64);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleImageUrl = (url: string) => {
+    setFormData({ ...formData, image: url });
+    setImagePreview(url);
   };
 
   const handleAddProduct = (e: React.FormEvent) => {
     e.preventDefault();
     if (editingProduct) {
-      setProducts(products.map(p => p.id === editingProduct.id ? { ...p, ...formData, price: parseFloat(formData.price) } : p));
+      saveProducts(products.map(p => p.id === editingProduct.id ? { ...p, ...formData, price: parseFloat(formData.price) } : p));
     } else {
-      setProducts([...products, { id: Date.now(), ...formData, price: parseFloat(formData.price) }]);
+      const newId = Math.max(...products.map(p => p.id), 0) + 1;
+      saveProducts([...products, { id: newId, ...formData, price: parseFloat(formData.price) }]);
     }
-    setFormData({ name: '', description: '', price: '' });
+    setFormData({ name: '', description: '', price: '', image: '' });
+    setImagePreview('');
     setEditingProduct(null);
     setShowForm(false);
   };
 
   const handleEditProduct = (product: any) => {
     setEditingProduct(product);
-    setFormData({ name: product.name, description: product.description, price: product.price.toString() });
+    setFormData({ name: product.name, description: product.description, price: product.price.toString(), image: product.image });
+    setImagePreview(product.image);
     setShowForm(true);
   };
 
   const handleDeleteProduct = (id: number) => {
     if (confirm('Deletar este produto?')) {
-      setProducts(products.filter(p => p.id !== id));
+      saveProducts(products.filter(p => p.id !== id));
     }
   };
 
@@ -96,8 +136,6 @@ export default function LocalAdminPanel() {
               Entrar
             </Button>
           </form>
-
-
         </Card>
       </div>
     );
@@ -119,8 +157,8 @@ export default function LocalAdminPanel() {
       <div className="max-w-6xl mx-auto p-4">
         <div className="mb-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold">Produtos</h2>
-            <Button onClick={() => { setShowForm(true); setEditingProduct(null); setFormData({ name: '', description: '', price: '' }); }} className="bg-red-600 hover:bg-red-700">
+            <h2 className="text-xl font-bold">Produtos ({products.length})</h2>
+            <Button onClick={() => { setShowForm(true); setEditingProduct(null); setFormData({ name: '', description: '', price: '', image: '' }); setImagePreview(''); }} className="bg-red-600 hover:bg-red-700">
               + Novo Produto
             </Button>
           </div>
@@ -164,6 +202,75 @@ export default function LocalAdminPanel() {
                     required
                   />
                 </div>
+
+                {/* Image Section */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">Imagem</label>
+                  <div className="flex gap-2 mb-3">
+                    <button
+                      type="button"
+                      onClick={() => setImageMode('url')}
+                      className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition ${
+                        imageMode === 'url'
+                          ? 'bg-red-600 text-white'
+                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      }`}
+                    >
+                      URL
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setImageMode('upload')}
+                      className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition ${
+                        imageMode === 'upload'
+                          ? 'bg-red-600 text-white'
+                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      }`}
+                    >
+                      Upload
+                    </button>
+                  </div>
+
+                  {imageMode === 'url' ? (
+                    <input
+                      type="url"
+                      value={formData.image}
+                      onChange={(e) => handleImageUrl(e.target.value)}
+                      placeholder="https://exemplo.com/imagem.jpg"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
+                    />
+                  ) : (
+                    <label className="flex items-center justify-center w-full px-4 py-8 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-red-600 hover:bg-red-50 transition">
+                      <div className="text-center">
+                        <Upload className="w-6 h-6 mx-auto mb-2 text-gray-400" />
+                        <span className="text-sm text-gray-600">Clique para selecionar imagem</span>
+                      </div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                      />
+                    </label>
+                  )}
+
+                  {imagePreview && (
+                    <div className="mt-3 relative">
+                      <img src={imagePreview} alt="Preview" className="w-full h-40 object-cover rounded-lg" />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setImagePreview('');
+                          setFormData({ ...formData, image: '' });
+                        }}
+                        className="absolute top-2 right-2 bg-red-600 text-white p-1 rounded-full hover:bg-red-700"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+
                 <div className="flex gap-2">
                   <Button type="submit" className="flex-1 bg-red-600 hover:bg-red-700">
                     Salvar
@@ -179,9 +286,12 @@ export default function LocalAdminPanel() {
           {/* Products List */}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {products.map((product) => (
-              <Card key={product.id} className="p-4">
+              <Card key={product.id} className="p-4 flex flex-col">
+                {product.image && (
+                  <img src={product.image} alt={product.name} className="w-full h-32 object-cover rounded-lg mb-3" />
+                )}
                 <h3 className="font-bold text-lg mb-1">{product.name}</h3>
-                <p className="text-gray-600 text-sm mb-2">{product.description}</p>
+                <p className="text-gray-600 text-sm mb-2 flex-1">{product.description}</p>
                 <p className="text-red-600 font-bold text-lg mb-4">R$ {product.price.toFixed(2)}</p>
                 <div className="flex gap-2">
                   <Button onClick={() => handleEditProduct(product)} variant="outline" className="flex-1 text-sm">
