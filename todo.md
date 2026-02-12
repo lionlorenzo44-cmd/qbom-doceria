@@ -462,3 +462,12 @@
 - [x] Configurar remotes (origin para Manus, user_github para GitHub)
 - [x] Testar sincronização bidirecional
 - [x] Documentar fluxo de sincronização
+
+## Configuração CI/CD com GitHub Actions
+- [x] Criar workflow de CI (testes e validação)
+- [x] Criar workflow de build
+- [x] Criar workflow de análise de código
+- [x] Documentar processo de configuração
+- [ ] Adicionar workflows via GitHub Web Interface (manual)
+- [ ] Testar workflows no GitHub
+- [ ] Adicionar badges de status ao README
