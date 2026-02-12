@@ -12,6 +12,7 @@ export default function LocalAdminPanel() {
   const [formData, setFormData] = useState({ name: '', description: '', price: '', image: '' });
   const [imageMode, setImageMode] = useState<'url' | 'upload'>('upload');
   const [imagePreview, setImagePreview] = useState('');
+  const [imageEditMode, setImageEditMode] = useState<'view' | 'replace' | 'add'>('view');
 
   useEffect(() => {
     const token = localStorage.getItem('adminLocalToken');
@@ -97,12 +98,14 @@ export default function LocalAdminPanel() {
     setImagePreview('');
     setEditingProductId(null);
     setShowAddForm(false);
+    setImageEditMode('view');
   };
 
   const handleEditProduct = (product: any) => {
     setEditingProductId(product.id);
     setFormData({ name: product.name, description: product.description, price: product.price.toString(), image: product.image });
     setImagePreview(product.image);
+    setImageEditMode('view');
     setTimeout(() => {
       const element = document.getElementById(`product-${product.id}`);
       if (element) {
@@ -302,66 +305,102 @@ export default function LocalAdminPanel() {
                   {editingProductId === product.id && (
                     <div className="mb-4 pt-4 border-t-2 border-red-200 space-y-3">
                       <div className="bg-red-50 p-3 rounded-lg">
-                        <label className="block text-sm font-medium mb-2">Imagem</label>
-                        <div className="flex gap-2 mb-2">
-                          <button
-                            type="button"
-                            onClick={() => setImageMode('upload')}
-                            className={`flex-1 px-2 py-1 rounded text-xs font-medium transition ${
-                            imageMode === 'upload'
-                              ? 'bg-red-600 text-white'
-                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                          }`}
-                        >
-                          Upload
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setImageMode('url')}
-                            className={`flex-1 px-2 py-1 rounded text-xs font-medium transition ${
-                              imageMode === 'url'
-                              ? 'bg-red-600 text-white'
-                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                          }`}
-                          >
-                            URL
-                          </button>
-                        </div>
-                        {imageMode === 'url' ? (
-                          <input
-                            type="url"
-                            value={formData.image}
-                            onChange={(e) => handleImageUrl(e.target.value)}
-                            placeholder="https://exemplo.com/imagem.jpg"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 text-sm"
-                          />
-                        ) : (
-                          <label className="flex items-center justify-center w-full px-3 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-red-600 transition text-xs">
-                            <span className="text-gray-600">Clique para upload</span>
-                            <input
-                              type="file"
-                              accept="image/*"
-                              onChange={handleImageUpload}
-                              className="hidden"
-                            />
-                          </label>
-                        )}
-                        {imagePreview && (
-                          <div className="mt-2 relative">
-                            <img src={imagePreview} alt="Preview" className="w-full h-20 object-cover rounded" />
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setImagePreview('');
-                                setFormData({ ...formData, image: '' });
-                              }}
-                              className="absolute top-1 right-1 bg-red-600 text-white p-1 rounded-full hover:bg-red-700"
-                            >
-                              <X className="w-3 h-3" />
-                            </button>
+                        <label className="block text-sm font-medium mb-2">Imagem Atual</label>
+                        {product.image ? (
+                          <div className="mb-3">
+                            <img src={product.image} alt={product.name} className="w-full h-32 object-cover rounded-lg" />
+                            <div className="flex gap-2 mt-2">
+                              <button
+                                type="button"
+                                onClick={() => setImageEditMode('replace')}
+                                className="flex-1 px-2 py-1 rounded text-xs font-medium bg-red-600 text-white hover:bg-red-700"
+                              >
+                                Substituir
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setImageEditMode('add')}
+                                className="flex-1 px-2 py-1 rounded text-xs font-medium bg-blue-600 text-white hover:bg-blue-700"
+                              >
+                                Adicionar Mais
+                              </button>
+                            </div>
                           </div>
+                        ) : (
+                          <div className="text-center py-4 text-gray-500 text-sm">Nenhuma imagem adicionada</div>
                         )}
                       </div>
+
+                      {(imageEditMode === 'replace' || imageEditMode === 'add') && (
+                        <div className="bg-red-50 p-3 rounded-lg">
+                          <label className="block text-sm font-medium mb-2">{imageEditMode === 'replace' ? 'Substituir Imagem' : 'Adicionar Nova Imagem'}</label>
+                          <div className="flex gap-2 mb-2">
+                            <button
+                              type="button"
+                              onClick={() => setImageMode('upload')}
+                              className={`flex-1 px-2 py-1 rounded text-xs font-medium transition ${
+                                imageMode === 'upload'
+                                  ? 'bg-red-600 text-white'
+                                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                              }`}
+                            >
+                              Upload
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setImageMode('url')}
+                              className={`flex-1 px-2 py-1 rounded text-xs font-medium transition ${
+                                imageMode === 'url'
+                                  ? 'bg-red-600 text-white'
+                                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                              }`}
+                            >
+                              URL
+                            </button>
+                          </div>
+                          {imageMode === 'url' ? (
+                            <input
+                              type="url"
+                              value={formData.image}
+                              onChange={(e) => handleImageUrl(e.target.value)}
+                              placeholder="https://exemplo.com/imagem.jpg"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 text-sm"
+                            />
+                          ) : (
+                            <label className="flex items-center justify-center w-full px-3 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-red-600 transition text-xs">
+                              <span className="text-gray-600">Clique para upload</span>
+                              <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageUpload}
+                                className="hidden"
+                              />
+                            </label>
+                          )}
+                          {imagePreview && (
+                            <div className="mt-2 relative">
+                              <img src={imagePreview} alt="Preview" className="w-full h-32 object-cover rounded" />
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setImagePreview('');
+                                  setFormData({ ...formData, image: '' });
+                                }}
+                                className="absolute top-1 right-1 bg-red-600 text-white p-1 rounded-full hover:bg-red-700"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+                            </div>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => setImageEditMode('view')}
+                            className="w-full mt-2 px-2 py-1 rounded text-xs font-medium bg-gray-300 text-gray-700 hover:bg-gray-400"
+                          >
+                            Cancelar
+                          </button>
+                        </div>
+                      )}
                       <div className="bg-red-50 p-3 rounded-lg">
                         <label className="block text-sm font-medium mb-1">Nome</label>
                         <input

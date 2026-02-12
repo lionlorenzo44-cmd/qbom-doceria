@@ -341,3 +341,10 @@
 - [x] Mover imagem para primeira opção na edição
 - [x] Depois nome, descrição e preço
 - [x] Testar em mobile e desktop
+
+
+## Corrigir Exibição de Imagens na Edição
+- [x] Mostrar imagem atual do produto antes de editar (igual na homepage)
+- [x] Adicionar opção de substituir imagem existente
+- [x] Adicionar opção de adicionar segunda imagem
+- [x] Testar em mobile e desktop
