@@ -1,0 +1,104 @@
+name: CI - Testes e Validação
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    name: Testes e Validação
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    - name: Instalar pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 10
+    
+    - name: Instalar dependências
+      run: pnpm install --frozen-lockfile
+    
+    - name: Validar tipos
+      run: pnpm validate-types
+    
+    - name: Executar testes
+      run: pnpm test
+    
+    - name: Fazer build
+      run: pnpm build
+    
+    - name: Upload artefatos de build
+      if: success()
+      uses: actions/upload-artifact@v4
+      with:
+        name: dist-${{ matrix.node-version }}
+        path: dist/
+        retention-days: 7
+
+  lint:
+    name: Linting e Formatação
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22.x'
+        cache: 'npm'
+    
+    - name: Instalar pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 10
+    
+    - name: Instalar dependências
+      run: pnpm install --frozen-lockfile
+    
+    - name: Verificar formatação com Prettier
+      run: pnpm prettier --check . || true
+    
+    - name: Verificar tipos TypeScript
+      run: pnpm tsc --noEmit || true
+
+  security:
+    name: Verificação de Segurança
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22.x'
+        cache: 'npm'
+    
+    - name: Instalar pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 10
+    
+    - name: Instalar dependências
+      run: pnpm install --frozen-lockfile
+    
+    - name: Verificar vulnerabilidades npm
+      run: npm audit --audit-level=moderate || true
