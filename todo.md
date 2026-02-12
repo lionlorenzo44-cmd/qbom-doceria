@@ -446,3 +446,7 @@
 - [x] Adicionar badge com número da imagem atual (1, 2, 3) no carousel
 - [x] Atualizar número dinamicamente ao navegar com setas
 - [x] Posicionar badge de forma visível (ex: canto superior)
+
+## Integração com GitHub
+- [x] Habilitar integração com GitHub no painel de configurações
+- [x] Permitir exportação do código para repositório GitHub
