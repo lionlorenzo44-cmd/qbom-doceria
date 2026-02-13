@@ -9,47 +9,65 @@ import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
 import LocalAdminPanel from "./components/LocalAdminPanel";
 import MyOrders from "./pages/MyOrders";
-import { Heart, MessageCircle } from "lucide-react";
+import { Heart, MessageCircle, ShoppingCart, Instagram, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-function Header() {
+function Header({ cartCount: initialCount = 0 }) {
   const [location, navigate] = useLocation();
+  const [cartCount, setCartCount] = useState(initialCount);
+
+  useEffect(() => {
+    const handleCartUpdate = (event: any) => {
+      setCartCount(event.detail.count);
+    };
+    window.addEventListener('cartUpdated', handleCartUpdate);
+    return () => window.removeEventListener('cartUpdated', handleCartUpdate);
+  }, []);
   
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-4">
+    <header className="bg-gradient-to-r from-red-600 to-pink-600 shadow-lg sticky top-0 z-50">
+      <div className="container mx-auto px-4 py-5">
         <div className="flex items-center justify-between">
           <div 
-            className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition"
+            className="flex items-center gap-3 cursor-pointer hover:scale-105 transition-transform duration-200"
             onClick={() => navigate("/")}
           >
-            <Heart className="w-6 h-6 text-red-600 fill-red-600" />
-            <h1 className="text-2xl font-bold text-red-700">Qbom Doceria</h1>
+            <div className="bg-white rounded-full p-2 shadow-md">
+              <Heart className="w-6 h-6 text-red-600 fill-red-600" />
+            </div>
+            <h1 className="text-3xl font-bold text-white drop-shadow-lg">Qbom Doceria</h1>
           </div>
           
-          <nav className="hidden md:flex items-center gap-6">
-            <a 
-              href="https://wa.me/5571992180210?text=Olá%20Qbom%20Doceria!"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition"
+          <nav className="hidden md:flex items-center gap-4">
+            <div 
+              className="relative cursor-pointer hover:scale-110 transition-transform" 
+              data-cart-icon
+              onClick={() => window.dispatchEvent(new CustomEvent('cartClicked'))}
             >
-              <MessageCircle className="w-4 h-4" />
-              <span className="text-sm">Contato</span>
-            </a>
+              <ShoppingCart className="w-6 h-6 text-white" />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-yellow-400 text-red-600 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+            </div>
           </nav>
 
           {/* Menu mobile */}
-          <div className="md:hidden flex items-center gap-2">
-            <a 
-              href="https://wa.me/5571992180210?text=Olá%20Qbom%20Doceria!"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition"
+          <div className="md:hidden flex items-center gap-3">
+            <div 
+              className="relative" 
+              data-cart-icon
+              onClick={() => window.dispatchEvent(new CustomEvent('cartClicked'))}
             >
-              <MessageCircle className="w-5 h-5" />
-            </a>
+              <ShoppingCart className="w-5 h-5 text-white cursor-pointer hover:scale-110 transition-transform" />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-yellow-400 text-red-600 text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -100,22 +118,22 @@ function Footer() {
             </div>
           </div>
 
-          {/* Segurança */}
-          <div translate="no">
-            <h3 className="text-white font-bold mb-4">Segurança</h3>
+          {/* Horário */}
+          <div>
+            <h3 className="text-white font-bold mb-4 flex items-center gap-2">
+              <Clock className="w-5 h-5" />
+              Horário
+            </h3>
             <div className="space-y-2 text-sm">
-              <p className="flex items-center gap-2">
-                <span className="text-green-400">🔒</span>
-                <span translate="no">Conexão segura (HTTPS)</span>
-              </p>
-              <p className="flex items-center gap-2">
-                <span className="text-green-400">✓</span>
-                <span translate="no">Dados protegidos</span>
-              </p>
-              <p className="flex items-center gap-2">
-                <span className="text-green-400">✓</span>
-                <span translate="no">Pagamento seguro</span>
-              </p>
+              <p><strong>Seg-Sex:</strong> 08:00-18:00</p>
+              <p><strong>Sábado:</strong> 09:00-17:00</p>
+              <p><strong>Domingo:</strong> Fechado</p>
+              <div className="mt-4 pt-4 border-t border-gray-700">
+                <a href="https://instagram.com/qbomdoceria" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-pink-400 hover:text-pink-300 transition">
+                  <Instagram className="w-5 h-5" />
+                  <span className="text-sm">@qbomdoceria</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -196,6 +214,8 @@ function Router() {
 // - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
 
 function App() {
+  const [cartCount, setCartCount] = useState(0);
+  
   return (
     <ErrorBoundary>
       <ThemeProvider
@@ -205,7 +225,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <div className="flex flex-col min-h-screen">
-            <Header />
+            <Header cartCount={cartCount} />
             <main className="flex-1">
               <Router />
             </main>

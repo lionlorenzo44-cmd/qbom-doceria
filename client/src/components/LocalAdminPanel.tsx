@@ -139,9 +139,8 @@ export default function LocalAdminPanel() {
           description: formData.description,
           price: Math.round(parseFloat(formData.price) * 100),
           imageUrl: formData.imageUrl,
-          imageUrl2: formData.imageUrl2 || null,
-          imageUrl3: formData.imageUrl3 || null,
-          isAvailable: true,
+          imageUrl2: formData.imageUrl2 || undefined,
+          imageUrl3: formData.imageUrl3 || undefined,
         });
         toast.success('Produto criado com sucesso');
       }
@@ -182,26 +181,43 @@ export default function LocalAdminPanel() {
 
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-pink-50 px-4">
-        <Card className="w-full max-w-md p-8">
-          <h1 className="text-2xl font-bold text-center text-red-600 mb-6">Acesso Administrativo</h1>
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Senha</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
-                placeholder="Digite a senha admin"
-                required
-              />
+      <div className="min-h-screen bg-gradient-to-br from-red-600 via-red-500 to-pink-600 flex items-center justify-center px-4">
+        <div className="w-full max-w-md">
+          <Card className="p-8 shadow-2xl border-0 bg-white/95">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-red-600 to-pink-600 rounded-full mb-4 shadow-lg">
+                <span className="text-2xl">❤️</span>
+              </div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-red-600 to-pink-600 bg-clip-text text-transparent mb-2">Qbom Doceria</h1>
+              <p className="text-gray-600 font-medium">Painel Administrativo</p>
             </div>
-            <Button type="submit" className="w-full bg-red-600 hover:bg-red-700">
-              Entrar
-            </Button>
-          </form>
-        </Card>
+
+            <form onSubmit={handleLogin} className="space-y-6">
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-gray-700">Senha de Acesso</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 border-2 border-red-200 rounded-lg focus:outline-none focus:border-red-600 focus:ring-2 focus:ring-red-100 transition-all text-base font-medium"
+                  placeholder="Digite sua senha"
+                  required
+                  autoFocus
+                />
+              </div>
+              <Button 
+                type="submit" 
+                className="w-full bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white font-bold py-3 text-base shadow-lg hover:shadow-xl transition-all"
+              >
+                Entrar no Painel
+              </Button>
+            </form>
+
+            <div className="mt-6 pt-6 border-t border-gray-200 text-center">
+              <p className="text-xs text-gray-500">© 2026 Qbom Doceria</p>
+            </div>
+          </Card>
+        </div>
       </div>
     );
   }

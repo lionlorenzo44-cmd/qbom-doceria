@@ -107,8 +107,16 @@ export async function getProductById(id: number) {
 export async function createOrder(order: InsertOrder) {
   const db = await getDb();
   if (!db) throw new Error('Database not available');
-  const result = await db.insert(orders).values(order) as any;
-  return { insertId: result.insertId || 0, orderNumber: order.orderNumber };
+  try {
+    const result = await db.insert(orders).values(order) as any;
+    if (!result || result.insertId === undefined) {
+      throw new Error('Failed to insert order - no insertId returned');
+    }
+    return { insertId: result.insertId, orderNumber: order.orderNumber };
+  } catch (error) {
+    console.error('[Database] Failed to create order:', error);
+    throw error;
+  }
 }
 
 export async function getOrderById(id: number) {
@@ -133,7 +141,15 @@ export async function updateOrderStatus(id: number, status: string) {
 export async function createOrderItems(items: InsertOrderItem[]) {
   const db = await getDb();
   if (!db) throw new Error('Database not available');
-  return db.insert(orderItems).values(items);
+  if (!items || items.length === 0) {
+    throw new Error('No order items provided');
+  }
+  try {
+    return await db.insert(orderItems).values(items);
+  } catch (error) {
+    console.error('[Database] Failed to create order items:', error);
+    throw error;
+  }
 }
 
 export async function getOrderItems(orderId: number) {

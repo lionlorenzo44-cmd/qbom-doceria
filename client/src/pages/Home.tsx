@@ -5,8 +5,8 @@ import { Label } from "@/components/ui/label";
 import { SoldOutBadge } from "@/components/SoldOutBadge";
 import PixPayment from "@/components/PixPayment";
 import { trpc } from "@/lib/trpc";
-import { MessageCircle, Plus, Trash2, MapPin, AlertCircle, CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState, useEffect } from "react";
+import { MessageCircle, Plus, Trash2, MapPin, AlertCircle, CheckCircle2, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 
 interface CartItem {
@@ -36,6 +36,25 @@ export default function Home() {
   const [changeAmount, setChangeAmount] = useState("");
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [photoIndex, setPhotoIndex] = useState<Record<number, number>>({});
+  const [flyingProduct, setFlyingProduct] = useState<{ id: number; x: number; y: number; targetX: number; targetY: number } | null>(null);
+  const addressSectionRef = useRef<HTMLDivElement>(null);
+
+  const scrollToAddressSection = () => {
+    const element = addressSectionRef.current;
+    if (element) {
+      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+      const offsetPosition = elementPosition - 100; // Sobe 100px acima do elemento
+      window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+    }
+  };
+
+  useEffect(() => {
+    const handleCartClick = () => {
+      scrollToAddressSection();
+    };
+    window.addEventListener('cartClicked', handleCartClick);
+    return () => window.removeEventListener('cartClicked', handleCartClick);
+  }, []);
 
   // Proteger contra tradução automática
   useEffect(() => {
@@ -44,6 +63,13 @@ export default function Home() {
       el.setAttribute('translate', 'no');
     });
   }, []);
+
+  // Atualizar cartCount quando o carrinho muda
+  useEffect(() => {
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    // Emitir evento customizado para atualizar Header
+    window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { count: totalItems, cart } }));
+  }, [cart]);
 
   // Validação em tempo real
   const validateName = (name: string) => {
@@ -82,10 +108,27 @@ export default function Home() {
     setErrors(prev => ({ ...prev, phone: error }));
   };
 
-  const handleAddToCart = (product: any) => {
+  const handleAddToCart = (product: any, event?: React.MouseEvent) => {
     if (!product.isAvailable) {
       toast.error("Este produto está esgotado");
       return;
+    }
+    if (event) {
+      const button = event.currentTarget as HTMLElement;
+      const rect = button.getBoundingClientRect();
+      const cartIcon = document.querySelector('[data-cart-icon]');
+      const cartRect = cartIcon?.getBoundingClientRect();
+      
+      if (cartRect) {
+        setFlyingProduct({
+          id: product.id,
+          x: rect.left + rect.width / 2,
+          y: rect.top + rect.height / 2,
+          targetX: cartRect.left + cartRect.width / 2,
+          targetY: cartRect.top + cartRect.height / 2,
+        } as any);
+        setTimeout(() => setFlyingProduct(null), 600);
+      }
     }
     const existingItem = cart.find(item => item.productId === product.id);
     if (existingItem) {
@@ -155,13 +198,17 @@ export default function Home() {
         })),
       });
 
+      if (!result || !result.orderNumber) {
+        throw new Error('Pedido nao foi criado corretamente - orderNumber ausente');
+      }
+
       // Montar mensagem para WhatsApp
       const itemsText = cart
         .map(item => `${item.productName} (x${item.quantity}) - R$ ${(item.price * item.quantity / 100).toFixed(2)}`)
         .join("\n");
 
       const fullAddress = `${customerAddress}${customerNeighborhood ? `, ${customerNeighborhood}` : ""}${customerReference ? ` - Ref: ${customerReference}` : ""}`;
-      const message = `Olá! Gostaria de fazer um pedido na Qbom Doceria:\n\n${itemsText}\n\nTotal: R$ ${(totalPrice / 100).toFixed(2)}\nNome: ${customerName}\nTelefone: ${customerPhone}\nEndereço: ${fullAddress || "Endereço não informado"}\nForma de pagamento: ${paymentMethod}\n\nPedido: ${result.orderNumber}`;
+      const message = `Ola! Gostaria de fazer um pedido na Qbom Doceria:\n\n${itemsText}\n\nTotal: R$ ${(totalPrice / 100).toFixed(2)}\nNome: ${customerName}\nTelefone: ${customerPhone}\nEndereco: ${fullAddress || "Endereco nao informado"}\nForma de pagamento: ${paymentMethod}\n\nPedido: ${result.orderNumber}`;
 
       const encodedMessage = encodeURIComponent(message);
       const whatsappNumber = "5571992180210";
@@ -180,20 +227,26 @@ export default function Home() {
       setPaymentMethod("dinheiro");
       setErrors({});
     } catch (error) {
-      toast.error("Erro ao criar pedido");
-      console.error(error);
+      const errorMsg = error instanceof Error ? error.message : "Erro ao criar pedido";
+      toast.error(errorMsg);
+      console.error('[Order Creation Error]:', error);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white" translate="no">
+    <div className="min-h-screen bg-gradient-to-b from-pink-50 via-white to-pink-50" translate="no">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Produtos */}
           <div className="lg:col-span-2">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">Escolha seus doces</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {products.map((product) => {
+            <div className="mb-8 pt-8">
+              <h2 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-red-600 to-pink-600 bg-clip-text text-transparent mb-4">Escolha seus doces</h2>
+              <div className="flex justify-center mb-6">
+                <ChevronDown className="w-6 md:w-8 h-6 md:h-8 text-red-600 animate-bounce" />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+              {products.map((product, index) => {
                 const images = [product.imageUrl, product.imageUrl2, product.imageUrl3].filter(Boolean);
                 const currentIndex = photoIndex[product.id] || 0;
                 const currentImage = images[currentIndex];
@@ -213,7 +266,7 @@ export default function Home() {
                 };
 
                 return (
-                  <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
+                  <Card key={product.id} className="overflow-hidden hover:shadow-2xl hover:scale-105 transition-all duration-300 flex flex-col border border-gray-200 hover:border-red-300 cursor-pointer animate-fadeIn" style={{ animationDelay: `${index * 100}ms` }}>
                     {!product.isAvailable && <SoldOutBadge />}
                     {currentImage && (
                       <div className="relative w-full bg-gray-200 overflow-hidden group" style={{ height: '384px' }}>
@@ -257,21 +310,31 @@ export default function Home() {
                       </div>
                     )}
                     <div className="p-4 flex-1 flex flex-col">
-                      <h3 className="font-bold text-gray-800">{product.name}</h3>
+                      {(() => {
+                        const parts = product.name.split(' com ');
+                        const mainTitle = parts[0];
+                        const flavor = parts.length > 1 ? 'com ' + parts.slice(1).join(' com ') : '';
+                        return (
+                          <>
+                            <h3 className="font-bold text-xl text-gray-800 mb-1">{mainTitle}</h3>
+                            {flavor && <p className="text-xs text-gray-500 mb-3 font-medium uppercase tracking-wide">{flavor}</p>}
+                          </>
+                        );
+                      })()}
                       {product.description && (
-                        <p className="text-sm text-gray-600 mb-2">{product.description}</p>
+                        <p className="text-sm text-gray-600 mb-4 leading-relaxed">{product.description}</p>
                       )}
                       <div className="flex justify-between items-center mt-auto">
                         <span className="text-lg font-bold text-red-600">
                           R$ {(product.price / 100).toFixed(2)}
                         </span>
                         <Button
-                          onClick={() => handleAddToCart(product)}
+                          onClick={(e) => handleAddToCart(product, e as React.MouseEvent)}
                           size="sm"
-                          className="bg-red-600 hover:bg-red-700"
+                          className="bg-red-600 hover:bg-red-700 hover:shadow-lg hover:scale-110 transition-all duration-200 active:scale-95 md:p-2 p-3"
                           disabled={!product.isAvailable}
                         >
-                          <Plus className="w-4 h-4" />
+                          <Plus className="w-4 h-4 md:w-4 md:h-4 w-5 h-5" />
                         </Button>
                       </div>
                     </div>
@@ -283,7 +346,7 @@ export default function Home() {
 
           {/* Carrinho e Formulário */}
           <div className="lg:col-span-1">
-            <Card className="p-6 sticky top-4">
+            <Card className="p-6 sticky top-4" ref={addressSectionRef}>
               <h2 className="text-xl font-bold text-gray-800 mb-4">Seu Pedido</h2>
 
               {/* Carrinho */}
@@ -498,7 +561,7 @@ export default function Home() {
                 <Button
                   onClick={handleSubmitOrder}
                   disabled={cart.length === 0 || createOrderMutation.isPending}
-                  className="w-full bg-red-600 hover:bg-red-700 text-white font-bold"
+                  className="w-full bg-red-600 hover:bg-red-700 text-white font-bold hover:shadow-lg hover:scale-105 transition-all duration-200 active:scale-95"
                 >
                   <MessageCircle className="w-5 h-5 mr-2" />
                   Enviar para WhatsApp
@@ -508,6 +571,22 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {flyingProduct && (
+        <div
+          className="fixed animate-fly-to-cart"
+          style={{
+            left: `${flyingProduct.x}px`,
+            top: `${flyingProduct.y}px`,
+            '--tx': `${flyingProduct.targetX - flyingProduct.x}px`,
+            '--ty': `${flyingProduct.targetY - flyingProduct.y}px`,
+          } as any}
+        >
+          <div className="w-10 h-10 bg-red-600 rounded-lg shadow-lg flex items-center justify-center text-white font-bold text-sm">
+            1
+          </div>
+        </div>
+      )}
     </div>
   );
 }
