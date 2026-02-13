@@ -3,6 +3,11 @@ import { notifyOwner } from "./notification";
 import { adminProcedure, publicProcedure, router } from "./trpc";
 
 export const systemRouter = router({
+  publish: publicProcedure.mutation(async () => {
+    // Simulação de publicação
+    console.log("[System] Publicação da última versão solicitada.");
+    return { success: true, timestamp: new Date().toISOString() };
+  }),
   health: publicProcedure
     .input(
       z.object({
