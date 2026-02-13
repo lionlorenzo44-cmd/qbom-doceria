@@ -73,13 +73,26 @@ export default function LocalAdminPanel() {
     e.preventDefault();
     try {
       if (editingProductId) {
-        await updateProductMutation.mutateAsync({
+        const product = products.find(p => p.id === editingProductId);
+        const updates: any = {
           id: editingProductId,
           name: formData.name,
           description: formData.description,
           price: Math.round(parseFloat(formData.price) * 100),
-          imageUrl: formData.imageUrl,
-        });
+        };
+
+        // Preservar outras imagens ao atualizar uma específica
+        if (imageEditMode === 'replace') {
+          if (editingImageIndex === 0) updates.imageUrl = formData.imageUrl;
+          if (editingImageIndex === 1) updates.imageUrl2 = formData.imageUrl;
+          if (editingImageIndex === 2) updates.imageUrl3 = formData.imageUrl;
+        } else if (imageEditMode === 'add') {
+          if (!product.imageUrl) updates.imageUrl = formData.imageUrl;
+          else if (!product.imageUrl2) updates.imageUrl2 = formData.imageUrl;
+          else if (!product.imageUrl3) updates.imageUrl3 = formData.imageUrl;
+        }
+
+        await updateProductMutation.mutateAsync(updates);
         toast.success('Produto atualizado com sucesso');
       } else {
         await createProductMutation.mutateAsync({
@@ -103,6 +116,7 @@ export default function LocalAdminPanel() {
     setEditingProductId(null);
     setShowAddForm(false);
     setImageEditMode('view');
+    setEditingImageIndex(0);
   };
 
   const handleEditProduct = (product: any) => {
