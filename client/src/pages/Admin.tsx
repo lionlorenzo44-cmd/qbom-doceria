@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { useNotification } from "@/hooks/useNotification";
 import { useNotificationSound } from "@/hooks/useNotificationSound";
 import { NotificationContainer } from "@/components/NotificationContainer";
+import { useAuth } from "@/_core/hooks/useAuth";
 
 export default function Admin() {
   const { user } = useAuth();
